@@ -35,9 +35,30 @@ async function installEnglishOnlyVoices(page: Page): Promise<void> {
   });
 }
 
+/**
+ * Skip onboarding: these specs are about the conversation screen's layout,
+ * contrast and reflow.
+ */
+async function seedLearner(page: Page): Promise<void> {
+  await page.addInitScript(() => {
+    localStorage.setItem(
+      'yds.v1',
+      JSON.stringify({ seenWelcome: true, native: 'en', study: 'es', prefs: {}, sessions: {} }),
+    );
+  });
+}
+
+/** Seed onboarding, open the conversation, and land on the transcript. */
+async function gotoConversation(page: Page): Promise<void> {
+  await seedLearner(page);
+  await page.goto('/');
+  await page.locator('.conversation-open').first().click();
+  await expect(page.locator('.transcript')).toBeVisible();
+}
+
 test('AC-UI-22: automated a11y checks pass at AA in Chromium', async ({ page }) => {
   await installEnglishOnlyVoices(page);
-  await page.goto('/');
+  await gotoConversation(page);
   await expect(page.locator('h1')).toHaveText('Making Plans');
   const results = await new AxeBuilder({ page })
     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'])
@@ -48,7 +69,7 @@ test('AC-UI-22: automated a11y checks pass at AA in Chromium', async ({ page }) 
 
 test('AC-UI-22: 200% zoom and a 320 px reflow keep the app functional', async ({ page }) => {
   await installEnglishOnlyVoices(page);
-  await page.goto('/');
+  await gotoConversation(page);
   await page.evaluate(() => {
     document.documentElement.style.fontSize = '200%';
   });

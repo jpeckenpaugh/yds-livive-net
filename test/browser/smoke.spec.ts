@@ -46,13 +46,49 @@ async function installEnglishOnlyVoices(page: Page): Promise<void> {
   });
 }
 
+/**
+ * Skip onboarding: the specs below are about the conversation screen. The
+ * Welcome flow has its own test.
+ */
+async function seedLearner(page: Page): Promise<void> {
+  await page.addInitScript(() => {
+    localStorage.setItem(
+      'yds.v1',
+      JSON.stringify({ seenWelcome: true, native: 'en', study: 'es', prefs: {}, sessions: {} }),
+    );
+  });
+}
+
+/** Seed onboarding, open the conversation, and land on the transcript. */
+async function gotoConversation(page: Page): Promise<void> {
+  await seedLearner(page);
+  await page.goto('/');
+  await page.locator('.conversation-open').first().click();
+  await expect(page.locator('.transcript')).toBeVisible();
+}
+
+test('AC-TOOL-18: the welcome flow reaches the conversation list and a conversation', async ({
+  page,
+}) => {
+  await installEnglishOnlyVoices(page);
+  await page.goto('/');
+
+  await expect(page.getByRole('button', { name: 'Start' })).toBeVisible();
+  await page.getByRole('button', { name: 'Start' }).click();
+
+  await expect(page.locator('.conversation-open').first()).toBeVisible();
+  await page.locator('.conversation-open').first().click();
+
+  await expect(page.locator('.transcript')).toBeVisible();
+  await expect(page.locator('.choice-cards').first()).toBeVisible();
+});
+
 test('AC-TOOL-18: smoke over the built artifact, including the G1 no-l2-voice state', async ({
   page,
 }) => {
   mkdirSync('test-artifacts', { recursive: true });
   await installEnglishOnlyVoices(page);
-
-  await page.goto('/');
+  await gotoConversation(page);
   await expect(page.locator('h1')).toHaveText('Making Plans');
   await page.screenshot({ path: 'test-artifacts/01-transcript.png', fullPage: true });
 
@@ -78,7 +114,7 @@ test('AC-TOOL-18: smoke over the built artifact, including the G1 no-l2-voice st
 
 test('AC-TOOL-18: the Licences surface names licences by purpose', async ({ page }) => {
   await installEnglishOnlyVoices(page);
-  await page.goto('/');
+  await gotoConversation(page);
   await page.getByRole('button', { name: 'Licences' }).click();
   const dialog = page.getByRole('dialog');
   await expect(dialog).toContainText('OpenRAIL-M');
