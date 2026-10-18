@@ -58,7 +58,7 @@ Consequence worth stating because it is where UI work usually goes wrong: **if a
 │         ├─ <DialogueLine lang={l1}>   when showL1
 │         ├─ <L2NotSpokenMarker>        G1 degraded only
 │         ├─ <ChoiceCards>              pending choice beat only
-│         │    └─ <OptionCard>          label + <PreviewButton>  ← repeated
+│         │    └─ <OptionCard>          label + icon (decorative) + <PreviewButton>  ← repeated
 │         ├─ <GhostOptions>             resolved choice beat
 │         └─ <UnreachableTailNote>      when this beat was invalidated by a re-pick
 ├─ <WhatIfPanel>                       end of conversation only
@@ -159,7 +159,7 @@ type Step = { kind: 'speak'; lang: Lang; voiceId: VoiceId; text: string;
               beatId: BeatId; lineId: string };
 ```
 
-`beatId`/`lineId` ride along because **utterance ≠ variant** (D3 §3.1): the engine deliberately does not know which line it is speaking, so "which line is playing" is answerable only because the scheduler attached it. This is the pre-registered D3 constraint, discharged here.
+`beatId`/`lineId` ride along because **utterance ≠ variant** (D3 §3.2): the engine deliberately does not know which line it is speaking, so "which line is playing" is answerable only because the scheduler attached it. This is the pre-registered D3 constraint, discharged here.
 
 Only the scheduler builds steps. A component that wants audio calls a store action; it never assembles a queue, and it never passes a template-fragment string (D3's AC-ENG-04 stands behind this).
 
@@ -284,11 +284,21 @@ D2 §10 says `choose` clamps `cursor` **and** `revealed` to the first beat that 
 
 **Escalation:** none. I do not think D2's rule should change, and I am not changing it. If D4 later wants a persistent "show the invalidated tail" affordance, it must come back to D2 as a new *read-only projection*, not as a change to `revealed` — because `revealed` is also what keeps the D2 §10 invariant (`revealed` is never beyond the first `pending` beat) true, and the whole session model depends on it.
 
-### 7.6 A schema gap surfaced by the README's own mockup
+### 7.6 Option icons — spec, and the render rule
 
-⚠ **DIVERGES FROM README** §core loop step 2, which shows emoji-tagged option cards ("🍽️ **Dinner**"). `Option.label` is `{ l1: string; l2: string }` (D2 §4.3) and there is **no icon field**. So the README's card design is not representable.
+The README's option cards carry an emoji tag ("🍽️ **Dinner**"). `Option.icon?: string` exists in the schema for exactly this (D2 §4.3), copied verbatim into `BuiltOption.icon`. It is **label-class** and **decorative**, and that word does all the work:
 
-**Recommendation: drop the emoji.** Reasons: it is decoration rather than information; a 10-option set across a conversation makes it a maintenance tax on every new conversation; and an emoji in an accessible name is announced (or skipped) inconsistently across screen readers. If the owner wants them, the correct move is a D2 amendment adding an optional `icon?: string` to `Label`, marked decorative with `aria-hidden`, and a rule that the label text alone must be sufficient. Flagged, not decided (§15).
+| Rule | Detail |
+|---|---|
+| Decorative | `aria-hidden="true"`, unconditionally |
+| Never in the accessible name | the card's accessible name is the label (in the current `read` channel, or L1 per §5.3's carve-out). The icon adds nothing to it, and a screen-reader user loses no information. |
+| Never load-bearing | no behaviour, state, or logic may key off an icon, and **the label text must stand alone**. If a card's meaning depends on its icon, the label is wrong. |
+| Never translated, never reviewed | it is UI chrome like the label text (D2 §4.3) |
+| Optional | absent is not a defect; a conversation with no icons is valid and renders as it does today |
+
+The one visual rule this doc fixes: the icon is **not** the tap/click target and does not sit inside the `<button>`'s accessible name, but it may sit inside the button's box. Making it a separate control would create a second focusable thing per card that does nothing, which is worse for keyboard users than decoration.
+
+This replaces my earlier "not representable → drop the emoji" recommendation, which the owner overruled on the grounds of a real affordance (a visual anchor in a listen-first app where the learner may be reading nothing), a concept document that already shows them, and the cost asymmetry: adding a decorative optional field now is nearly free, and adding it after the first bake is a schema change to a committed artifact.
 
 ---
 
@@ -441,16 +451,41 @@ The popover is `role="tooltip"`-like but must be dismissible and must not contai
 | SC 4.1.2 | Accessible names state value and purpose, e.g. "Read: Spanish only". |
 | Drag / motion / timing | No drag interactions. No time limits. Nothing flashes. |
 
+### 12.1 Which requirement has which evidence source
+
+`AC-UI-22` cannot be satisfied by one mechanism, because jsdom computes no layout and no colours. Stated explicitly so the Engineer does not claim a check it does not have (this is the split D5 §9.4 requested):
+
+| Checked in **jsdom** (`vitest-axe`, the `ui` project) | Checked in **Playwright** (real Chromium, `@axe-core/playwright`) |
+|---|---|
+| 1.3.1 structure and relationships | 1.4.3 contrast of text, including ghosted options |
+| 2.1.1 / 2.1.2 keyboard operability, no trap outside dialogs | 1.4.11 contrast of control boundaries and focus indicators |
+| 2.4.3 focus order | 2.4.7 / 2.4.11 focus visible and not obscured by sticky chrome |
+| 4.1.2 names, roles, values, including `lang` attributes | 1.4.4 the 200% zoom pass |
+| 1.4.12 spacing overrides do not clip | 1.4.10 reflow |
+| 2.3.3 reduced motion applied | 2.5.8 the 24 px target measurement |
+
+The Playwright job additionally gives the real-browser smoke path and — because headless Chromium has no `es` voice — exercises the G1 `no-l2-voice` state on every run (D5 §9.4).
+
 ---
 
 ## 13. The About / Licenses surface
 
 A `LicensesDialog` from the toolbar. D3 §6.7 owns the facts; this owns the surface, and it has **two jobs, not one**:
 
-1. **Include the licenses.** Supertonic weights (OpenRAIL-M), Supertonic code (MIT), the OPUS-MT models (Apache-2.0), and the M2 runtimes' own licenses. Apache-2.0's "include the license text" is satisfied by shipping the license files **and** listing them here. **No OPUS-MT attribution line is required** — Apache-2.0 with no upstream NOTICE — so none is added (PM A4).
-2. **State OpenRAIL-M's use restrictions in plain language.** OpenRAIL-M is use-restricted, not merely attribution-required, so it must be surfaced as *restrictions*, in language a learner can read, not as a filename. This is the one license in the set where "include the text" is insufficient.
+1. **Include the licences.** Supertonic weights (OpenRAIL-M), Supertonic code (MIT), the OPUS-MT models (Apache-2.0), and the M2 runtimes' own licences. Apache-2.0's "include the license text" is satisfied by shipping the licence files **and** listing them here. **No OPUS-MT attribution line is required** — Apache-2.0 with no upstream NOTICE — so none is added (PM A4).
+2. **State OpenRAIL-M's use restrictions in plain language.** OpenRAIL-M is use-restricted, not merely attribution-required, so it must be surfaced as *restrictions*, in language a learner can read, not as a filename. This is the one licence in the set where "include the text" is insufficient.
 
-Also: the app is offline and, in M1, downloads nothing. That is worth stating on this surface — it is the claim a learner is most likely to doubt. M2 adds the model sizes, which belong to the Downloads surface (D3 §9) rather than here.
+**In M1 the surface names the licences, not the models or repos** (amendment E4). M1 ships no model weights at all, and naming Supertonic or the OPUS-MT repos would put exactly the strings `check:bundle` forbids into the emitted JS (D5 §6.3), making the gate permanently red with no permitted fix. So M1 renders three licence entries described by *purpose* rather than by product:
+
+| M1 entry | Text | Why it is here in M1 |
+|---|---|---|
+| OpenRAIL-M — use-restricted | "planned speech engine (M3)" | The restriction must be surfaced before the weights arrive, not after |
+| MIT | "UI framework" | Preact, actually shipped in M1 |
+| Apache-2.0 | "build-time translation models" | The Spanish dialogue is machine-drafted with these, at build time |
+
+Model names, repo ids and byte sizes arrive at **M3**, alongside the Downloads surface (D3 §9), where the bundle is allowed to contain them because the engine genuinely is in it.
+
+Also: the app is offline and, in M1, downloads nothing. That is worth stating on this surface — it is the claim a learner is most likely to doubt.
 
 ---
 
@@ -481,21 +516,25 @@ All timings (§6.3) and the presentation table (§5.2) are canonical here. Nothi
 | **AC-UI-19** | There is no `aria-live` region containing dialogue, and exactly one `role="status"` exists, updated only on user transport actions. |
 | **AC-UI-20** | Every L2 text node carries `lang` = the conversation's `l2` and every L1 node the `l1`. |
 | **AC-UI-21** | Glosses are reachable by hover, by tap, and by keyboard, and are announced as the accessible description of the span (§11.4). |
-| **AC-UI-22** | Automated a11y checks pass at AA on every screen and state, including targets ≥24 px, contrast, and 200% zoom. |
-| **AC-UI-23** | `LicensesDialog` lists every license and states OpenRAIL-M's use restrictions in plain language; no OPUS-MT attribution line is present. |
+| **AC-UI-22** | Automated a11y checks pass at AA on every screen and state. Two evidence sources, split per §12.1: jsdom (`vitest-axe`) for structure, ARIA, focus order and names; Playwright (`@axe-core/playwright`) for contrast, control boundaries, targets ≥24 px, 200% zoom and reflow. |
+| **AC-UI-23** | `LicensesDialog` lists every licence and states OpenRAIL-M's use restrictions in plain language. **In M1 it names the licences, not the models or repos** (§13): no model name, no repo id, no engine name — because M1 ships no weights and naming them would put forbidden strings in the bundle (D5 §6.3). No OPUS-MT attribution line is present. |
 | **AC-UI-24** | No "preparing audio" affordance, spinner, or per-line progress element exists anywhere in the M1 build; progress may only appear when the active engine reports `prefetch`/`duration`. |
 | **AC-UI-25** | The first beat does not autoplay: the app loads in `idle` and the Play control is the required gesture. |
+| **AC-UI-27** | Option icons render as decoration: `aria-hidden`, never part of a card's accessible name, never targeted independently, never load-bearing, and their absence is not a defect. |
 | **AC-UI-26** | `prefers-reduced-motion: reduce` sets `ANIMATE_IN_MS` to 0 and no other motion occurs. |
 
 ---
 
 ## 15. Cross-doc notes — pushback, and what should block M1
 
-**Pushing back on D2 — one item, and it does not block M1:**
+**Pushing back on D2 — nothing.** `Option.icon` was the one open schema question and it is closed: the field exists, it is label-class, and D2 §4.3 carries its treatment while this doc carries its render rule.
 
-1. **`Option.icon` does not exist (§7.6).** The README's card mockup is not representable. My recommendation is to drop the emoji, which needs no D2 change. If the owner wants them, it is a D2 amendment (optional `icon?: string` on `Label`, decorative, `aria-hidden`, label text must stand alone) — and doing it **after** the first bake means a schema change to a committed artifact, so it should be decided now or explicitly deferred to M2.
+**Pushing back on D3 — two items, both now resolved in D3:**
 
-**Pushing back on D3 — no changes requested.** All four pre-registered M1 constraints are absorbed (§6.6, §7.4, §9): they cost the UI a "preparing" state it cannot have, a duration it cannot show, an instant replay it cannot promise, and a frame-exact cut it cannot make. Each is handled by *not building* the affordance rather than by faking it. AC-UI-24 exists because the tempting mistake is to build the M2 affordance now with a spinner.
+1. **`resolveVoice` needed a `characterId`** (D3 §3.1.1, amendment C1). `voiceOverrides` is keyed by character, nothing forbids two characters sharing a `VoiceId`, and an adapter with only a voice id cannot honour an override. D4 §9.2's picker is only implementable against the amended signature. AC-ENG-22.
+2. **The hash fallback** (D3 §7.7, amendment C8): `crypto.subtle` is absent in a non-secure context, which is a real case for a LAN preview, and M1's replay path needs a key either way. AC-ENG-03 now names both algorithms.
+
+Everything else D3 pre-registered is absorbed without a change request: the four M1 constraints cost the UI a "preparing" state it cannot have, a duration it cannot show, an instant replay it cannot promise, and a frame-exact cut it cannot make. Each is handled by *not building* the affordance rather than by faking it, which is why AC-UI-24 exists.
 
 **Pushing back on D6 — nothing.** D4 renders the resolved artifact and touches no content.
 
@@ -503,7 +542,7 @@ All timings (§6.3) and the presentation table (§5.2) are canonical here. Nothi
 
 **Open items for the owner:**
 
-1. §7.6 — emoji option tags: drop them (recommended) or amend D2 for `Option.icon`.
-2. §6.3 — `GAP_POST_BEAT_MS = 300`, `GAP_AFTER_CHOICE_MS = 300` and `ANIMATE_IN_MS = 180` are my invented defaults; they are one-line changes and worth tuning against real playback once M1 runs.
-3. §11.1 — the letter shortcuts (`G`, `W`, `?`) are additions beyond the map you approved (Q12). Approved verbs; the letters are mine and are cheap to change.
-4. §12 — I have taken the position that turning off Read is a learner setting rather than a WCAG 1.2.1 failure. If you want the stricter reading, the fallback is to make `read: 'none'` a warned state with an inline note rather than a silent one.
+1. §6.3 — `GAP_POST_BEAT_MS = 300`, `GAP_AFTER_CHOICE_MS = 300` and `ANIMATE_IN_MS = 180` are my invented defaults; they are one-line changes and worth tuning against real playback once M1 runs.
+2. §11.1 — the letter shortcuts (`G`, `W`, `?`) are additions beyond the map you approved (Q12). Approved verbs; the letters are mine and are cheap to change.
+3. §12 — I have taken the position that turning off Read is a learner setting rather than a WCAG 1.2.1 failure. If you want the stricter reading, the fallback is to make `read: 'none'` a warned state with an inline note rather than a silent one.
+4. §7.6 — the ten icons themselves are content, owned by D6. If any of the ten is unimaginable for a learner, that is a one-line content change with no schema impact.

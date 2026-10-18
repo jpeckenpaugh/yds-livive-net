@@ -6,7 +6,7 @@
 An interactive, listen-first conversation reader for language learners.
 
 You hear two people talking. At key moments the conversation pauses and you choose what one of them
-says next — so you *guide* the dialogue rather than just read it. Hover any word to see what it means.
+says next — so you _guide_ the dialogue rather than just read it. Hover any word to see what it means.
 Toggle which language you read and which language you hear, independently. The whole thing runs in
 the browser, offline, with no server and no API keys.
 
@@ -18,17 +18,17 @@ the browser, offline, with no server and no API keys.
    language(s) you've enabled.
 2. **Beat 2 pauses.** Bobby is about to respond. Two option cards appear, each tagged with a short
    contextual label:
-   - 🍽️ **Dinner** — *Sure Ron! Why don't we get together for a nice dinner.*
-   - 🎬 **Movie** — *Ok Ron. I was thinking we could meet up at the theater and watch a new movie.*
+   - 🍽️ **Dinner** — _Sure Ron! Why don't we get together for a nice dinner._
+   - 🎬 **Movie** — _Ok Ron. I was thinking we could meet up at the theater and watch a new movie._
 3. **You pick one.** The chosen line animates in, plays, and joins the transcript. The option you
    didn't pick stays visible (ghosted) so you can see the road not taken — and replay it.
 4. **The story bends.** Your choice sets a variable. Later lines interpolate it, so Ron's next line
-   refers to *dinner* or *the movie* without anyone writing two separate scripts.
+   refers to _dinner_ or _the movie_ without anyone writing two separate scripts.
 5. **Repeat to beat 10.** Five turns each, four decision points.
 6. **Afterwards:** "What if I'd picked Movie?" — swap one decision and hear the same conversation
    resolve a different way.
 
-The point is not to read a conversation. It's to *hear* one, and to have enough scaffolding — hints in
+The point is not to read a conversation. It's to _hear_ one, and to have enough scaffolding — hints in
 your native language, translations on demand, a voice that speaks at a learner's pace — that the
 listening actually lands.
 
@@ -37,13 +37,13 @@ listening actually lands.
 ## The three text channels
 
 Keeping these separate is what makes the UI legible. If you collapse them, the learner can't tell
-whether they're looking at what was *said* or what it *meant*.
+whether they're looking at what was _said_ or what it _meant_.
 
-| Channel | What it is | Example |
-|---|---|---|
-| **Hint** | Author-written scaffolding in the native language. Not a translation. | "Bobby suggests getting together." |
-| **Dialogue** | The actual spoken line, in L1 and/or L2. | "¿Quieres que nos juntemos mañana?" |
-| **Gloss** | A rendering of a *piece* of the line, on demand. | `nos juntemos` → "we get together" |
+| Channel      | What it is                                                            | Example                             |
+| ------------ | --------------------------------------------------------------------- | ----------------------------------- |
+| **Hint**     | Author-written scaffolding in the native language. Not a translation. | "Bobby suggests getting together."  |
+| **Dialogue** | The actual spoken line, in L1 and/or L2.                              | "¿Quieres que nos juntemos mañana?" |
+| **Gloss**    | A rendering of a _piece_ of the line, on demand.                      | `nos juntemos` → "we get together"  |
 
 Three independent axes of control, all orthogonal to each other:
 
@@ -58,12 +58,12 @@ language.
 
 ## Decisions
 
-| Area | Decision | Rationale |
-|---|---|---|
-| Branching | Variable-seeded linear timeline | Avoids the 2ⁿ blowup; authoring cost stays O(beats + choices) |
-| TTS | Supertonic 3 | One voice identity across all languages; no phonemizer needed |
-| Translation | Client-side MT (OPUS-MT ROMANCE pair) | No cloud; two models cover en ⇄ es/pt/fr |
-| Stack | Vite + Preact + TypeScript | Minimal, one real dependency, no framework tax |
+| Area        | Decision                              | Rationale                                                     |
+| ----------- | ------------------------------------- | ------------------------------------------------------------- |
+| Branching   | Variable-seeded linear timeline       | Avoids the 2ⁿ blowup; authoring cost stays O(beats + choices) |
+| TTS         | Supertonic 3                          | One voice identity across all languages; no phonemizer needed |
+| Translation | Client-side MT (OPUS-MT ROMANCE pair) | No cloud; two models cover en ⇄ es/pt/fr                      |
+| Stack       | Vite + Preact + TypeScript            | Minimal, one real dependency, no framework tax                |
 
 Everything is a static SPA. No backend, no accounts, no network after first load.
 
@@ -76,13 +76,13 @@ scripts**, and it gets worse from there. Instead:
 
 > **A choice = a label (the button) + a response line (what gets said) + the variables it sets.**
 
-The timeline stays **linear**. Later *fixed* lines interpolate the variables. Four decisions × two
+The timeline stays **linear**. Later _fixed_ lines interpolate the variables. Four decisions × two
 options becomes **eight authored lines**, not sixteen scripts — and the story still coheres because
 Ron's follow-up can be `"Great, {cuisine} sounds perfect."`
 
 Choices can also be conditioned on variables, which is what makes the interaction feel responsive
 without forking the timeline. In the example below, beat 4's options depend on what happened at
-beat 2 — *Chinese/Pizza* only makes sense if the answer was *dinner*:
+beat 2 — _Chinese/Pizza_ only makes sense if the answer was _dinner_:
 
 ```jsonc
 { "id": 4, "when": { "activity": "dinner" }, "choices": [ /* chinese | pizza */ ] },
@@ -179,7 +179,7 @@ const tts = await pipeline('text-to-speech', 'onnx-community/Supertonic-TTS-ONNX
 });
 
 const audio = await tts('Hola Bobby. ¿Quieres que nos juntemos mañana?', {
-  speaker_embeddings: '.../voices/M1.bin',   // M1–M5, F1–F5
+  speaker_embeddings: '.../voices/M1.bin', // M1–M5, F1–F5
   language: 'es',
   num_inference_steps: 5,
   speed: 1.05,
@@ -190,7 +190,7 @@ Three properties earned this its slot:
 
 1. **Speaker identity survives a language switch.** This is the decisive one. The premise is that the
    learner chooses what they hear; if Ron is one voice in English and a different person in Spanish,
-   the illusion of *a single conversation* breaks every time they toggle. Supertonic's M1–F5 presets
+   the illusion of _a single conversation_ breaks every time they toggle. Supertonic's M1–F5 presets
    are the same voice across all 31 languages.
 2. **No phonemizer.** Kokoro and Piper both need espeak-ng compiled to WASM for Spanish, French, and
    Portuguese — the usual source of "why does my Spanish sound English" bugs. Supertonic ships its own
@@ -205,13 +205,13 @@ int8 build is a 138 MB download.
 
 ### Why not Kokoro or Piper
 
-| | Supertonic 3 | Kokoro-82M | Piper (VITS) |
-|---|---|---|---|
-| Languages | 31 | en/es/pt/fr, thin | en/es/pt/fr, deep |
-| Voices | 5F + 5M, same identity across languages | 54 | hundreds |
-| Spanish / French / Portuguese | all covered | **3 / 1 / 3 voices** | deepest roster |
-| Phonemizer required | **no** | yes (espeak-ng WASM) | yes (espeak-ng WASM) |
-| License | MIT code / OpenRAIL-M model | Apache-2.0 | MIT |
+|                               | Supertonic 3                            | Kokoro-82M           | Piper (VITS)         |
+| ----------------------------- | --------------------------------------- | -------------------- | -------------------- |
+| Languages                     | 31                                      | en/es/pt/fr, thin    | en/es/pt/fr, deep    |
+| Voices                        | 5F + 5M, same identity across languages | 54                   | hundreds             |
+| Spanish / French / Portuguese | all covered                             | **3 / 1 / 3 voices** | deepest roster       |
+| Phonemizer required           | **no**                                  | yes (espeak-ng WASM) | yes (espeak-ng WASM) |
+| License                       | MIT code / OpenRAIL-M model             | Apache-2.0           | MIT                  |
 
 Kokoro sounds better in English and is far smaller, but its non-English roster is Austrian: French has
 **exactly one** voice (`ff_siwis`, female). It cannot cast a varied French conversation. Piper is the
@@ -226,48 +226,48 @@ the same interface as a zero-download development stub.
 Pairwise OPUS-MT is the wrong shape here — six models at ~107 MB each, and the Portuguese pairs aren't
 even ONNX-converted. But two multilingual models cover the entire language set:
 
-| Model | Direction | q8 |
-|---|---|---|
+| Model                       | Direction                          | q8      |
+| --------------------------- | ---------------------------------- | ------- |
 | `Xenova/opus-mt-en-ROMANCE` | en → **es, pt, fr**, it, ro, ca, … | ~107 MB |
-| `Xenova/opus-mt-ROMANCE-en` | **es, pt, fr** → en | ~107 MB |
+| `Xenova/opus-mt-ROMANCE-en` | **es, pt, fr** → en                | ~107 MB |
 
 The target language is a sentence-initial token, so one model per direction:
 
 ```js
 const toL2 = await pipeline('translation', 'Xenova/opus-mt-en-ROMANCE', { dtype: 'q8' });
-await toL2('>>es<< Do you want to get together tomorrow?');   // >>pt<< , >>fr<< for the others
+await toL2('>>es<< Do you want to get together tomorrow?'); // >>pt<< , >>fr<< for the others
 ```
 
 ### Making MT behave like word-level hover
 
-MT takes a sentence and returns a sentence, so hovering `juntemos` naively yields *"Do you want us to
-get together tomorrow?"* — a fine answer to a different question. Two mitigations:
+MT takes a sentence and returns a sentence, so hovering `juntemos` naively yields _"Do you want us to
+get together tomorrow?"_ — a fine answer to a different question. Two mitigations:
 
 **Clause-windowing.** On hover, find the smallest clause containing the word (split on punctuation,
 then on subordinators like `que`, `si`, `cuando`, `porque`) and translate only that span. Hovering
-`juntemos` in *"¿Quieres que nos juntemos mañana?"* sends `nos juntemos` instead, yielding **"we get
+`juntemos` in _"¿Quieres que nos juntemos mañana?"_ sends `nos juntemos` instead, yielding **"we get
 together"**. Cache by span string — dialogue repeats phrases constantly, so hit rates are high.
 
 **Bake it at build time.** The same models run in Node. A one-off script can walk every beat, extract
 clauses, translate them, and write the results into the conversation JSON. Identical models and the
 same no-cloud story, but runtime downloads drop to zero and the output can be reviewed before a learner
-sees it. In a *language-learning* app, a silent MT error is invisible to precisely the person who can't
+sees it. In a _language-learning_ app, a silent MT error is invisible to precisely the person who can't
 detect it, so review matters more than it would elsewhere.
 
 ---
 
 ## Footprint
 
-| Asset | Size | When |
-|---|---|---|
-| Supertonic 3, int8 | 138 MB | first play |
-| OPUS-MT ROMANCE ⇄ en | 214 MB | lazily, first hover (or zero, if baked at build time) |
-| Voice styles, all ten | ~0.5 MB | upfront |
+| Asset                 | Size    | When                                                  |
+| --------------------- | ------- | ----------------------------------------------------- |
+| Supertonic 3, int8    | 138 MB  | first play                                            |
+| OPUS-MT ROMANCE ⇄ en  | 214 MB  | lazily, first hover (or zero, if baked at build time) |
+| Voice styles, all ten | ~0.5 MB | upfront                                               |
 
 All of it goes in IndexedDB / Cache Storage. The 350 MB is a one-time cost, and afterwards the app is
 fully offline.
 
-The int8 path is worth calling out: it's *smaller* than the official `onnx-community` repo, which ships
+The int8 path is worth calling out: it's _smaller_ than the official `onnx-community` repo, which ships
 only fp32 via `_data` external weights totaling ~248 MB.
 
 ---
@@ -276,18 +276,18 @@ only fp32 via `_data` external weights totaling ~248 MB.
 
 One conversation, English ⇄ Spanish, **ten beats, five turns each, four decision points.**
 
-| Beat | Speaker | Kind | Reads | Writes |
-|---|---|---|---|---|
-| 1 | Ron | fixed | — | — |
-| 2 | Bobby | **choice** | — | `activity` (dinner \| movie) |
-| 3 | Ron | fixed | — | — |
-| 4 | Bobby | **choice** | `activity` | `cuisine` \| `genre` |
-| 5 | Ron | fixed | `cuisine` / `genre` | — |
-| 6 | Bobby | **choice** | — | `time` (early \| late) |
-| 7 | Ron | fixed | `time` | — |
-| 8 | Bobby | **choice** | — | `who` (just us \| friends) |
-| 9 | Ron | fixed | `activity`, `time` | — |
-| 10 | Bobby | fixed | — | — |
+| Beat | Speaker | Kind       | Reads               | Writes                       |
+| ---- | ------- | ---------- | ------------------- | ---------------------------- |
+| 1    | Ron     | fixed      | —                   | —                            |
+| 2    | Bobby   | **choice** | —                   | `activity` (dinner \| movie) |
+| 3    | Ron     | fixed      | —                   | —                            |
+| 4    | Bobby   | **choice** | `activity`          | `cuisine` \| `genre`         |
+| 5    | Ron     | fixed      | `cuisine` / `genre` | —                            |
+| 6    | Bobby   | **choice** | —                   | `time` (early \| late)       |
+| 7    | Ron     | fixed      | `time`              | —                            |
+| 8    | Bobby   | **choice** | —                   | `who` (just us \| friends)   |
+| 9    | Ron     | fixed      | `activity`, `time`  | —                            |
+| 10   | Bobby   | fixed      | —                   | —                            |
 
 Eight authored choice lines instead of sixteen branches.
 
@@ -321,12 +321,12 @@ src/
 ## Open questions
 
 - **Is MT the hover layer, or the source of the second language?** Currently assumed to be the hover
-  layer, with the script authored bilingually. If MT *generates* the Spanish dialogue, authoring cost
+  layer, with the script authored bilingually. If MT _generates_ the Spanish dialogue, authoring cost
   halves — but the spoken lines become machine output, and Supertonic will read any errors faithfully.
 - **Clause segmentation rules** for Spanish: where exactly to cut, and how to avoid splitting idioms
   and multi-word units like `¿por qué no…?`.
 - **Authored glosses vs. pure MT.** A small authored glossary for high-frequency teaching words, with
-  MT as the fallback, would fix MT's worst cases (`juntamos` is subjunctive *nosotros*; the model will
+  MT as the fallback, would fix MT's worst cases (`juntamos` is subjunctive _nosotros_; the model will
   likely say "we join").
 - **How much hint text is too much?** The hint channel could easily become a crutch that turns listening
   into reading.

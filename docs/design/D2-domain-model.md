@@ -77,6 +77,8 @@ Rules:
 
 Canonical TypeScript: `src/domain/types.ts`. Field names below are normative.
 
+The `id` in the example is the **M2 shipping conversation**; M1 ships `m1-fixture` under the same convention (D6 §2). The id is author-assigned and appears in no path that either milestone fixes.
+
 ```jsonc
 {
   "id": "ron-bobby-01",
@@ -133,10 +135,11 @@ type Option    = {
   icon?: string;              // decorative, language-independent, literal; see below
   template: string;           // the spoken response line, English, may read slots
   sets: Record<VarName, ValueKey>;     // may be {} for a purely rhetorical option
-  hint?: string;
 };
 type When = Record<VarName, ValueKey>;  // AND of exact matches; {} is forbidden (E_EMPTY_WHEN)
 ```
+
+**There is no `Option.hint`** (amendment C6). A source field with no counterpart on `BuiltOption` and no governing AC is dead, and the reasoning that makes `hint` beat-level applies to options too: a hint orients the listener to the *beat*, and an option that seems to need its own hint is a signal that its `label` is doing too little work. If a conditional beat genuinely needs a different hint, the beat should be split — which is the same rule stated below for hints that read slots.
 
 **`icon` is on `Option`, not inside `Label`.** Structurally, `Label` is a *pair of per-language renderings of one string*; the icon is language-independent, so it is not a member of that pair. Putting it on `Option` keeps `Label`'s meaning intact ("the same two words, in two languages") and avoids a field that must stay identical across both language entries. It is a **label-class** value, with the whole label-class treatment:
 
@@ -220,6 +223,9 @@ A : Assignment = Record<VarName, ValueKey>      // variables written so far
 S = [ {} ]                                       // the set of live assignments
 for beat in conversation.beats:                  // array order is timeline order
     for a in S:
+        if this session has already stopped (a PENDING beat was reached):
+            emit step(beat, status = 'unreached', alternativeId = ABSENT)
+            continue                                 // one step per beat, always
         alt = the unique alternative of `beat` matching `a`      // proven by §5.2
         if beat is a choice beat:
             if choices[beat.id] is defined and is an option of `alt`:
@@ -227,13 +233,29 @@ for beat in conversation.beats:                  // array order is timeline orde
             else if opts.autoPick:
                 chosen = alt.options[0] ; S' += a ⊕ chosen.sets   // marked auto-picked
             else:
-                chosen = PENDING ; S' += a                       // walk continues no further for this session
-            emit step(beat, a, alt, chosen)
+                chosen = PENDING ; stop this session after emitting
+            emit step(beat, status = chosen is PENDING ? 'pending' : 'resolved', a, alt, chosen)
         else:
-            emit step(beat, a, alt)
+            emit step(beat, status = 'resolved', a, alt)
             S' += a
     S = S'
 ```
+
+**The walk emits exactly one step for every beat, for every live path** (amendment C3, scoped by E6). A walk that stopped early would force `resolveTimeline` to synthesise steps for the remaining beats, and that is a second implementation of the timeline — the thing §5.1 exists to forbid and AC-DOM-14 tests against. An `unreached` step carries no `alternativeId` and an empty assignment; nothing about it is rendered, and `resolveTimeline` reads its status rather than inventing content.
+
+**The step count is a function of the mode, and the invariant is about beats per path, not about a total** (amendment E6). An earlier revision said "one step for every beat", which is true of a session projection and *false* of the exhaustive one:
+
+| Mode | Steps per beat | Fixture total |
+|---|---|---|
+| `session` (one recorded choice set, no fan-out) | exactly **1** — the path never forks | **10** |
+| `session` + `autoPick` | exactly **1** | **10** |
+| **`exhaustive`** (`reachableVariants`, used by bake) | one per **(beat, live path)**; a choice beat contributes one per (incoming path × matching option) | **77** |
+
+Fixture breakdown, exhaustive: `b1` 1 · `b2` 2 · `b3` 2 · `b4` 4 · `b5` 4 · `b6` 8 · `b7` 8 · `b8` 16 · `b9` 16 · `b10` 16 = **77**, from **16** terminal assignments.
+
+The invariant that actually matters, and the one AC-DOM-14 asserts: **for any path, no beat is skipped, and `resolveTimeline` never produces a beat the walk did not visit.** The total step count is a derived quantity and must never be asserted as a constant in a test — 16 terminal assignments for the fixture, 4 for the 4-beat worked example, and the totals follow.
+
+⚠ **Reported as 65 and measured as 77.** The M1a escalation reported 65 exhaustive steps for the fixture; I measured 77 by running the committed `runWalk(c, {}, 'exhaustive')`, with the per-beat breakdown above, and 10 for each session mode. The breakdown sums consistently and the 16 terminals match the expected `2⁴`. Flagged as an open item rather than reconciled here, because if the implementation were emitting 65 it would be dropping 12 steps — the same class of defect as the variant-key collision, and worth confirming rather than assuming.
 
 Three projections of exactly that code:
 
@@ -312,19 +334,21 @@ For the 4-beat example in §4.4, along with the provisional 10-beat figures. **P
 | — | — | **4-beat example total** | **7** | from **4** terminal assignments |
 | b1 | line | — | 1 | |
 | b2 | choice | `spot` (self-set) | 2 | |
-| b3 | line | — | 1 | |
-| b4 | choice | — | 4 | 2 choice sets × 2 options |
+| b3 | line | `spot` | 2 | the story bends at the first opportunity |
+| b4 | choice | `cuisine` \| `genre` (self-set) | 4 | 2 choice sets × 2 options |
 | b5 | line | `cuisine` \| `genre` (one per alternative) | 4 | 2 + 2 across alternatives |
-| b6 | choice | — | 2 | |
+| b6 | choice | `time` (self-set) | 2 | |
 | b7 | line | `time` | 2 | |
-| b8 | choice | — | 2 | |
-| b9 | line | `spot`, `time` | 4 | `spot` bound to `activity` → 2 × 2 |
-| b10 | line | `who` (PM ruling Q5) | 2 | |
-| — | — | **10-beat total** | **≈24** | from **16** terminal assignments |
+| b8 | choice | `who` (self-set) | 2 | |
+| b9 | line | `spot`, `time`, `who` | **8** | `spot` bound to `activity` → 2 × 2 × 2 |
+| b10 | line | — | 1 | |
+| — | — | **10-beat total** | **28** | from **16** terminal assignments |
 
-Binding matters for cost: if `spot` were an independent variable rather than bound to `activity`, b9 would cost 8 variants instead of 4. If `who` were read at b9 instead of b10, the total would be ≈28.
+This table is normative for the shipped content and **must agree with D6 §11.2**, which owns the prose. It was refreshed at freeze time (amendment C10) after drifting from D6 by one revision: b3 reads `spot` (README §core loop step 4 promises that "Ron's next line refers to dinner or the movie"), and `who` is read at **b9**, not b10.
 
-The README's §Branching claim survives intact: 4 decision beats × 2 options = **8 authored option templates**. The additional records are fixed beats with conditional alternatives (b5), and they are not hand-written 16 times.
+Binding matters for cost: if `spot` were an independent variable rather than bound to `activity`, b9 would cost 16 variants instead of 8. If `who` were read at b10 instead of b9, the total would be 26.
+
+The README's §Branching claim survives intact: 4 decision beats × 2 options = **8 authored option templates** (D6's spec has 10 options, because beat 4 offers two *when*-scoped pairs of two). The remaining records are fixed beats with conditional alternatives (b5) and multi-variable lines (b9), and they are not hand-written 16 times.
 
 ---
 
@@ -334,7 +358,9 @@ The README's §Branching claim survives intact: 4 decision beats × 2 options = 
 
 Every declared variable must be **written** by at least one `Option.sets`, and **read** by at least one `when` clause or template slot.
 
-⚠ **DIVERGES FROM README** §First milestone, where beat 8 writes `who` and no beat reads it. PM ruling Q5: `who` must be read downstream or be replaced by a variable that is. D6 owns which, and the prose that reads it. The validator enforces the rule either way; a cosmetic choice is not shippable.
+⚠ **DIVERGES FROM README** §First milestone, where beat 8 writes `who` and no beat reads it. PM ruling Q5: `who` must be read, or be replaced by a variable that is. D6 §11.1 resolves it: `who` is read **twice** — by b8's own option templates (a self-read) and by b9. The validator enforces the rule either way; a cosmetic choice is not shippable.
+
+**A self-read counts as a read** (§5.1). That is why the acceptance criterion is phrased as "deleting **every** read of `who`", not "deleting its downstream read" (amendment D1): with b8 self-reading, removing only b9's read would leave the variable legitimately read and `E_DEAD_VARIABLE` would correctly not fire.
 
 `activity` is read only by `when` — that is a legitimate read (§2, "selector variable"), and it needs no `l1`. Conversely, if a variable is read by a template, **every** one of its reached values must have an `l1` (`E_MISSING_SURFACE_FORM`).
 
@@ -390,13 +416,26 @@ type BuiltOption = {
   label: { l1: string; l2: string };
   icon?: string;                                    // copied verbatim from the source; decorative
   sets: Record<VarName, ValueKey>;
-  slotNames: VarName[];                             // frozen read scope, INCLUDING self-set
+  slotNames: VarName[];                             // the variables this option's TEMPLATE reads
 };
 ```
+
+⚠ **`slotNames` is the template-read scope only — it does not include the option's own `sets`** (amendment E5). These are two different things and an earlier revision of this doc conflated them in a parenthetical:
+
+| Concept | What it is | Where it is used |
+|---|---|---|
+| **the assignment used to resolve an option** | `a ⊕ option.sets` — the beat's incoming assignment with the option's own writes applied | §5.1's self-read rule: this is what makes `{spot}` resolvable inside the option that sets `spot` |
+| **`slotNames` (the read scope)** | the variables the option's **template** actually reads | the variant key (§5.3) and therefore which records exist |
+
+Including a self-set variable that the template never reads would be a defect, not a safety margin: it would produce one record per value of a variable that changes no text, multiplying MT and review cost for identical `l1`/`l2`. §5.3's own rule 5 is the general statement of this — *"two assignments that differ only in variables outside the read scope yield the same variant"* — and a self-set-but-unread variable is exactly such a variable.
+
+In the shipped fixture the two definitions happen to coincide, because every option's template reads the variable it sets (`b2|dinner|spot=dinner-plan`). They diverge for a purely rhetorical option — one that sets `time` while its template never says `{time}` — and there the template-read definition is the correct one. AC-DOM-24 asserts it.
 
 `lines` is keyed globally because every variant key is prefixed with its `beatId`.
 
 There is **no precomputed `assignment → variantKey` table**. The runtime has `slotNames`, the walk's assignment, and one pure function. Baking the full table would duplicate §5.3 in data and could disagree with it; deriving it keeps one implementation.
+
+`ConversationMeta` carries `reviewPolicy: 'shipping' | 'fixture'` (§7.2) alongside `sourceDigest`, which is a digest of the source file's **bytes** — so line endings are part of the contract (D3 §10 rule 7, D5 §10).
 
 ### 7.2 The variant record — provenance is first-class
 
@@ -432,6 +471,33 @@ Derived, never stored: **`edited(record) = record.l2 !== record.mt`**.
 | no `{`, `}`, `${` in `l1`/`l2` | `E_L2_RESERVED_CHAR` | §8 INV-3. |
 
 Because a hand edit is *detected* rather than *declared*, no author has to remember a flag: `mt` is written once by the machine and never rewritten by an edit, so `edited` stays true forever.
+
+**`reviewPolicy` — how M1's content passes the gate honestly** (amendment F2). M1 ships a *fixture*: the conversation is real and playable, but no triage agent and no human have reviewed it. Stamping `reviewedBy: 'owner'` on it would assert a review that never happened — the exact claim the field exists to prevent.
+
+| `meta.reviewPolicy` | `E_UNREVIEWED` | `E_EDITED_NOT_OWNER` | Additional rule |
+|---|---|---|---|
+| `'shipping'` | error | error | — |
+| `'fixture'` | **warning** | **warning** | every record must still carry `reviewedBy: 'agent'` and `l2 === mt` |
+
+**A fixture record claiming `reviewedBy: 'owner'` is an error, and it reuses `E_UNREVIEWED` with a distinct message** (amendment E4) — no new code. The registry is frozen at 49 codes, and a new entry is not worth it for a single case. The two messages:
+
+```
+E_UNREVIEWED  <path>  reviewPolicy is 'fixture': 'owner' claims a human review that did not happen
+E_UNREVIEWED  <path>  reviewedBy is null
+```
+
+Both are the same *kind* of fault — a provenance claim that is not true — so one code with two messages is the honest grouping rather than a compromise. AC-DOM-10 asserts both.
+
+**The fixture's translator provenance is a fixture identifier, not a commit SHA.** The committed fixture records `meta.translator = { en2romance: 'fixture-1', romance2en: 'fixture-1' }`, and every record's `translationRev = 'fixture-1'`. That keeps the invariant `(mt === '') === (translationRev === null)` true **without amendment** — `mt` is non-empty and `translationRev` is non-null — and `E_TRANSLATOR_REV_STALE` compares like with like and stays clean. So:
+
+| `reviewPolicy` | `meta.translator.*` | Rule |
+|---|---|---|
+| `'shipping'` | a **pinned commit SHA** (D3 §10) | required; a non-SHA is an error |
+| `'fixture'` | a fixture translator identifier (`fixture-1`) | must be *consistent*, is never required to be a SHA |
+
+`reviewPolicy` is what makes that distinction safe — the same mechanism this section already uses for the review gate. AC-CONTENT-23 asserts it.
+
+The policy is recorded in the artifact rather than inferred from a path, so it survives a file move and is visible in a diff. D6 §7.2 owns the bake-side behaviour, and the report prints the policy on every run so an unreviewed fixture can never be mistaken for reviewed shipping content.
 
 ### 7.3 Why English is the authored language and MT sees whole sentences
 
@@ -479,6 +545,20 @@ function resolveGlossSpan(spans: Span[], offset: number): Span | undefined;  // 
 ```
 
 `segmentL2` is pure and model-free. **The build step and the browser call the identical function.** If they ever diverge, every hover misses; therefore it is one module, and gloss keys are stored as normalized span *text*, never as offsets (offsets shift, text does not).
+
+**The `lang` parameter selects the tables, and that is all it does** (amendment C7). It is not decorative:
+
+| `lang` | Levels returned |
+|---|---|
+| the conversation's `l2` (`'es'` in M1) | all four: `line`, `sentence`, `clause`, `predicate` |
+| **any other language** | `line` and `sentence` **only** |
+
+`line` and `sentence` are language-neutral: the `line` level is the whole string, and the `sentence` level splits on `.` `?` `!` `…`, with the opening marks `¿` `¡` attaching to the following text — a rule that is simply inert in a language that has no such marks. `clause` and `predicate` are defined entirely by the Spanish word tables below, so for any other language they are **not returned**: an empty set rather than a wrong split. A caller that needs clause boundaries in a new language must add that language's three tables and bump `SEGMENTATION_VERSION` (§13).
+
+The two real callers both work under that rule:
+
+- the **gloss pipeline** only ever segments `l2`, so it always has all four levels;
+- the **speech adapter** splits a long line at *sentence* boundaries (D3 §4.2.1) and therefore works for either channel — an English line splits correctly, and it never asks for a level English does not have.
 
 ### 9.2 Levels and rules
 
@@ -549,19 +629,35 @@ type SessionOp =
   | { type: 'rewind' }
   | { type: 'reset' };
 
-function reduce(c: Conversation, s: Session, op: SessionOp): Session;   // pure
+function reduce(c: Conversation, s: Session, op: SessionOp): Session;   // pure, total
 ```
+
+**`reduce` is total and silent** (amendment C2). For a rejected op it returns the session **unchanged**; it does not throw and it does not log (AC-DOM-02 forbids logging). Rejection is observable only through `reduceChecked`, which lives in `src/domain/validate.ts` — a module the app scan root excludes (§13) and which nothing shipped imports, so it is never in the production bundle. The two share one implementation and `reduceChecked` returns the six dev diagnostics of the table below. `validateSession` covers `E_STALE_CHOICE` only.
+
+**The initial session** is fully specified (amendment C4):
+
+```
+initialSession(c) = {
+  cursor:   c.order[0],
+  revealed: firstPendingBeat ?? c.order[c.order.length - 1],
+  choices:  {},
+}
+```
+
+`revealed` is the first beat that still needs a choice, so the transcript shows everything up to and including it — and at the initial session that is the first choice beat. `revealed` may *be* the first `pending` beat but never beyond it (see the invariants below).
 
 Invariants: `index(cursor) <= index(revealed)`; values of `choices` are keys of options that are in the matched choice set at their beat for the assignment implied by the other choices; `revealed` is never beyond the first `pending` beat.
 
 **Two operations, not three.** The PM's ruling Q3 describes a `swap` that clears downstream choices. That behaviour is here, but it is folded into `choose`: `choose` is the one operation that commits a pick, whether the pick is for the current beat or for an earlier beat in the "What if" flow. A separate `swap` op would differ from `choose` only in intent, and two spellings of one behaviour is how drift starts. The read-only "What if" view does not use `choose` at all (§11.3).
 
-| Op | Behaviour | Errors |
+| Op | Behaviour | Diagnostics on rejection |
 |---|---|---|
 | `choose(beatId, key)` | Rejects if `key` is not an option of the choice set matching `beatId`'s current assignment. Sets `choices[beatId]`. **Clears** every `choices[b]` for `b` after `beatId` that is no longer an option of `b`'s newly-matched set, and clamps `cursor` **and** `revealed` to the first beat that is now `pending`. | `E_CHOOSE_INVALID_KEY`, `E_CHOOSE_NOT_CHOICE_BEAT` |
-| `advance()` | `cursor` and `revealed` move to the next beat. Rejected while the current beat is `pending`. | `E_ADVANCE_UNRESOLVED`, `E_ADVANCE_AT_END` |
-| `rewind()` | `cursor` moves back one beat. `revealed` is unchanged, so progress stays visible. | `E_REWIND_AT_START` |
+| `advance()` | `cursor = next` and **`revealed = max(revealed, next)`**. Rejected while the current beat is `pending`. | `E_ADVANCE_UNRESOLVED`, `E_ADVANCE_AT_END` |
+| `rewind()` | `cursor` moves back one beat. `revealed` is **unchanged**, so progress stays visible. | `E_REWIND_AT_START` |
 | `reset()` | Back to the initial session. | — |
+
+**`advance` extends `revealed` monotonically, and that is not the same as moving it** (amendment C4). `rewind` deliberately leaves `revealed` alone, so a naive `revealed = next` would move it *backwards* on the first advance after a rewind — which would violate the invariant that a revealed beat's content is visible and resolvable. `max` is what makes rewind-then-advance idempotent with respect to `revealed`.
 
 Clamping `revealed` on `choose` is what makes the transcript coherent after a re-pick: a beat whose variables changed is re-promptable, and there is never a `pending` beat sitting inside an already-revealed transcript. The cleared beats are the PM's Q3 requirement, expressed as one rule instead of a second op.
 
@@ -606,10 +702,12 @@ type ResolvedBeat = {
 ### 11.1 Statuses
 
 - `resolved` — the beat's content is determined. For a choice beat, a registered or auto-picked choice exists.
-- `pending` — a reachable choice beat with no committed choice, under `autoPick: false`. The walk stops here.
+- `pending` — a reachable choice beat with no committed choice, under `autoPick: false`. The walk stops producing content here.
 - `unreached` — every beat after the first `pending`. Content cannot be determined, so `line` and `options` are absent.
 
-`resolveTimeline` returns **every** beat, in order, with a status. It does not filter by `revealed`; rendering is D4's concern. Beat 1 of an empty session is `resolved` only after its choice is made; a fixed beat is always resolvable, so the walk stops at the first *pending choice beat*.
+`resolveTimeline` returns **every** beat, in order, with a status. It does not filter by `revealed`; rendering is D4's concern.
+
+The three statuses are exactly the walk's, not a re-derivation (amendment C3): §5.1 emits one step per beat, and an `unreached` step is a *status* on a step that exists, not a beat the walk skipped. `resolveTimeline` is a lookup over the walk's steps — it never invents a step for a beat the walk did not visit, which is what keeps AC-DOM-14's single-implementation claim true. Beat 1 of an empty session is `resolved` because a fixed beat is always resolvable, so the first `pending` beat is the first *choice* beat.
 
 ### 11.2 Ghosts
 
@@ -649,8 +747,10 @@ type Visibility = {
   playOrder: Lang[];             // length 0..2; ['es','en'] when hear === 'both'  (Q8)
 };
 
-function visibility(p: Preferences, b: ResolvedBeat): Visibility;
+function visibility(p: Preferences): Visibility;
 ```
+
+**The signature takes `Preferences` and nothing else** (amendment C5). An earlier revision accepted a `ResolvedBeat` that the derivation never read: `showL1`/`showL2`/`showHint` come from `read`/`hint`, and `playOrder` comes from `hear`. AC-DOM-19 asserts all 32 inputs with no beat, and `noUnusedParameters` would reject a parameter that is never used. The two carve-outs below *feel* beat-dependent — an option label, a textless beat row — but they are presentation rules about how a beat row is *rendered* given the flags, so they belong to D4 §5.3, not to this derivation.
 
 Derivation (this is the whole truth table; 4 × 4 × 2 = 32 states, asserted by AC-DOM-19):
 
@@ -666,7 +766,7 @@ Derivation (this is the whole truth table; 4 × 4 × 2 = 32 states, asserted by 
 | `hear: 'none'` | from `read` | from `read` | `[]` |
 | `hint: true` | from `read` | from `read` | `showHint: true` |
 
-Three semantic carve-outs that are not visual decisions and therefore live here rather than in D4:
+Three constraints the **renderer** must apply on top of this derivation. They are stated here because they are consequences of the semantics, not visual choices, and they are implemented in D4 §5.3 — **none of them is an input to `visibility()`**, which is why the function takes `Preferences` alone:
 
 1. **Option labels always render in at least L1** (PM ruling Q7), regardless of `read`. Rendering a chooser with unreadable buttons is a broken state, not a sparse one.
 2. **`read: 'none'` + `hear: 'none'` does not skip a beat.** The beat still occupies a transcript row. A silent, textless beat is a legitimate state (the transcript is the app), and skipping beats would desynchronise `revealed` from the visible transcript. D4 owns what the row looks like.
@@ -738,7 +838,7 @@ One registry, cited by D5 (CI), D6 (bake) and the Engineer's tests. `severity: e
 | `E_VARIANT_KEY_COLLISION` | error | bake | two variant specs produced the same key — **never overwrite** (§5.3 rule 6) |
 | `E_VARIANT_MISSING` | error | bake | a reachable variant key has no record (§7.2) |
 | `E_ORPHAN_VARIANT` | warn | bake | a record is no longer reachable; removed only with `--prune` |
-| `E_UNREVIEWED` | error | bake:check | `reviewedBy === null` on a line or gloss |
+| `E_UNREVIEWED` | error / warn | bake:check | `reviewedBy === null` on a line or gloss — or, under `reviewPolicy: 'fixture'`, a record claiming `reviewedBy: 'owner'` (distinct message, same code; amendment E4) |
 | `E_EDITED_NOT_OWNER` | error | bake | `l2 !== mt` without `reviewedBy === 'owner'` |
 | `E_GLOSS_EDITED_NOT_OWNER` | error | bake | `origin: 'mt'` but `l1 !== mt` |
 | `E_SOURCE_STALE` | error | bake:check | `sourceHash` no longer matches the render of `l1` |
@@ -753,7 +853,13 @@ One registry, cited by D5 (CI), D6 (bake) and the Engineer's tests. `severity: e
 | `E_REWIND_AT_START` | dev | session | `rewind` at the first beat (§10) |
 | `E_STALE_CHOICE` | dev | session | defensive; unreachable if §10 holds |
 
-Two codes raised by the bake program belong to **D6** and are deliberately **not** in this table: `E_SENTINEL_IGNORED` (the `>>es<<` target token is not honoured) and the `FLAG-*` family (flag-list validation). Keeping them out means the `DiagnosticCode` union is exactly the set the source and generated-artifact validators can raise.
+Two families of codes raised by the bake program belong to **D6** and are deliberately **not** in this table, so the `DiagnosticCode` union is exactly the set the source and generated-artifact validators can raise:
+
+- `E_SENTINEL_IGNORED` — phase 0: the `>>es<<` target token is not honoured (D6 §4.1);
+- the `FLAG-*` family — flag-list validation (D6 §8.3);
+- the `HINT-*` family — the authoring-quality hint rules that D6 §11.5 mechanises (length, echoing the line).
+
+The line between the two registries: **D2 owns "structurally invalid"** (`E_HINT_SLOT`, `E_LABEL_SLOT`, `E_TEMPLATE_RESERVED_CHAR` — a slot in a hint is a schema violation), and **D6 owns "not good enough to ship"** (a hint that is too long, or that paraphrases the dialogue). The split is why `E_SENTINEL_IGNORED` staying out of this table is correct rather than an oversight.
 
 D6 owns the *commands* that emit the bake-side codes and the workflow around them; this doc owns their meaning. D5 owns the runner's typing of the union.
 
@@ -769,24 +875,26 @@ D1 references these ids; they are stable and must not be renumbered.
 | **AC-DOM-02** | `resolveTimeline` and `reduce` are pure: no DOM, `fetch`, `Date`, `Math.random`, or module-level mutable state. Same inputs → deep-equal outputs. |
 | **AC-DOM-03** | Over the exhaustive walk, exactly one alternative matches at every beat for every reachable assignment; a constructed counterexample raises `E_NO_MATCH` and another raises `E_AMBIGUOUS_MATCH`. |
 | **AC-DOM-04** | Fallback discipline: ≤1 `when`-less alternative per beat, and it is last. |
-| **AC-DOM-05** | No dead variables: the shipped conversation validates clean, and removing `who`'s downstream read makes `E_DEAD_VARIABLE` fire. |
+| **AC-DOM-05** | No dead variables: the shipped conversation validates clean, and deleting **every** read of `who` — its self-read in b8's option templates *and* its read in b9 — makes `E_DEAD_VARIABLE` fire. A self-read counts as a read (§5.1), so removing only the downstream read must *not* fire it. |
 | **AC-DOM-06** | No read of an unset variable; an option reading a variable it sets itself is valid and produces a variant. |
 | **AC-DOM-07** | Bound-pair coherence: `activity`/`spot` are one co-write group; a mutated source that writes `activity` alone raises `E_BOUND_PAIR_SLOPPY`, and one that writes the same tuple twice raises `E_BOUND_PAIR_AMBIGUOUS`. |
 | **AC-DOM-08** | No `{`, `}` or `${` appears in any string returned by `resolveTimeline` across all reachable sessions (INV-3). |
-| **AC-DOM-09** | Every reachable variant key resolves to exactly one record; `variantKey` computed at build time equals `variantKey` computed at runtime for all 16 sessions. |
-| **AC-DOM-10** | Provenance: `reviewedBy: null` fails the check; a record with `l2 !== mt` and `reviewedBy !== 'owner'` fails the check. |
+| **AC-DOM-09** | Every reachable variant key resolves to exactly one record, and `variantKey` computed at build time equals `variantKey` computed at runtime **for every reachable session of the conversation under test**. The count is a property of the conversation, not of this criterion: 16 for the shipped 10-beat fixture, 4 for the 4-beat worked example. |
+| **AC-DOM-10** | Provenance: `reviewedBy: null` fails the check; a record with `l2 !== mt` and `reviewedBy !== 'owner'` fails the check. Under `meta.reviewPolicy: 'fixture'` both are **warnings**, and `reviewedBy: 'owner'` is an **error** — emitted as `E_UNREVIEWED` with its distinct fixture message, asserted separately from the null message (§7.2). |
 | **AC-DOM-11** | Staleness: editing an authored English template makes exactly the affected variants report `E_SOURCE_STALE`, and check mode writes nothing. |
 | **AC-DOM-12** | Every span at every level of every variant's `l2` has a gloss entry; a deleted entry raises `E_GLOSS_MISSING`. |
-| **AC-DOM-13** | `segmentL2` passes a golden corpus of ≥20 span boundaries, including `¿por qué no…?` as one protected unit and `nos juntemos` resolving from `¿Quieres que nos juntemos mañana?`. |
-| **AC-DOM-14** | One walk, three projections: `resolveTimeline`, `deriveVariables` and `reachableVariants` agree on a property test that mutates `when`/`sets`. |
+| **AC-DOM-13** | `segmentL2` passes a golden corpus of ≥20 span boundaries, including `¿por qué no…?` as one protected unit and `nos juntemos` resolving from `¿Quieres que nos juntemos mañana?`. For a language with no tables, only `line` and `sentence` spans are returned (§9.1). |
+| **AC-DOM-14** | One walk, three projections: `resolveTimeline`, `deriveVariables` and `reachableVariants` agree on a property test that mutates `when`/`sets`. Per path, no beat is skipped: the walk emits one step per (beat, live path), including `unreached` steps with no `alternativeId`, and `resolveTimeline` never produces a beat the walk did not visit. **No test asserts a total step count** — 10 per session mode and 77 for the fixture are derived, and the fixture's 16 terminals are the only stable number (§5.1). |
 | **AC-DOM-15** | `choose` clears every downstream choice invalidated by the new assignment and clamps `cursor` and `revealed` to the first now-`pending` beat. |
-| **AC-DOM-16** | `advance` is rejected while the current beat is `pending`. |
+| **AC-DOM-16** | `advance` is rejected while the current beat is `pending`; when accepted it sets `cursor = next` and `revealed = max(revealed, next)`, so rewind-then-advance never moves `revealed` backwards. |
 | **AC-DOM-17** | Ghosts equal the matched set minus the chosen key; replaying a ghost changes no session field. |
 | **AC-DOM-18** | `autoPick` selects `options[0]`, marks `autoPicked`, and resolves the full timeline; the "What if" projection needs no session mutation. |
-| **AC-DOM-19** | `visibility()` is asserted over all 32 inputs, including `['es','en']` for `hear: 'both'` and label-degradation to L1 at `read: 'none'`. |
+| **AC-DOM-19** | `visibility()` is asserted over all 32 `Preferences` inputs and takes no beat argument, including `['es','en']` for `hear: 'both'`. The label-degradation and textless-row carve-outs are D4 §5.3 presentation rules, not part of this derivation. |
 | **AC-DOM-20** | Enumeration limits fire with the exact codes at 33 variants and 4097 assignments. |
-| **AC-DOM-21** | Every `error` code in §14 has at least one test that triggers it. |
+| **AC-DOM-21** | Every `error` code in §14 has at least one test that triggers it. The six session codes are triggered through `reduceChecked` (§10), since `reduce` returns the session unchanged and raises nothing; `E_STALE_CHOICE` is triggered through `validateSession`. **This criterion is about coverage of a code *set*, not about a single unit**, so it is legitimately satisfied across two test projects: the source/walk codes in `domain/diagnostics.spec.ts` and the pipeline-only `E_SOURCE_STALE` in `bake/provenance.spec.ts` (amendment E8). `tools/ac-map.json`'s `tests` array is designed for exactly this, and `check:ac-map` requires at least one test per due id, not exactly one. |
 | **AC-DOM-22** | Option icons are label-class: literal (a slot raises `E_LABEL_SLOT`), never sent to MT, never carrying `reviewedBy`, never present in `lines` or `gloss`, and absent from `ConversationSource` entirely if no option has one. |
+| **AC-DOM-23** | `initialSession(c)` is exactly `{ cursor: order[0], revealed: firstPendingBeat ?? lastBeat, choices: {} }`, and the invariants of §10 hold for it. |
+| **AC-DOM-24** | `BuiltOption.slotNames` is the **template-read scope only**: an option that sets a variable its template never reads produces exactly one record regardless of that variable's value, while an option that reads a variable it sets produces one record per value of that variable (§7.1). A constructed option with a self-set-but-unread variable yields one key, not two. |
 
 ---
 

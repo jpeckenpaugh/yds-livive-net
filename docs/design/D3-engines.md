@@ -54,14 +54,16 @@ type TtsCapabilities = {
 type SynthRequest = {
   /** A variant's rendered string — `l1` or `l2`. NEVER a template. See AC-ENG-04. */
   text: string;
-  voiceId: VoiceId;       // the authored Character.voice, possibly user-overridden
+  /** The speaker. See §3.1.1 — the voice id alone cannot identify an override. */
+  characterId: CharacterId;
+  voiceId: VoiceId;       // the authored Character.voice
   lang: Lang;
   speed: number;
 };
 
 type Utterance = {
   kind: 'buffer' | 'native';
-  /** Identity. See §3.1. */
+  /** Identity. See §3.2. */
   key: string;
   /** null when `capabilities.duration` is false. */
   durationMs: number | null;
@@ -77,10 +79,19 @@ type TtsEngine = {
   init(): Promise<void>;
   /** Voices available for a language in this environment. May legitimately be []. */
   voices(lang: Lang): Promise<VoiceInfo[]>;
-  /** Authored VoiceId + lang → an engine-native handle, or null if none can serve it. */
-  resolveVoice(voiceId: VoiceId, lang: Lang): string | null;
+  /**
+   * Authored character + voice id + lang → an engine-native handle, or null.
+   * `characterId` is REQUIRED: see §3.1.1.
+   */
+  resolveVoice(characterId: CharacterId, voiceId: VoiceId, lang: Lang): string | null;
   synth(req: SynthRequest): Promise<Utterance>;
   dispose(): void;
+};
+
+type CreateTtsEngineOptions = {
+  engine: EngineId;
+  /** `Preferences.voiceOverrides`, passed in rather than read from a global. §3.1.1. */
+  overrides: VoiceOverrides;
 };
 
 type VoiceInfo = { handle: string; lang: Lang; name: string; local: boolean };
@@ -90,7 +101,18 @@ type TtsErrorKind =
 type TtsError = { kind: TtsErrorKind; message: string; action?: string };
 ```
 
-### 3.1 Utterance identity — confirmation with a correction
+### 3.1.1 `resolveVoice` needs a character — amendment C1
+
+An earlier revision typed it `resolveVoice(voiceId, lang)`, and that cannot serve the feature it is for. `Preferences.voiceOverrides` is keyed by **`CharacterId`** (D2 §12), and nothing forbids two characters from sharing a `VoiceId` — the 10-beat spec happens to give Ron `M2` and Bobby `M4`, but that is content, not a constraint. An adapter that receives only a `VoiceId` has no way to look up a per-character override, so §4.3 step 1's rule was unimplementable as written.
+
+Two changes, both in the port:
+
+1. **`resolveVoice(characterId, voiceId, lang)`** — the character is required, and `SynthRequest` carries it too, so a caller cannot supply a voice the learner did not choose.
+2. **The overrides map is passed at construction** (`CreateTtsEngineOptions.overrides`), not read from a global. An adapter that reaches for `localStorage` or a module singleton is untestable and would make the conformance suite depend on browser state. This also keeps `Preferences` ownership in D4 and the adapter's job purely mechanical.
+
+`voiceId` remains the *authored* `Character.voice` — it is what identifies the voice in a cache key (D3 §7.2) and what the learner overrides *away from*.
+
+### 3.2 Utterance identity — confirmation with a correction
 
 The PM's phrasing: *engines receive a variant's `l2` string and never a template, and utterance identity is the variant, not the text.*
 
@@ -150,17 +172,17 @@ A callback carrying a stale generation is dropped. `pause()`/`resume()` are **no
 
 ### 4.3 Voice resolution and the approximate mapping
 
-`resolveVoice(voiceId, lang)` maps an authored `VoiceId` (`M1`–`F5`) to an OS voice handle. There is **no gender metadata** in the `SpeechSynthesisVoice` list, so the mapping is a heuristic over `voice.name` plus a per-language preference order, and it degrades gracefully:
+`resolveVoice(characterId, voiceId, lang)` maps an authored `VoiceId` (`M1`–`F5`) to an OS voice handle. There is **no gender metadata** in the `SpeechSynthesisVoice` list, so the mapping is a heuristic over `voice.name` plus a per-language preference order, and it degrades gracefully:
 
 | Step | Rule |
 |---|---|
-| 1 | User override from `Preferences.voiceOverrides[character][lang]`, if it still resolves |
+| 1 | **The override supplied at construction**: `overrides[characterId]?.[lang]`, if it still resolves to a live voice |
 | 2 | An exact-language (`es-ES`, `es-MX`, …) local voice matching a curated preferred-name list |
 | 3 | Any exact-language voice |
 | 4 | The first voice whose `lang` starts with the language subtag |
 | 5 | `null` → the G1 path (§4.4) |
 
-The heuristic table is adapter data, not logic, so it can be corrected without touching the port. Ordering is deterministic for a given voice list so tests are stable. Every resulting mapping is correctable by the learner, because `resolveVoice` prefers the override and D4 owns the picker.
+The heuristic table is adapter data, not logic, so it can be corrected without touching the port. Ordering is deterministic for a given voice list so tests are stable. Every resulting mapping is correctable by the learner, because `resolveVoice` prefers the override and D4 owns the picker. A stale override (one naming a voice this device no longer has) falls through to step 2 rather than failing — that is why step 1 is conditional.
 
 ### 4.4 G1 and G2 — the two recorded deviations
 
@@ -323,7 +345,7 @@ type AudioCache = {
 withAudioCache(engine, cache): TtsEngine   // no-op decorator when !engine.capabilities.cache
 ```
 
-`utteranceKey(engineId, engineRevision, voiceId, lang, speed, text) = sha256(`${engineId}\u0000${engineRevision}\u0000${voiceId}\u0000${lang}\u0000${speed.toFixed(2)}\u0000${text}`)`
+`utteranceKey({engineId, engineRevision, voiceId, lang, speed, text})` = `stableKey(algorithm, `${engineId}\u0000${engineRevision}\u0000${voiceId}\u0000${lang}\u0000${speed.toFixed(2)}\u0000${text}`)`
 
 Rules:
 
@@ -333,6 +355,16 @@ Rules:
 4. `withAudioCache` is transparent: when `capabilities.cache` is false it returns the engine unchanged, so **M1 has no cache store populated at all**. The key discipline is specified now so the store cannot later serve mismatched audio.
 5. `CachedAudioMeta` records `bytes`, `engineId`, `engineRevision`, `voiceId`, `lang`, `speed`, `createdAt` (cache metadata is allowed a timestamp; generated *repo* artifacts are not — D2 §3.3).
 6. Cache misses are not errors: a miss and an eviction are the same code path (re-synthesise).
+7. **The hash algorithm is a mechanism, and the fallback is specified** (amendment C8). `crypto.subtle` does not exist in a non-secure context — a LAN preview over `http://192.168.x.x` is the realistic case, and `speechSynthesis` works there — so `stableKey` takes an algorithm and the key is **algorithm-prefixed**:
+
+   | Algorithm | Availability | Key shape |
+   |---|---|---|
+   | `sha256` | `crypto.subtle`, i.e. a secure context | `sha256:<hex>` |
+   | `fnv1a64` | always; a documented non-cryptographic hash over UTF-8 | `fnv1a64:<hex>` |
+
+   The prefix means a store populated under one algorithm can never be misread under the other. **AC-ENG-03 is the requirement** — identical tuples interchangeable, different tuples never colliding — and the algorithm is how it is met; `fnv1a64` over a few dozen short strings is not a security boundary and does not need to be one.
+
+   ⚠ This also retires an earlier claim: D5 no longer asserts that the build runs from `file://`. ES modules do not load from `file://` in Chromium regardless of `crypto.subtle`, and the smoke path serves `dist/` over HTTP (D5 §9.4). `base: './'` remains, for subpath hosting.
 
 ---
 
@@ -404,11 +436,28 @@ Rules:
 
 1. **The port owns the `>>es<<` convention.** `translate({ text, from: 'en', to: 'es' })` and the adapter prepends the token internally. **No call site constructs a model prompt** (AC-ENG-17). This is the seam that lets the pipeline stay model-agnostic, and it is the reason the token is a *fact* (D3) while its *use* is pipeline (D6).
 2. **Revisions are pinned** (R3) and recorded in `Conversation.meta.translator`. Never a branch: a moving model makes every build look stale.
+
+   **The pinned revisions, as of 2026-10-18** (fetched from the Hugging Face API by the owner; amendment E7):
+
+   | Model | Pinned revision |
+   |---|---|
+   | `Xenova/opus-mt-en-ROMANCE` | `9d2ba69ac80c8e8453c3d9a1e2323a0e7b8ca3cd` |
+   | `Xenova/opus-mt-ROMANCE-en` | `f60feaabe8bb435a5871e7702b25f53a01e770f8` |
+
+   These are the values `registry.build.ts` must carry, and the values a shipping artifact's `translationRev` must match. **A revision bump is a deliberate act**, per R3's mitigation: it re-drafts every line, which invalidates every `mt`, every gloss key derived from one, and every review stamp. It must therefore be its own commit, never a side effect of a rebuild. AC-CONTENT-23 asserts that a `'shipping'` artifact's revisions are these SHAs and that a `'fixture'` artifact's are consistent without being SHAs (D2 §7.2).
+
+   The **Supertonic** revisions arrive with M3 and are recorded the same way (§11); nothing about them is needed to bake.
+
+   ⚠ An earlier revision of this doc said "record them in D3 §10" without supplying values, so `registry.build.ts` shipped with placeholders. That is the gap this table closes; if a placeholder is ever found in a committed registry, `E_TRANSLATOR_REV_STALE` is what catches it.
 3. **`>>es<<` must be proven honoured before a full bake** (R2). Phase 0 of the pipeline runs a smoke test: `translate('Do you want to get together tomorrow?', en→es)` must differ from the same call with `to: 'pt'`. If the sentinel is ignored, the failure mode is Portuguese text on a Spanish page with **no error anywhere**, which is the worst possible silent failure for this project. The smoke test is specified here because it is a property of the model; D6 runs it as its first phase.
 4. **Node only.** No browser code path reaches a `Translator`. Its implementation is a build-only module (`tools/bake/translator.node.ts`, D6 §2.1); `src/engines/ports.ts` holds types only. D5's bundle assertions make this checkable (R11).
 5. The `Translator` is **injected** (R6): tests pass a fake and the whole pipeline runs offline. It is a frozen port for exactly that reason.
 6. MT precision/revision details for the build machine (cache directory, dtype) belong to the registry entry; CI never loads them at all (§11, D5).
 7. **`meta.sourceDigest` is a hash of the source file's bytes, so line endings are part of this contract.** `.gitattributes` forces `eol=lf` (D5 §10). A CRLF checkout — a Windows contributor, or a tool that rewrites endings — makes **every** CI run report `E_SOURCE_STALE` while the author changed nothing, and the symptom looks like an authoring problem rather than a checkout difference. Cross-referenced here because `sourceDigest` is a revision-identity concept and belongs beside the revision pinning that rule 2 requires.
+8. **The inference runtime is loaded lazily, inside the injected port, and is not installed in M1** (amendment F3). `tools/bake/translator.node.ts` types against a local `TransformersLike` interface and does `await import(...)` *inside* `loadTranslator`; a `declare module` shim in `tools/bake/` satisfies typecheck. Consequences:
+   - `bake --check --author-only` — M1's and CI's only mode — never evaluates the import, so **a Node-major incompatibility with `onnxruntime-node` cannot break M1's gate**;
+   - `@huggingface/transformers` and `onnxruntime-node` are **absent from `package.json` in M1** and are added at the first full bake (`npm i -D @huggingface/transformers`, documented in D6). AC-TOOL-04's intent is unchanged and strengthened: if either ever appears, it must be a devDependency, never a runtime dependency.
+   - The alternative — installing them now so types resolve — would put a native-module install into M1's `npm ci` for no M1 benefit. The shim removes the risk rather than deferring it.
 
 ⚠ **DIVERGES FROM README** §Decisions ("Translation: client-side MT") and §Footprint ("lazily, first hover"). Under locked decision 3 the browser performs no translation and downloads no translation model, so the 214 MB is a **build-machine** cost, not a learner cost, and the README's footprint table no longer describes the app.
 
@@ -442,12 +491,22 @@ type AssetRegistryEntry = {
 
 Entries: M1 `speech-synthesis` (`bundled`, zero bytes, `decision: 'm1'`); the two Supertonic packagings (`decision: 'deferred'`, §6.1); the ten voice styles (`storage: 'browser-cache'`, `revision` pinned, ~49 KB each); the two OPUS-MT models (`storage: 'build-only'`).
 
+### 11.1 The registry is TWO files — amendment C9
+
+An earlier revision said "the registry is the only module that names a repo id", which contradicted D5's `check:bundle`: it forbids `supertonic`, `sherpa`, `opus-mt` and any registry `repoId` in emitted JS, while AC-ENG-11 requires exactly those strings to exist in `src/engines/registry.ts`. Tree-shaking a single reachable object literal is not guaranteed, so the contradiction was real and would have surfaced as a permanently red gate.
+
+| File | Imported by | Contains | In the bundle? |
+|---|---|---|---|
+| `src/engines/registry.browser.ts` | `src/**` | **only** the selected engine's entries. **Empty in M1** — `speechSynthesis` needs no assets. | yes, and in M1 it is an empty array |
+| `tools/bake/registry.build.ts` | `tools/bake/**` only | the two OPUS-MT entries | no; `tools/` is outside the app scan root |
+
 Rules:
 
 1. `requiredForM1` is `false` for everything except the engine the build selects. A CI check asserts the M1 build fetches nothing (AC-ENG-10).
-2. No code outside the registry selects a packaging, a precision, or a revision. AC-ENG-11.
-3. `license.weights` and `license.code` are non-null and verified (§6.7) for every entry that ships or fetches an artifact. `verifiedOn === null` is reserved for a newly added asset whose license has not yet been checked; the About/Licenses surface (D4) lists every license and states OpenRAIL-M's use restrictions.
+2. **No code outside the two registry modules selects a packaging, a precision, or a revision.** AC-ENG-11. The browser registry is the only one `src/**` may import.
+3. `license.weights` and `license.code` are non-null and verified (§6.7) for every entry that ships or fetches an artifact. `verifiedOn === null` is reserved for a newly added asset whose license has not yet been checked.
 4. `storage: 'browser-cache'` and `'build-only'` are never `'bundled'` for weights (PM ruling C10).
+5. **`check:bundle`'s forbidden list is derived from the build's engine selection** (D5 §6.3): `transformers`, `onnxruntime` and `opus-mt` are always forbidden in the bundle, because translation never runs in a browser; `supertonic` and `sherpa` are forbidden **while `__TTS_ENGINE__ === 'speech-synthesis'`**, and become permitted when the M2 engine is selected, because at that point the engine genuinely is in the bundle. A registry `repoId` is forbidden unless it belongs to the selected packaging. This is what makes the M1 assertion meaningful without making M2's gate impossible.
 
 ---
 
@@ -470,7 +529,7 @@ Rules:
 |---|---|
 | **AC-ENG-01** | The ports are the only engine surface: no module outside `src/engines/**` references `speechSynthesis`, `transformers`, or `sherpa`. |
 | **AC-ENG-02** | Capabilities are declared data; the M1 adapter's five values match §4.1, and no code branches on a runtime probe outside an adapter. |
-| **AC-ENG-03** | Utterance identity is the six-part tuple of §3.1; identical tuples are interchangeable and different tuples never collide. |
+| **AC-ENG-03** | Utterance identity is the six-part tuple of §3.2; identical tuples are interchangeable and different tuples never collide. The key is algorithm-prefixed, `sha256` is used in a secure context, and the documented `fnv1a64` fallback is used where `crypto.subtle` is absent (§7.7). |
 | **AC-ENG-04** | No template reaches an engine: a property test over every variant × reachable session asserts no `{`, `}` or `${` is ever passed to `synth`, and no engine module imports a `*.source.json`. |
 | **AC-ENG-05** | Cache keys include `engineId` and `engineRevision`; changing either yields zero hits against a populated store. |
 | **AC-ENG-06** | M1 declares `preservesVoiceIdentityAcrossLangs === false`, and no UI string, icon or tooltip claims identity preservation while M1 is active. |
@@ -478,7 +537,7 @@ Rules:
 | **AC-ENG-08** | The four R5 landmines are covered: >`MAX_UTTERANCE_MS` splits at sentence boundaries; a late `voiceschanged` refreshes handles; cancel-then-speak never interleaves and drops stale callbacks; the adapter is safe when the API is absent. |
 | **AC-ENG-09** | The conformance suite (§4.6, C1–C11) passes against the fake engine and the mocked `speechSynthesis`. |
 | **AC-ENG-10** | The M1 build constructs no worker and fetches nothing: no `new Worker` in the M1 bundle, and every registry entry with `requiredForM1` is `bundled` with zero bytes. |
-| **AC-ENG-11** | Packaging, precision and revision are selected only from the registry; a test asserts no literal repo id or revision appears outside it. |
+| **AC-ENG-11** | Packaging, precision and revision are selected only from the two registry modules (§11.1); a test asserts no literal repo id or revision appears outside them, and that `src/**` imports only `registry.browser.ts`. |
 | **AC-ENG-12** | `int8` and `q8` are never used interchangeably in code or comments; the check is scoped to code files and ignores `docs/**` (D5 §6.1), because a doc must be able to name the wrong term to forbid it. |
 | **AC-ENG-13** | The precision chain is registry data, and an unsupported precision fails loudly naming the entry and the attempted chain. |
 | **AC-ENG-14** | Voice styles are fetched from the pinned revision and cached, never committed: no binary >100 KB and no `.bin` under `src/`. |
@@ -486,8 +545,9 @@ Rules:
 | **AC-ENG-16** | The `Translator` is injected: the whole pipeline runs with a fake translator under a test that fails on any network access. |
 | **AC-ENG-17** | The port owns the `>>es<<` convention; no call site constructs a model prompt. |
 | **AC-ENG-18** | The phase-0 smoke test asserts `to: 'es'` differs from `to: 'pt'` before any full bake. |
-| **AC-ENG-19** | `translationRev` rules hold: both null is clean; exactly one null is `E_TRANSLATOR_REV_STALE` with a distinct message; differ is the same code; and `(mt === '') === (translationRev === null)` everywhere. |
+| **AC-ENG-19** | `translationRev` rules hold: both null is clean; exactly one null is `E_TRANSLATOR_REV_STALE` with a distinct message; differ is the same code; and `(mt === '') === (translationRev === null)` everywhere. A `'shipping'` artifact's revisions are the pinned SHAs of §10.2; a `'fixture'` artifact's are its fixture translator identifier (D2 §7.2). |
 | **AC-ENG-20** | The production bundle contains none of `transformers`, `onnxruntime`, `opus-mt` or `supertonic` (mechanism: D5). |
+| **AC-ENG-22** | `resolveVoice` takes a character id and consults the override map supplied at construction (§3.1.1); two characters sharing a `VoiceId` receive their own overrides, and no adapter reads `localStorage`, a global, or a module singleton to obtain them. |
 | **AC-ENG-21** | Every registry entry naming weights has a **verified** license (§6.7), and the About/Licenses surface lists all of them and states OpenRAIL-M's use restrictions in plain language. |
 
 ---
@@ -510,10 +570,13 @@ Rules:
 4. The MT build cache directory (and any `HF_HOME`) needs `.gitignore` coverage.
 5. D5 owns the `speechSynthesis` mock used by both the conformance suite and UI tests; D3 owns the assertions, and D5 must not duplicate fixtures.
 6. **AC-ENG-12 is a trap I set for myself.** This document uses the string `q8` several times — all of them to say it is wrong. A repo-wide grep in CI would fail on its own spec. **Resolved in D5 §6.1:** the check is scoped to code files (`.ts`/`.tsx`/`.js`/`.mjs`) and ignores `docs/**`, because a doc must be able to name the wrong term in order to forbid it.
-7. Node floor: pin `engines.node` so the CI Node matches local (this repo runs Node 26) — `onnxruntime-node` is sensitive.
+7. Node floor: pin `engines.node` so the CI Node matches local — `onnxruntime-node` is sensitive. **Amended at freeze:** the risk is now removed rather than managed, because `@huggingface/transformers` and `onnxruntime-node` are not installed in M1 and the runtime is imported lazily inside the injected port (§10.8). D5 §2 must drop them from the M1 dependency list and note the first-bake install command.
+8. **`check:bundle`'s forbidden list must be engine-derived** (§11.1 rule 5). A flat list forbidding `supertonic` permanently would make the M2 gate impossible; a flat list that omits it would make the M1 assertion meaningless.
 
 **For D7 (architecture):**
 1. `domain/` is the base layer; `engines/` depends on it and never the reverse. `ports.ts` is **not** a domain file.
 2. **M1's diagram contains no worker box.** The worker is an M2 implementation detail *behind* the port; showing it in M1 misrepresents the milestone that must ship with zero downloads.
 3. `bake` is a **separate Node program** with its own dependency set; the flow is source → bake → committed artifact → bundle. The browser never talks to a translator.
 4. The honest M2 swap checklist: adding `supertonic-*` touches `src/engines/tts/` **plus** one registry entry, one `package.json` entry, and a Vite worker setting. The locked claim is "one file"; the accurate claim is "one directory plus three one-line registrations". Say the accurate one.
+5. **The registry is two files** (§11.1): `src/engines/registry.browser.ts` (imported by `src/**`, empty in M1) and `tools/bake/registry.build.ts` (the MT models). D7 §2's rule that "only the registry names a repo id" must name both, and must say that `src/**` may import only the browser one.
+6. `ports.ts` now exists and is **frozen** — D7's layer map should show it as a real artefact rather than a planned one.

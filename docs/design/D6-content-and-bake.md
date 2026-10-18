@@ -30,35 +30,91 @@
 
 ## 2. The four files
 
-Approved exactly as laid out in PM ruling Q4. Paths are normative.
+Approved exactly as laid out in PM ruling Q4, with one addition for M1. Paths are normative.
 
-| File | Authored by | Machine-written | In git | Contents |
-|---|---|---|---|---|
-| `src/data/conversations/ron-bobby-01.source.json` | **human** | never | yes | `ConversationSource` — English only, templates allowed |
-| `src/data/glossary.es.json` | **human** | never | yes | Authored gloss overrides, keyed by `normalizeSpan(text)` |
-| `src/data/conversations/ron-bobby-01.json` | machine, then possibly human | yes | yes | `Conversation` — slot-free runtime artifact |
-| `src/data/conversations/ron-bobby-01.glossary.json` | machine | yes | yes | `GlossIndex` |
-| `review/flags.ron-bobby-01.json` | review agent, then adjudicated by the owner | — | yes | The flag list (§8). A real artifact, because review is delegated. |
-| `review/report.ron-bobby-01.md` | machine | yes | yes | Coverage report (§9). Regenerated, never hand-edited. |
+**The convention is `src/data/conversations/<id>.{source.json,json,glossary.json}` and `src/data/glossary.es.json`, where `<id>` is the conversation's id.** In M1 `<id>` is **`m1-fixture`**; at M2 the shipping conversation takes its own id and the fixture is deleted (amendment F1). The fixture is *not* at the shipping conversation's path, which is what D1 §4 requires — it is a distinct conversation that happens to be the only one M1 has.
 
-Edit rules (D2 §3, restated as instructions because this is the doc an author reads):
+| File | Authored by | Machine-written | In git | M1 path | Contents |
+|---|---|---|---|---|---|
+| authored source | **human** | never | yes | `src/data/conversations/m1-fixture.source.json` | `ConversationSource` — English only, templates allowed |
+| authored gloss overrides | **human** | never | yes | `src/data/glossary.es.json` | keyed by `normalizeSpan(text)` |
+| generated artifact | machine, then possibly human | yes | yes | `src/data/conversations/m1-fixture.json` | `Conversation` — slot-free runtime artifact |
+| generated glossary | machine | yes | yes | `src/data/conversations/m1-fixture.glossary.json` | `GlossIndex` |
+| conversation entry module | **human** | never | yes | `src/data/conversation.ts` | **the only place `src/ui` obtains a `Conversation`** (amendment F1) |
+| flag list | review agent, then adjudicated by the owner | — | yes | `review/flags.m1-fixture.json` | §8 |
+| coverage report | machine | yes | yes | `review/report.m1-fixture.md` | §9, regenerated, never hand-edited |
 
-1. **Never hand-edit `ron-bobby-01.glossary.json`.** Gloss corrections go in `glossary.es.json`.
-2. `ron-bobby-01.json` **may** be hand-edited, but only the `l2` field of a variant record. Nothing else. A hand-edited `l2` is detected, not declared (§7.2).
+### 2.1 The conversation entry module (amendment F1)
+
+```ts
+// src/data/conversation.ts — the single entry point
+import type { Conversation } from '../domain/types';
+import fixture from './conversations/m1-fixture.json';
+
+export const conversation: Conversation = fixture as Conversation;
+```
+
+**One import path, one export.** `src/ui/**` imports `conversation` from here and nowhere else. That is what makes the M2 swap *one import path plus one deletion*: point the import at the shipping artifact, delete the fixture files. A UI component that reaches for a conversation JSON directly breaks the swap and is caught by review, because there is exactly one such import to look at.
+
+**The fixture *is* in the M1 bundle** (PM ruling F1). D1's earlier wording — "the fixture never ships" — was wrong; the correct statement is that the fixture is never the *shipping content*. A smoke test over `dist/` needs the conversation in `dist/`, and M1 must be playable end to end, so bundling it is the point.
+
+### 2.2 The fixture's review policy (amendment F2)
+
+The fixture must not claim `reviewedBy: 'owner'` — that would assert a human review that never happened, and the Engineer was right to refuse. The mechanism is `ConversationMeta.reviewPolicy` (D2 §7.2), recorded **in the artifact** rather than inferred from a path, so it survives a move and shows up in a diff:
+
+| `reviewPolicy` | `E_UNREVIEWED` | `E_EDITED_NOT_OWNER` | Extra rule |
+|---|---|---|---|
+| `'shipping'` | error | error | — |
+| `'fixture'` (M1) | **warning** | **warning** | `reviewedBy: 'agent'` and `l2 === mt` are required; `reviewedBy: 'owner'` is an **error** |
+
+So the fixture passes the gate with `reviewedBy: 'agent'` and `l2 === mt` — both already permitted by D2 §7.2 — while the artifact itself records that no triage agent ran. The report prints the policy on every run, and `bake:check` fails if a `'fixture'` artifact is ever referenced as shipping content at M2.
+
+**The mechanism that sets the policy is `--review-policy <shipping|fixture>`** (amendment E1), which **defaults to `'fixture'`** — omitting it can never claim a human review, which is the property that matters. D5 §3 owns the flag.
+
+### 2.4 How the committed fixture is produced (amendment E2)
+
+An earlier revision of §7.2 said a fixture run with no translator writes `l2 = mt = ''` and "coverage fails loudly". That contradicted F1/F2 — which require a **complete, playable** artifact with `l2 === mt` and full gloss coverage — and it made `bake:check --author-only` unable to exit 0. Both cannot hold. The resolution, **confirmed**:
+
+> The committed fixture is generated **once**, by `bake:fixture`, using the **fixture translator** (the deterministic fake of §4.2). `--author-only` is **never** run in write mode against the fixture. `bake:check --author-only` validates the committed artifact and exits 0.
+
+That is coherent on every axis, and it is the only arrangement that satisfies all four constraints at once:
+
+| Constraint | How it holds |
+|---|---|
+| the fixture is complete and playable (F1) | the fixture translator fills every `l2` and every gloss span |
+| `l2 === mt` for every record (F2) | the fixture translator's output *is* `mt`; nothing edits it |
+| `bake:check --author-only` exits 0 | it validates a committed artifact and never drafts |
+| **CI never generates** (the standing rule) | the fixture is regenerated only by `bake:fixture`, on a dev machine, as an explicit act |
+
+The fixture translator is **deterministic**, so regenerating the fixture produces a byte-identical artifact and `bake:check`'s idempotence assertion (AC-CONTENT-03) covers it. That is also why the fixture's Spanish is not real MT: real MT would make the committed artifact unreproducible offline, which would put a 214 MB model download behind every fixture regeneration and break the standing rule. `meta.reviewPolicy: 'fixture'` is what records that this text is a scaffold rather than teaching material, and the artifact is deleted at M2 (F1).
+
+**Two concessions the fixture makes, and neither may be inherited by M2:**
+
+1. **Glosses.** Sub-span gloss entries in the fixture are **identity mappings** — `l1 === mt === spanText`, `origin: 'mt'`, `reviewedBy: 'agent'`. Coverage is complete (`E_GLOSS_MISSING` is satisfied), but a self-gloss teaches nothing. This is acceptable only because the fixture is never taught from and is deleted at M2. The guard is mechanical: a **`'shipping'`** artifact whose gloss `l1 === mt === spanText` is an error, `GLOSS-IDENTITY` (§12). Only line-level spans carry real English in the fixture.
+2. **Translator provenance.** `meta.translator` is the fixture identifier `fixture-1`, not a pinned SHA (D2 §7.2). A `'shipping'` artifact's revisions must be the SHAs in D3 §10.2.
+
+**M2's boundary, stated once so it is not rediscovered:** the shipping artifact must have a **real gloss at every level** (`line`, `sentence`, `clause`, `predicate`), no identity entries, real MT provenance, and `reviewPolicy: 'shipping'` with every record adjudicated. AC-CONTENT-25 asserts the first three against the M2 artifact and the fixture's exemption is what makes them M2 criteria rather than M1 ones.
+
+Edit rules (D2 §3, restated as instructions because this is the doc an author reads). `<id>` is `m1-fixture` in M1:
+
+1. **Never hand-edit `<id>.glossary.json`.** Gloss corrections go in `glossary.es.json`.
+2. `<id>.json` **may** be hand-edited, but only the `l2` field of a variant record. Nothing else. A hand-edited `l2` is detected, not declared (§7.2).
 3. The `.source.json` is the only place templates, hints, labels and variables live.
 4. No timestamps in any generated file.
 5. `review/flags.*.json` is edited only to adjudicate (§8.4).
+6. **`src/data/conversation.ts` is the only module that imports a conversation artifact** (F1). Nothing under `src/ui/**` may import a `.json` conversation directly.
 
-### 2.1 Where the code lives
+### 2.3 Where the code lives
 
 | Piece | Path | Why |
 |---|---|---|
 | The bake program | `tools/bake/**` | A **separate Node program**. Matches the sibling repo's `tools/` convention. Never reachable from `index.html`. |
-| The Node `Translator` implementation | `tools/bake/translator.node.ts` | It imports `@huggingface/transformers`; keeping it out of `src/` is what makes R11 checkable rather than aspirational. |
+| The Node `Translator` implementation | `tools/bake/translator.node.ts` | It imports `@huggingface/transformers` **lazily, inside `loadTranslator`**, and types against a local interface; `tools/bake/runtime-shim.d.ts` satisfies typecheck without the package installed (D3 §10.8, amendment F3). |
+| The build-only registry | `tools/bake/registry.build.ts` | The two OPUS-MT entries. `tools/` is outside the app scan root. |
 | Engine port **types** | `src/engines/ports.ts` | Types only, no runtime imports (D3 owns). |
-| The asset registry | `src/engines/registry.ts` | Plain data. Consumed by the browser for TTS entries and by bake for MT entries; importing it is safe and cheap. |
+| The **browser** registry | `src/engines/registry.browser.ts` | Plain data, and **empty in M1**. The split is what keeps the deferred packagings' repo ids out of the bundle (D3 §11.1, amendment C9). |
 
-⚠ This requires a **second small D2 amendment** (see §12): D2 §13's boundary list originally named `src/engines/**/bake/**`, a path this doc does not use. The boundary now lives in `tools/scan-excludes.json` (D5 §6), and the bake program is in `tools/**`. The lint boundary D5 implements has to match where the code actually is, or it will pass while the property it guards is false.
+The INV-1 boundary lives in `tools/scan-excludes.json` (D5 §6): the bake program is in `tools/**`, which is outside the app scan root, so no bake path needs an exception. The lint boundary D5 implements has to match where the code actually is, or it will pass while the property it guards is false.
 
 ---
 
@@ -72,18 +128,29 @@ The pipeline has exactly two axes, and conflating them is the main way to get co
 | **translator** | provided \| **absent** (`--author-only`) | Whether machine drafting is available in this run. |
 
 ```bash
-bake                       # write + translator (dev machine, full drafting)
-bake --check               # verify only; needs no translator at all
-bake --check --author-only # CI default (PM ruling): verify structure, hashes, provenance, coverage, revisions. Zero network.
-bake --author-only         # write + no drafting: author by hand; MT fields stay empty
-bake --prune               # write: remove orphaned variant/gloss records
-bake --report              # write review/report.<id>.md
-bake --adjudicate review/flags.<id>.json   # apply an adjudicated flag list (§8.4)
+bake --conversation <path>                       # write + translator (dev machine, full drafting)
+bake --check --conversation <path>               # verify only; needs no translator at all
+bake --check --author-only --conversation <path> # CI default (PM ruling): verify structure, hashes,
+                                                 # provenance, coverage, revisions. Zero network.
+bake --author-only --conversation <path>         # write + no drafting: author by hand; MT fields stay empty
+bake --prune --conversation <path>               # write: remove orphaned variant/gloss records
+bake --report --conversation <path>              # write review/report.<id>.md
+bake --adjudicate review/flags.<id>.json         # apply an adjudicated flag list (§8.4)
+```
+
+**`--conversation <path>` selects the authored source** (amendment E2). It is required, and it is what makes M1 and M2 differ by one argument: M1 points it at the development fixture, M2 at the shipping conversation. An earlier revision fixed the input path, which M1 does not have — the fixture is not at the shipping conversation's path (D1 §4).
+
+M1's invocation is therefore:
+
+```bash
+bake --check --author-only --conversation src/data/conversations/m1-fixture.source.json
 ```
 
 **`--check --author-only` is the CI default and the reason the pipeline is testable.** It validates a committed artifact offline, against pinned revisions recorded *in* the artifact, with no model downloads. `check` + a translator present is allowed and additionally verifies that fresh MT output still matches (it reports `E_SOURCE_STALE`/`E_TRANSLATOR_REV_STALE` rather than writing).
 
 **`--author-only` in `write` mode is not a way to produce a shippable conversation from scratch.** It cannot fill ~200 gloss spans, so coverage will fail. Its purposes are CI verification and hand-authoring a line or two before a full bake. This is why the PM's ruling that author-only is the CI default is coherent: its job is *verification*, not generation.
+
+**The first full bake needs an install** (amendment F3): `npm i -D @huggingface/transformers` — the runtime is a devDependency that M1 deliberately does not carry, and `tools/bake/translator.node.ts` imports it lazily inside the injected port (D3 §10.8).
 
 ---
 
@@ -217,6 +284,8 @@ Per D2 §7.2: `l1` is the source of truth; `sourceHash` is the hash of the rende
 | revision in the record ≠ the pinned revision | re-drafts, updates `translationRev` | `E_TRANSLATOR_REV_STALE` |
 | a record is unreachable | reported; removed only with `--prune` | `E_ORPHAN_VARIANT` (warn) |
 | a gloss key has no entry | cannot synthesise it without a translator; reported | `E_GLOSS_MISSING` (error) |
+| `meta.reviewPolicy === 'fixture'` | stamps new records `reviewedBy: 'agent'`, `l2 = mt`, `translationRev = 'fixture-1'`; **never** `'owner'` | `E_UNREVIEWED`/`E_EDITED_NOT_OWNER` are warnings; `reviewedBy: 'owner'` is an error with its distinct message (D2 §7.2) |
+| **the fixture is never drafted by `--author-only` write** | the committed fixture comes from `bake:fixture` (§2.4); `write` + no translator is not run against it | `--check --author-only` validates the committed artifact and exits 0 (E2) |
 
 Three judgement calls inside that table, each deliberate:
 
@@ -268,7 +337,7 @@ Not given, and not allowed to use: the browser, the UI, learner data, or the abi
 
 ```jsonc
 {
-  "conversationId": "ron-bobby-01",
+  "conversationId": "m1-fixture",
   "sourceDigest": "sha256:v1:…",        // must equal meta.sourceDigest, else FLAG-STALE
   "translatorRev": "…",                 // the drafting revision these flags describe
   "reviewer": {
@@ -306,7 +375,7 @@ Not given, and not allowed to use: the browser, the UI, learner data, or the abi
 The owner edits `status` on each flag — and, for an `accepted` flag, optionally supplies the final text in a `correction` field. Then:
 
 ```bash
-bake --adjudicate review/flags.ron-bobby-01.json
+bake --adjudicate review/flags.m1-fixture.json
 ```
 
 - `accepted` **with** `correction` → `l2` is replaced, `reviewedBy: 'owner'`, `triageRef: <id>`. Because `mt` is immutable, the record becomes `edited` forever — correct, a human chose those bytes.
@@ -337,7 +406,7 @@ D6-local codes (these are **not** D2 `E_*` diagnostics; the flag list is D6's ar
 
 ## 9. Coverage report and the visibility-weighted ranking
 
-`bake --report` writes `review/report.ron-bobby-01.md`. It is the owner's working surface and the project's most honest status page.
+`bake --report` writes `review/report.m1-fixture.md`. It is the owner's working surface and the project's most honest status page.
 
 | Section | Contents |
 |---|---|
@@ -505,15 +574,27 @@ b10|b10-l1
 
 28 keys, no duplicates. Note b5's four alternatives share two template strings but produce four distinct `l1` renders ("Let's go with Chinese.", "…with pizza.", "…with a comedy.", "…with an action movie."): one authored template, several fully-formed outputs — the mechanic the whole design rests on.
 
+**These keys are template-read scope, and that is the ruling** (amendment E5). Every option in this conversation happens to read the variable it sets, so the template-read and self-set definitions coincide here and these keys are correct either way. They are **not** evidence that self-set variables belong in `slotNames` — D2 §7.1 settles that they do not, and AC-DOM-24 asserts it with a constructed option where the two definitions differ.
+
 ### 11.5 Hint discipline
 
-Hints are the scaffolding channel and the easiest thing to ruin (README §Open questions, "how much hint text is too much"). Rules, checked at build time:
+Hints are the scaffolding channel and the easiest thing to ruin (README §Open questions, "how much hint text is too much"). **Five rules, and the split between what a machine can check and what only a reader can is stated explicitly** (amendment D3) — an AC whose predicate cannot be evaluated is not an AC.
 
-1. **≤ 60 characters**, one clause, sentence case, no trailing punctuation beyond a period.
-2. **No slots**, and therefore no interpolation (D2 §4.3).
-3. **Never quotes or paraphrases the line itself.** A hint is orientation, not a translation — if it reads like a translation, the learner reads instead of listens and the L2 dialogue becomes decoration.
-4. **Never reveals a choice's answer.** At a choice beat the hint describes the *situation*, not which option is right.
-5. **One hint per beat**, so the hint can never vary by branch. If a beat seems to need two hints, the beat should be split.
+| # | Rule | Enforced by |
+|---|---|---|
+| 1 | **≤ `HINT_MAX_CHARS` (60)**, one clause, sentence case | build: `HINT-TOO-LONG` |
+| 2 | **No slots**, and therefore no interpolation (D2 §4.3) | build: `E_HINT_SLOT` (D2's registry — a slot in a hint is structurally invalid) |
+| 3 | **No quotation marks** — none of `"`, `“`, `”`, `«`, `»`. A quoted span is a hint that hands over the line. The ASCII apostrophe is *not* in the set, so "Bobby's" is fine. | build: `HINT-ECHOES-LINE` |
+| 4 | **No run of ≥4 consecutive tokens shared with any line of the same beat.** Tokenised on whitespace and punctuation, case-folded, accents significant; a choice beat is checked against *every* one of its options' lines. This is the mechanical half of "never quotes or paraphrases the line". | build: `HINT-ECHOES-LINE` |
+| 5 | **Never reveals a choice's answer**; **one hint per beat**, so it can never vary by branch. If a beat seems to need two hints, the beat should be split. | review: §11.7 |
+| 6 | **Does it read like a translation?** — the judgement half of rule 4. A hint that is a *paraphrase* rather than an *orientation* makes the learner read instead of listen, and no token-overlap threshold can decide that. | review only, §11.7 — **explicitly not mechanised** |
+
+D6-local codes (they are authoring-quality rules, not schema validity, which is why they are not in D2's registry — see §12):
+
+| Code | Severity | Meaning |
+|---|---|---|
+| `HINT-TOO-LONG` | error | a hint exceeds `HINT_MAX_CHARS` |
+| `HINT-ECHOES-LINE` | error | a hint contains a double-quote character, or shares a ≥4-token run with a line of its beat |
 
 ### 11.6 MT attention list
 
@@ -531,6 +612,11 @@ Predicting where `opus-mt-en-ROMANCE` will fail is what makes the triage tractab
 | 8 | Register drift into formal or written Spanish (`usted`, `¿Desea…?`) | all | `register` | medium |
 | 9 | Length: MT sometimes drops or doubles a coordinated clause in longer sentences | b9 | `omission`, `addition` | medium |
 | 10 | Standardisation of "Ron" / "Bobby" | b3, b10 | `name` | low |
+| 11 | **False friends** — `actual`/`actualmente`, `realizar`, `embarazada`, `éxito`, `largo`. English words that map onto a Spanish word with a different sense | any | `false-friend` | low, but **high harm** — a false friend is confidently wrong and a learner will not catch it |
+| 12 | **Gloss scope** — a gloss whose rendering describes the whole clause rather than the hovered span. The failure mode `README §Translation` names, and the reason §9.2 emits nested levels | glosses only, especially `line`-level spans | `scope` | **high for glosses** |
+| 13 | **Other** — anything the twelve categories do not cover. Requires a `reason`, and a flag in this category is itself a signal that the enum needs a thirteenth value | any | `other` | low |
+
+All twelve `category` values now appear here, which is what AC-CONTENT-19 asserts (amendment D2). `scope` was the specific omission worth fixing: it is the gloss failure mode the whole hover design exists to avoid, and it had no row.
 
 ### 11.7 Owner review checklist
 
@@ -542,9 +628,11 @@ Per flagged line, in order. The last item is the real gate.
 4. **Punctuation** — `¿…?` and `¡…!` present and correctly paired.
 5. **Substitution** — read the substituted variable in place; does it read naturally there?
 6. **Names** — unchanged.
-7. **Gloss scope** — for a gloss, is it a rendering of *that span*, not of the clause?
-8. **Pedagogy** — for a gloss, does hovering this teach the learner the right thing?
-9. **The gate** — would you be comfortable showing this to a learner who cannot detect the error? If no, reject it and supply a correction.
+7. **False friends** — does any word look like an English word but mean something else?
+8. **Gloss scope** — for a gloss, is it a rendering of *that span*, not of the clause?
+9. **Pedagogy** — for a gloss, does hovering this teach the learner the right thing?
+10. **Hints (§11.5 rules 5–6, review-only).** Two things a machine cannot decide: does this hint describe the *situation* rather than the answer, and does it read like a **paraphrase of the line** rather than an orientation to it? A hint that reads like a translation defeats the listen-first premise, and no token-overlap threshold can tell the difference between "Ron likes the idea" and "Ron says a nice dinner sounds great".
+11. **The gate** — would you be comfortable showing this to a learner who cannot detect the error? If no, reject it and supply a correction.
 
 ---
 
@@ -552,19 +640,38 @@ Per flagged line, in order. The last item is the real gate.
 
 | Key | Value | Notes |
 |---|---|---|
-| `HINT_MAX_CHARS` | `60` | §11.5.1 |
+| `HINT_MAX_CHARS` | `60` | §11.5 rule 1 |
+| `HINT_ECHO_MIN_TOKENS` | `4` | §11.5 rule 4: a shared run this long with a line of the same beat is `HINT-ECHOES-LINE` |
+| `HINT_QUOTE_CHARS` | `" “ ” « »` | §11.5 rule 3. The ASCII apostrophe is deliberately excluded |
 | `REVIEW_FLAG_TARGET` | `0.20` | reported, not enforced; §8.1 |
 | `GLOSS_PRIORITY_TOP_N` | `20` | §9 |
 | `MAX_GLOSS_KEYS_WARN` | `250` | above this the report says the gloss spine needs rethinking, not more review |
-| `MT_ATTENTION_EMPTY` | `''` | the `mt` sentinel for "no machine translation exists" (§7.2, item 3) |
-| review-artifact paths | `review/flags.<id>.json`, `review/report.<id>.md` | §2 |
+| `NO_MACHINE_OUTPUT` | `''` | the `mt` sentinel for "no machine translation exists" (§7.2, item 3) |
+| review-artifact paths | `review/flags.<id>.json`, `review/report.<id>.md` | §2, where `<id>` is `m1-fixture` in M1 |
 
-**Registry additions — approved and applied.** Both are now in D2 §14 and in `DiagnosticCode`:
+**Registry additions — approved and applied.** `E_VARIANT_KEY_COLLISION` is in D2 §14 and in `DiagnosticCode`. `E_SENTINEL_IGNORED` is **not**, and the earlier text here claimed it was (amendment B2 / F2):
 
-| Code | Severity | Meaning |
+| Code | Home | Why |
 |---|---|---|
-| `E_VARIANT_KEY_COLLISION` | error | two variant specs produced the same key (§5.3). **Permanent guard**, even though the amendment removes the known cause. |
-| `E_SENTINEL_IGNORED` | error | phase 0: `>>es<<` does not change the output (§4.1). |
+| `E_VARIANT_KEY_COLLISION` | **D2 §14** and the frozen `DiagnosticCode` union | a source/walk validity rule |
+| `E_SENTINEL_IGNORED` | **D6-local**, in `BakeDiagnosticCode` below | a property of the model, raised only by the bake program |
+| `FLAG-*`, `HINT-*` | **D6-local**, in `BakeDiagnosticCode` | flag-list and hint-discipline validation |
+
+D2 §14 is right to exclude it: the union must stay exactly the set the source and generated-artifact validators can raise. So this doc declares its own type, which is what makes AC-CONTENT-18 typeable without polluting the frozen union:
+
+```ts
+// tools/bake/diagnostics.ts — D6-local, never imported by src/**
+type BakeDiagnosticCode =
+  | 'E_SENTINEL_IGNORED'
+  | 'FLAG-STALE' | 'FLAG-REF-UNKNOWN' | 'FLAG-DUP-REF'
+  | 'FLAG-UNKNOWN-CATEGORY' | 'FLAG-REVIEWER-IS-DRAFTER' | 'FLAG-OPEN'
+  | 'HINT-TOO-LONG' | 'HINT-ECHOES-LINE'
+  | 'GLOSS-IDENTITY';          // §2.4: a self-gloss in a 'shipping' artifact
+```
+
+A `BakeDiagnostic` is `{ code: BakeDiagnosticCode; severity: Severity; path: string; message: string }` — the same shape as D2's `Diagnostic`, with a disjoint code set, so the two can be concatenated for reporting without either validator accepting the other's codes.
+
+**`GLOSS-IDENTITY` is the fixture concession's guard** (§2.4): it fires when a `'shipping'` artifact has a gloss whose `l1 === mt === spanText`, i.e. a gloss that renders a span as itself. In a `'fixture'` artifact the same condition is **silent**, because that is how the fixture satisfies coverage. It is an error in shipping and nothing at all in a fixture — the policy is the whole distinction, which is why it needs no third severity.
 
 **D2 path-list amendment — approved and applied.** The INV-1 boundary now lives in `tools/scan-excludes.json` as its single machine-readable copy (D5 §6), and names no bake path: the bake program lives in `tools/**` (§2.1), entirely outside the scan root. D2 §13 points at the JSON; `src/domain/types.ts` deliberately exports nothing for it.
 
@@ -587,13 +694,20 @@ Per flagged line, in order. The last item is the real gate.
 | **AC-CONTENT-11** | `--report` emits every §9 section, including the top-20 visibility-weighted gloss ranking, and is byte-reproducible. |
 | **AC-CONTENT-12** | The 28 dialogue records and ~200 distinct gloss keys are printed by the report; a gloss count above `MAX_GLOSS_KEYS_WARN` emits the "rethink the gloss spine" warning. |
 | **AC-CONTENT-13** | `--author-only` completes the entire pipeline with zero model downloads and zero network access (asserted by a network guard). |
-| **AC-CONTENT-14** | §11's spec materialised as `ron-bobby-01.source.json` validates with **zero `error` diagnostics** against D2's registry, including exactly-one-match, no dead variables, read-before-write, bound-pair coherence and enumeration limits. |
-| **AC-CONTENT-15** | `who` is read at b9; deleting that read makes D2's `E_DEAD_VARIABLE` fire (AC-DOM-05's shipped-conversation assertion). |
-| **AC-CONTENT-16** | Hint discipline is checked at build time: `>HINT_MAX_CHARS`, a slot, or a quoted line is an error. |
+| **AC-CONTENT-14** | §11's spec materialised as `m1-fixture.source.json` validates with **zero `error` diagnostics** against D2's registry, including exactly-one-match, no dead variables, read-before-write, bound-pair coherence and enumeration limits. |
+| **AC-CONTENT-15** | `who` is read twice — a self-read in b8's option templates and a read at b9; deleting **every** read makes D2's `E_DEAD_VARIABLE` fire, and deleting only b9's read does not (D2 §5.1, amendment D1). |
+| **AC-CONTENT-16** | Hint discipline is split into mechanised rules and a human check (§11.5): the build **errors** on `>HINT_MAX_CHARS` (`HINT-TOO-LONG`), on a slot (`E_HINT_SLOT`), on any double-quote character, and on a run of ≥4 consecutive tokens shared with any line of the same beat (`HINT-ECHOES-LINE`). The "does it read like a paraphrase" judgement is **review-only** and is §11.7's item, not a build rule. |
 | **AC-CONTENT-17** | Labels **and option icons** are literal and authored on the human side: they appear in neither `lines` nor `gloss`, are never machine-translated, never carry `reviewedBy`, and all **ten** option cards in the shipped conversation carry an icon. |
-| **AC-CONTENT-18** | Phase 0 runs before any drafting and aborts on `E_SENTINEL_IGNORED`. |
-| **AC-CONTENT-19** | Every flag `category` is in the closed enum and appears in §11.6's attention list, so flags are triageable. |
-| **AC-CONTENT-20** | CI's default is `bake --check --author-only` and it exits non-zero on any unreviewed, stale or revision-mismatched item. |
+| **AC-CONTENT-18** | Phase 0 runs before any drafting and aborts on the D6-local `E_SENTINEL_IGNORED` (§12); the code is not in D2's frozen union. |
+| **AC-CONTENT-19** | Every flag `category` is in the closed enum **and** appears in §11.6's attention list, so flags are triageable. All twelve categories have a row, including `false-friend`, `scope` and `other`. |
+| **AC-CONTENT-20** | CI's default is `bake --check --author-only --conversation <path>` and it exits non-zero on any unreviewed, stale or revision-mismatched item. |
+| **AC-CONTENT-21** | M1's artifact is `meta.reviewPolicy: 'fixture'`, every record carries `reviewedBy: 'agent'` with `l2 === mt`, no record carries `'owner'`, and the report prints the policy (§2.2). |
+| **AC-CONTENT-22** | `src/data/conversation.ts` is the only module in `src/**` that imports a conversation artifact, and no module under `src/ui/**` imports one directly (F1). |
+| **AC-CONTENT-23** | Revision provenance is policy-scoped (§2.4, D2 §7.2): a `'shipping'` artifact's `meta.translator` values and every record's `translationRev` are the pinned SHAs of D3 §10.2; a `'fixture'` artifact's are its fixture identifier and are consistent with each other. |
+| **AC-CONTENT-24** | The committed fixture is reproducible offline: `bake:fixture` regenerates it byte-identically, and `--author-only` **write** is never run against it; `bake:check --author-only` validates it and exits 0 (§2.4, E2). |
+| **AC-CONTENT-25** | **M2 boundary.** The shipping artifact has a real gloss at every level, no `GLOSS-IDENTITY` entry, real MT provenance and `reviewPolicy: 'shipping'` with every record adjudicated. A `'shipping'` artifact with a self-gloss fails; the same condition in a `'fixture'` artifact is silent (§2.4). |
+
+**Milestone note.** `AC-CONTENT-23` and `AC-CONTENT-25` describe the **shipping** artifact and are therefore registered with an **M3** milestone in `tools/ac-map.json`; `AC-CONTENT-24` is purely M1. `check:ac-map` does not require a passing test for an id until the milestone that produces the artifact it describes (D5 §3.0(b)). `AC-CONTENT-23`'s **fixture** half is nonetheless exercised in M1, by `AC-CONTENT-21` (policy and stamps) and `AC-CONTENT-24` (byte-identical regeneration). Registering the M3 criteria now is deliberate: the criteria exist before the artifact does, which is the opposite of writing them afterwards and calling it verification.
 
 ---
 
@@ -602,17 +716,19 @@ Per flagged line, in order. The last item is the real gate.
 **For D4 (UI):** one thing crosses the boundary — **option `icon`s** (D2 §4.3) are copied verbatim into `BuiltOption.icon` and are label-class: decorative, language-independent, and never load-bearing. D4 owns the render rule (`aria-hidden`, never in the accessible name). Everything else here is content, not presentation: `l2` always arrives fully formed, so the UI must never attempt to fill a placeholder. If D4 finds itself wanting a slot in a rendered string, the schema is wrong, not the UI.
 
 **For D5 (tooling):**
-1. The default CI job is `bake --check --author-only`; **no CI job may generate** — drafting needs ~214 MB of MT models.
-2. The two proposed registry codes (§12) and the `FLAG-*` set are distinct families: `E_*` are D2's, `FLAG-*` are D6's. A CI grep must not conflate them.
-3. `review/report.<id>.md` is generated; it must be regenerated in CI's check run or the diff will churn. Recommend: CI regenerates it into a temp path and compares, rather than writing in-tree.
-4. The hint-discipline check (`AC-CONTENT-16`) is build-time, not lint-time, because it needs the parsed source.
-5. Vitest's bake project needs a fixture translator; D6 owns the fixtures, D5 owns the harness.
+1. The default CI job is `bake --check --author-only --conversation <path>`; **no CI job may generate** — drafting needs ~214 MB of MT models.
+2. There are **three** code families, not two (amendment B2): `E_*` are D2's frozen union; `E_SENTINEL_IGNORED`, `FLAG-*` and `HINT-*` are D6-local and live in `BakeDiagnosticCode` (§12). A CI grep must not conflate them, and the union must not grow.
+3. `review/report.<id>.md` is generated; CI regenerates it into a temp path and compares rather than writing in-tree (AC-TOOL-11).
+4. The hint-discipline check (`AC-CONTENT-16`) is build-time, not lint-time, because it needs the parsed source and the beat's other lines.
+5. Vitest's bake project needs a fixture translator; D6 owns the fixtures, D5 owns the harness. `AC-DOM-10/11/12` also belong to that project (amendment D5).
+6. The first full bake needs `npm i -D @huggingface/transformers` — M1 does not install it (D3 §10.8, amendment F3).
 
-**For D7 (architecture):** bake is a separate Node program with its own dependency set, four inputs and three outputs, and it consumes `domain`'s walk. The browser artifact is a projection of it. The "one file swap" claim for M2 belongs to D3 §14, and D7 should repeat the accurate version.
+**For D7 (architecture):** bake is a separate Node program with its own dependency set, four inputs and three outputs, and it consumes `domain`'s walk. The browser artifact is a projection of it, and `src/data/conversation.ts` is the single import that the M2 swap changes (§2.1). The "one file swap" claim for M2 belongs to D3 §14; D7 §6 repeats the accurate version.
 
 **Open items for the owner:**
 
 1. **§7.2 — write mode clearing the review stamp** when the authored English changes. It is the honest behaviour and it makes review debt visible in the diff, but it will produce a diff full of `reviewedBy: null` on the first English edit. If you prefer noiseless diffs over visible debt, say so and I will invert it (report-only, no write).
 2. **§11.2 — b9 is 8 variants**, the most expensive line, because it is the only one reading three variables. Splitting the plan across b9 and b10 would reduce b9 to 4 and add 2 at b10 (net −2 records) at the cost of a weaker ending. I recommend keeping it: the ending is where the "story bends" payoff lands.
 3. **§11.6's attention list is a prediction, not a measurement.** It should be re-annotated after the first triage run and the observed flag categories folded back in.
-4. `MAX_GLOSS_KEYS_WARN = 250` and `HINT_MAX_CHARS = 60` are invented guards; both are one-line policy changes.
+4. `MAX_GLOSS_KEYS_WARN = 250`, `HINT_MAX_CHARS = 60` and `HINT_ECHO_MIN_TOKENS = 4` are invented guards; all three are one-line policy changes.
+5. **§2.2's `reviewPolicy: 'fixture'` is a mechanism I chose over the path-based exemption you suggested.** A field in the artifact survives a file move and shows up in a diff; "living outside the shipping data path" does neither. Flagged because it is a deviation from your suggested mechanism, not from your ruling — no record claims a human review, which was the requirement.
