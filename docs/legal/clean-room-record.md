@@ -82,7 +82,8 @@ Licence fields verified on 2026-10-18 against the Hugging Face API and the npm r
 
 | Component | Role | Licence | Obligation |
 |---|---|---|---|
-| Supertonic 3 — weights | TTS engine (M2) | **OpenRAIL-M** | Carries **use restrictions**. Must be surfaced to the user as restrictions, not merely included as text. `D4` owns that surface. |
+| Supertonic — weights (**selected: v2 int8**, `csukuangfj2/sherpa-onnx-supertonic-tts-int8-2026-03-06`) | TTS engine (M3) | **OpenRAIL-M** | Carries **use restrictions**, surfaced in-app. ⚠ **Licence conflict, resolved conservatively:** the upstream `Supertone/supertonic-2` card declares `openrail`, while the conversion repo ships an **MIT** `LICENSE`. A mislabelled mirror is not a licence grant, so the **most restrictive reading (OpenRAIL-M) governs the weights**. Recorded 2026-10-18. |
+| `sherpa-onnx` (runtime, vendored) | Inference runtime (M3) | **Apache-2.0** | Verified against both the npm package and `k2-fsa/sherpa-onnx` upstream. Vendored as **code** under `vendor/sherpa/` — it is a runtime, not a model weight, and there is no npm browser build. |
 | Supertonic — reference code | Architecture reference only | **MIT** | No code copied; not redistributed. |
 | OPUS-MT ROMANCE pair (`Helsinki-NLP`) | MT drafter (build-time only) | **Apache-2.0** | Include the licence text. **No attribution line required**; there is no upstream NOTICE file to propagate. Not shipped to the browser. |
 | `@huggingface/transformers` | TTS + MT runtime / build | Apache-2.0 | Include licence text. |

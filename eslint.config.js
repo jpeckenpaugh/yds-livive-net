@@ -20,7 +20,14 @@ const tsconfigRootDir = import.meta.dirname;
 
 export default tseslint.config(
   {
-    ignores: ['dist/**', 'node_modules/**', 'test-artifacts/**', 'coverage/**', 'docs/**'],
+    ignores: [
+      'dist/**',
+      'node_modules/**',
+      'test-artifacts/**',
+      'coverage/**',
+      'docs/**',
+      'vendor/**',
+    ],
   },
   {
     files: ['src/**/*.{ts,tsx}', 'test/**/*.{ts,tsx}'],

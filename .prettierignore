@@ -10,3 +10,5 @@ review/report.*.md
 # would be a contract change. D5 §10's list omits them (reported).
 src/domain/types.ts
 src/engines/ports.ts
+# Vendored third-party runtime (sherpa-onnx, Apache-2.0); not ours to reformat.
+vendor/**

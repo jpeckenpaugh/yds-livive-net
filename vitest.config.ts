@@ -11,6 +11,11 @@ import preact from '@preact/preset-vite';
  *   ui      — AC-UI-* (jsdom)
  */
 export default defineConfig({
+  define: {
+    // The build-time engine selector (D5 §5), so tests can exercise either
+    // registry selection. Defaults to the M1 engine, as `vite.config.ts` does.
+    __TTS_ENGINE__: JSON.stringify(process.env.TTS_ENGINE ?? 'speech-synthesis'),
+  },
   test: {
     passWithNoTests: true,
     projects: [

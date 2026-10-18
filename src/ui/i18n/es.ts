@@ -99,6 +99,12 @@ export const es: Messages = {
   licencesHeading: 'Licencias',
   offlineStatement:
     'Esta aplicación funciona sin conexión y, por ahora, no descarga nada. Sin servidor, sin cuenta y sin red después de la primera carga.',
+  offlineStatementDownloads:
+    'La aplicación funciona sin conexión. En el primer uso descarga el motor de voz una vez (~92 MB) y lo guarda en este dispositivo. Después, sin red.',
+  storage: 'Motor de voz',
+  storageTotal: (mb) => `Descargado en este dispositivo: ${mb} MB.`,
+  deleteCachedAudio: 'Borrar el audio guardado',
+  storageDeleted: 'Audio guardado borrado. Se volverá a descargar al reproducir.',
   voiceOverridesHeading: 'Voces',
   voiceFor: (character, language) => `${character} en ${language}`,
   resolvedVoice: (name) => `Se usa ${name}`,
@@ -109,6 +115,7 @@ export const es: Messages = {
   licencePurposeSpeech: 'motor de voz previsto (M3)',
   licencePurposeUi: 'interfaz',
   licencePurposeTranslation: 'modelos de traducción en tiempo de compilación',
+  licencePurposeRuntime: 'entorno de ejecución del motor de voz',
 
   shortcutPlayPause: 'Reproducir o pausar',
   shortcutReplay: 'Repetir el turno actual',

@@ -12,3 +12,6 @@ test-artifacts/*
 *.onnx_data
 *.bin
 *.wasm
+# The sherpa-onnx browser runtime is code (Apache-2.0), not a model weight, and
+# check:bundle expects it in dist/ (D5 §3.2, §6.3 check 3). The one negation.
+!vendor/sherpa/sherpa-onnx-wasm-main-tts.wasm

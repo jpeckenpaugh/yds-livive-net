@@ -1,5 +1,5 @@
 {
-  "currentMilestone": "M1",
+  "currentMilestone": "M3",
   "ids": {
     "AC-ARCH-01": {
       "milestone": "M1",
@@ -123,7 +123,7 @@
     },
     "AC-CONTENT-18": {
       "milestone": "M2",
-      "tests": []
+      "tests": ["bake/shipping-provenance.spec.ts"]
     },
     "AC-CONTENT-19": {
       "milestone": "M1",
@@ -143,7 +143,7 @@
     },
     "AC-CONTENT-23": {
       "milestone": "M2",
-      "tests": [],
+      "tests": ["bake/shipping-provenance.spec.ts"],
       "note": "satisfied by the authored-table content route"
     },
     "AC-CONTENT-24": {
@@ -152,7 +152,7 @@
     },
     "AC-CONTENT-25": {
       "milestone": "M2",
-      "tests": [],
+      "tests": ["bake/shipping-provenance.spec.ts"],
       "note": "satisfied by the authored-table content route"
     },
     "AC-DOM-01": {
@@ -269,7 +269,7 @@
     },
     "AC-ENG-05": {
       "milestone": "M3",
-      "tests": ["engines/conformance.spec.ts"]
+      "tests": ["engines/conformance.spec.ts", "engines/cache.spec.ts"]
     },
     "AC-ENG-06": {
       "milestone": "M1",
@@ -301,15 +301,15 @@
     },
     "AC-ENG-13": {
       "milestone": "M3",
-      "tests": []
+      "tests": ["engines/sherpa.spec.ts", "engines/m3-registry.spec.ts"]
     },
     "AC-ENG-14": {
       "milestone": "M3",
-      "tests": []
+      "tests": ["engines/m3-registry.spec.ts"]
     },
     "AC-ENG-15": {
       "milestone": "M3",
-      "tests": []
+      "tests": ["engines/models.spec.ts"]
     },
     "AC-ENG-16": {
       "milestone": "M1",
@@ -321,7 +321,7 @@
     },
     "AC-ENG-18": {
       "milestone": "M3",
-      "tests": []
+      "tests": ["bake/shipping-provenance.spec.ts"]
     },
     "AC-ENG-19": {
       "milestone": "M1",
@@ -333,7 +333,7 @@
     },
     "AC-ENG-21": {
       "milestone": "M3",
-      "tests": []
+      "tests": ["engines/m3-registry.spec.ts"]
     },
     "AC-ENG-22": {
       "milestone": "M1",
@@ -341,7 +341,7 @@
     },
     "AC-ENG-23": {
       "milestone": "M3",
-      "tests": []
+      "tests": ["tools/audition.spec.ts"]
     },
     "AC-I18N-01": {
       "milestone": "M6",

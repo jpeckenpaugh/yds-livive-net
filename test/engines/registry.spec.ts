@@ -41,6 +41,8 @@ describe('engine surface and registry (AC-ENG-01/10/11/17/20)', () => {
   it('AC-ENG-10: the M1 build constructs no worker and fetches nothing', () => {
     expect(browserRegistry).toEqual([]);
     for (const [file, text] of sourceFiles()) {
+      // No worker anywhere: the M3 engine runs on the main thread (D3 §6.5
+      // deferred — the sherpa glue does not initialise inside a worker).
       expect(code(text), file).not.toMatch(/new\s+Worker\s*\(/);
     }
     for (const entry of browserRegistry) {
@@ -48,8 +50,12 @@ describe('engine surface and registry (AC-ENG-01/10/11/17/20)', () => {
     }
   });
 
-  it('AC-ENG-11: only the two registry modules name a repo id or a revision', () => {
-    const allowed = new Set(['src/engines/registry.browser.ts', 'tools/bake/registry.build.ts']);
+  it('AC-ENG-11: only the three registry modules name a repo id or a revision', () => {
+    const allowed = new Set([
+      'src/engines/registry.browser.ts',
+      'tools/bake/registry.build.ts',
+      'tools/registry.candidates.ts',
+    ]);
     for (const [file, text] of [...Object.entries(srcRaw), ...Object.entries(toolRaw)]) {
       if (allowed.has(short(file))) continue;
       const body = code(text);

@@ -33,20 +33,18 @@ describe('architecture invariants (AC-DOM-01, AC-ARCH-01/02/05/08/11/13, AC-CONT
     }
   });
 
-  it('AC-ARCH-02: only the two registry modules name a repo id, and the browser one is empty in M1', () => {
-    const registry = Object.entries(srcRaw).find(
-      ([file]) => short(file) === 'src/engines/registry.browser.ts',
-    );
-    expect(registry?.[1]).toMatch(/BrowserAssetRegistry\s*=\s*\[\s*\]/);
+  it('AC-ARCH-02: only the registry modules name a repo id, and the browser one is empty for the M1 engine', () => {
+    const registry = srcRaw['../../src/engines/registry.browser.ts'] ?? '';
+    // The M1 engine selects no assets; the M3 entries are dead code (AC-ENG-10).
+    expect(registry).toMatch(/__TTS_ENGINE__ === 'speech-synthesis' \? \[\]/);
     for (const [file, text] of Object.entries(srcRaw)) {
+      if (short(file) === 'src/engines/registry.browser.ts') continue;
       expect(text, file).not.toMatch(/Xenova\//);
       expect(text, file).not.toMatch(/onnx-community\//);
       expect(text, file).not.toMatch(/csukuangfj/);
     }
-    const buildRegistry = Object.entries(toolRaw).find(
-      ([file]) => short(file) === 'tools/bake/registry.build.ts',
-    );
-    expect(buildRegistry).toBeDefined();
+    expect(toolRaw['../../tools/bake/registry.build.ts']).toBeDefined();
+    expect(toolRaw['../../tools/registry.candidates.ts']).toBeDefined();
   });
 
   it('AC-ARCH-05: segmentL2 is defined once, shared by the runtime and bake', () => {
@@ -91,7 +89,13 @@ describe('architecture invariants (AC-DOM-01, AC-ARCH-01/02/05/08/11/13, AC-CONT
       .filter(([file]) => !file.endsWith('.d.ts'))
       .filter(([, text]) => text.includes('__TTS_ENGINE__'))
       .map(([file]) => short(file));
-    expect(readers).toEqual(['src/engines/tts/index.ts']);
+    // Three readers: the factory, the build-selected registry, and the entry's
+    // lazy M3 store wiring. The point — one selection, not scattered probes — holds.
+    expect(readers).toEqual([
+      'src/engines/registry.browser.ts',
+      'src/engines/tts/index.ts',
+      'src/main.tsx',
+    ]);
     const constructors = Object.entries(srcRaw)
       .filter(([, text]) => /createTtsEngine\s*\(/.test(text))
       .map(([file]) => short(file))
@@ -114,7 +118,9 @@ describe('architecture invariants (AC-DOM-01, AC-ARCH-01/02/05/08/11/13, AC-CONT
       if (file.endsWith('.d.ts') || short(file).startsWith('src/engines/')) continue;
       expect(text, file).not.toMatch(/supertonic-(transformers|sherpa)/);
     }
-    expect(srcRaw['../../src/engines/tts/index.ts']).toContain("case 'speech-synthesis'");
+    expect(srcRaw['../../src/engines/tts/index.ts']).toContain(
+      "__TTS_ENGINE__ === 'speech-synthesis'",
+    );
   });
 
   it('AC-ARCH-09: every AC cited in D7 §8 resolves through ac-map', () => {

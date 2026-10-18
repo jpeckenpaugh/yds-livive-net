@@ -102,6 +102,11 @@ export type Messages = {
   keyboardHeading: string;
   licencesHeading: string;
   offlineStatement: string;
+  offlineStatementDownloads: string;
+  storage: string;
+  storageTotal: (mb: number) => string;
+  deleteCachedAudio: string;
+  storageDeleted: string;
   voiceOverridesHeading: string;
   voiceFor: (character: string, language: string) => string;
   resolvedVoice: (name: string) => string;
@@ -113,6 +118,7 @@ export type Messages = {
   licencePurposeSpeech: string;
   licencePurposeUi: string;
   licencePurposeTranslation: string;
+  licencePurposeRuntime: string;
 
   /* shortcuts (key names themselves are not translated) */
   shortcutPlayPause: string;
@@ -210,6 +216,12 @@ export const en: Messages = {
   licencesHeading: 'Licences',
   offlineStatement:
     'This app is offline and, in M1, downloads nothing. No server, no account, no network after first load.',
+  offlineStatementDownloads:
+    'The app runs offline. On first use it downloads the audio engine once (~92 MB) and caches it on this device. After that, there is no network.',
+  storage: 'Audio engine',
+  storageTotal: (mb) => `Downloaded to this device: ${mb} MB.`,
+  deleteCachedAudio: 'Delete cached audio',
+  storageDeleted: 'Cached audio deleted. It will download again on next play.',
   voiceOverridesHeading: 'Voices',
   voiceFor: (character, language) => `${character} in ${language}`,
   resolvedVoice: (name) => `Using ${name}`,
@@ -220,6 +232,7 @@ export const en: Messages = {
   licencePurposeSpeech: 'planned speech engine (M3)',
   licencePurposeUi: 'UI framework',
   licencePurposeTranslation: 'build-time translation models',
+  licencePurposeRuntime: 'speech engine runtime',
 
   shortcutPlayPause: 'Play / pause',
   shortcutReplay: 'Replay the current beat',

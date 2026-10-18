@@ -16,6 +16,7 @@ import { GAP_AFTER_CHOICE_MS } from './constants.ts';
 import {
   AudioNotice,
   CompletionPanel,
+  DownloadsDialog,
   KeyboardHelpDialog,
   LicensesDialog,
   SkipToContent,
@@ -393,6 +394,7 @@ export function App({
       </main>
       {dialog?.name === 'whatif' ? <WhatIfPanel /> : null}
       {dialog?.name === 'licenses' ? <LicensesDialog onClose={closeDialog} /> : null}
+      {dialog?.name === 'downloads' ? <DownloadsDialog onClose={closeDialog} /> : null}
       {dialog?.name === 'voice' ? (
         <VoiceOverridesDialog
           onClose={closeDialog}

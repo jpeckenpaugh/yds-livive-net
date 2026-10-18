@@ -21,7 +21,9 @@ import type {
 import { glossWords } from './gloss.ts';
 import type { Messages } from './i18n/index.ts';
 import { ANIMATE_IN_MS, MIN_TARGET_PX, SPEED_MAX, SPEED_MIN } from './constants.ts';
-import { M1_LICENCES, OPENRAIL_RESTRICTIONS, licencePurpose } from './licenses.ts';
+import { browserRegistry } from '../engines/registry.browser.ts';
+import { AUDIO_CACHE_STORE, MODELS_CACHE_STORE } from '../engines/ports.ts';
+import { licencesFor, OPENRAIL_RESTRICTIONS, licencePurpose } from './licenses.ts';
 import { shortcutAction, type Shortcut } from './keys.ts';
 import { spokenLine } from './scheduler.ts';
 import { useStore } from './store.ts';
@@ -212,19 +214,24 @@ export function SpeedControl(): preact.JSX.Element {
   );
 }
 
-export type DialogName = 'voice' | 'licenses' | 'help';
+export type DialogName = 'voice' | 'licenses' | 'help' | 'downloads';
 
 export function VoiceAndAboutMenu({
   onOpen,
 }: {
   onOpen: (dialog: DialogName, event?: Event) => void;
 }): preact.JSX.Element {
-  const { t } = useStore();
+  const { t, engine } = useStore();
   return (
     <div class="menu">
       <button type="button" onClick={(event) => onOpen('voice', event)}>
         {t.voices}
       </button>
+      {engine.capabilities.cache ? (
+        <button type="button" onClick={(event) => onOpen('downloads', event)}>
+          {t.storage}
+        </button>
+      ) : null}
       <button type="button" onClick={(event) => onOpen('licenses', event)}>
         {t.licences}
       </button>
@@ -774,15 +781,57 @@ function Dialog({
   );
 }
 
-export function LicensesDialog({ onClose }: { onClose: () => void }): preact.JSX.Element {
+/** Delete the `audio` and `models` stores without importing the model layer. */
+function clearCachedAudio(): Promise<void> {
+  return new Promise((resolve) => {
+    if (typeof indexedDB === 'undefined') {
+      resolve();
+      return;
+    }
+    const request = indexedDB.open('yds.audio.v1', 1);
+    request.onsuccess = () => {
+      const db = request.result;
+      const tx = db.transaction([AUDIO_CACHE_STORE, MODELS_CACHE_STORE], 'readwrite');
+      tx.objectStore(AUDIO_CACHE_STORE).clear();
+      tx.objectStore(MODELS_CACHE_STORE).clear();
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => resolve();
+    };
+    request.onerror = () => resolve();
+  });
+}
+
+export function DownloadsDialog({ onClose }: { onClose: () => void }): preact.JSX.Element {
   const { t } = useStore();
+  const [deleted, setDeleted] = useState(false);
+  const totalMb = Math.round(browserRegistry.reduce((sum, e) => sum + e.totalBytes, 0) / 1048576);
+  return (
+    <Dialog title={t.storage} onClose={onClose}>
+      <p>{t.storageTotal(totalMb)}</p>
+      <button
+        type="button"
+        onClick={() => {
+          void clearCachedAudio().then(() => setDeleted(true));
+        }}
+      >
+        {t.deleteCachedAudio}
+      </button>
+      {deleted ? <p role="status">{t.storageDeleted}</p> : null}
+    </Dialog>
+  );
+}
+
+export function LicensesDialog({ onClose }: { onClose: () => void }): preact.JSX.Element {
+  const { t, engine } = useStore();
+  const entries = licencesFor(engine.id, browserRegistry);
   return (
     <Dialog title={t.licencesHeading} onClose={onClose}>
-      <p>{t.offlineStatement}</p>
+      <p>{engine.id === 'speech-synthesis' ? t.offlineStatement : t.offlineStatementDownloads}</p>
       <ul>
-        {M1_LICENCES.map((entry) => (
+        {entries.map((entry) => (
           <li key={entry.id}>
             <strong>{entry.licence}</strong> — {licencePurpose(t, entry)}
+            {entry.detail ? <span class="licence-detail"> ({entry.detail})</span> : null}
             {entry.restricted ? <p>{OPENRAIL_RESTRICTIONS}</p> : null}
           </li>
         ))}
