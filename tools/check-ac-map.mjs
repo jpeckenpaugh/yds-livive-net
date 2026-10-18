@@ -23,7 +23,10 @@ const docIds = new Set();
 for (const file of readdirSync(join(ROOT, 'docs', 'design'))) {
   if (!file.endsWith('.md')) continue;
   const text = readFileSync(join(ROOT, 'docs', 'design', file), 'utf8');
-  for (const match of text.matchAll(/AC-[A-Z]+-\d+/g)) docIds.add(match[0]);
+  // `[A-Z0-9]+` rather than `[A-Z]+`: a family name may contain digits (`AC-I18N`),
+  // and with the narrower class that whole family is invisible to this check —
+  // neither required nor covered.
+  for (const match of text.matchAll(/AC-[A-Z0-9]+-\d+/g)) docIds.add(match[0]);
 }
 
 const mapIds = new Set(Object.keys(map.ids));

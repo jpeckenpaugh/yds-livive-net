@@ -192,15 +192,16 @@ main {
   cursor: not-allowed;
 }
 
-/* Play is the required first gesture (AC-UI-25), so it reads as primary. */
-.transport button[aria-label='Play'] {
+/* Play is the required first gesture (AC-UI-25), so it reads as primary. Styled
+   by class, not by an aria-label selector: the label is translated now. */
+.transport button.primary-action {
   background: var(--fg);
   border-color: var(--fg);
   color: var(--bg);
   font-weight: 600;
 }
 
-.transport button[aria-label='Play']:hover:not(:disabled) {
+.transport button.primary-action:hover:not(:disabled) {
   background: var(--fg-muted);
   border-color: var(--fg-muted);
 }
@@ -218,11 +219,8 @@ main {
   color: var(--fg);
 }
 
-.audio-status:not(:empty)::before {
-  content: '·';
-  margin-inline: 0.5rem;
-  color: var(--fg-faint);
-}
+/* The separator was a `::before`, which leads the line when the row wraps. The
+   flex gap already separates them. */
 
 /* ----------------------------------------------------------------- toolbar */
 
@@ -451,7 +449,9 @@ main {
   letter-spacing: -0.005em;
 }
 
-.dialogue-line[lang='en'] {
+/* The study line is de-emphasised. Keyed on the line's role in the pair, not on
+   its language code: `[lang='en']` was only correct while the pair was `en -> es`. */
+.dialogue-line[data-role='study'] {
   font-size: 1.0625rem;
   color: var(--fg-muted);
 }

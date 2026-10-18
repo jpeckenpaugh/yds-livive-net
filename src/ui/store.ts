@@ -12,6 +12,7 @@ import { useContext } from 'preact/hooks';
 import { initialSession, reduce } from '../domain/session.ts';
 import {
   DEFAULT_SPEED,
+  type Channel,
   type ChoiceKey,
   type Conversation,
   type Preferences,
@@ -21,6 +22,7 @@ import {
 import { visibility } from '../domain/visibility.ts';
 import type { PlaybackState, TtsEngine } from '../engines/ports.ts';
 import { audioState, type AudioState } from './audio-state.ts';
+import type { Messages } from './i18n/index.ts';
 import type { Scheduler } from './scheduler.ts';
 
 export const DEFAULT_PREFS: Preferences = {
@@ -113,6 +115,14 @@ export type AppContext = {
   engine: TtsEngine;
   /** The 32→4 projection the UI renders from; components never read `prefs.read`. */
   visibility: ReturnType<typeof visibility>;
+  /** The chrome catalog for the learner's native language (D4 §18.7). */
+  t: Messages;
+  /**
+   * Which content channel carries the learner's *native* language (D4 §16.3).
+   * Not always `l1`: a reversed pair swaps them, so any component that shows a
+   * learner-facing label must resolve it through this rather than assuming.
+   */
+  nativeChannel: Channel;
   /** The single polite status string (AC-UI-19). */
   status: string;
   setStatus: (message: string) => void;

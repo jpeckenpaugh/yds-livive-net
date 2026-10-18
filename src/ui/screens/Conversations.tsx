@@ -8,7 +8,7 @@
 
 import type { CatalogEntry } from '../../data/catalog.ts';
 import type { Session } from '../../domain/types.ts';
-import { langName } from '../language.ts';
+import type { Messages } from '../i18n/index.ts';
 
 export type Progress = {
   beatsRevealed: number;
@@ -47,6 +47,7 @@ export function Conversations({
   sessionFor,
   onOpen,
   onChangePair,
+  t,
 }: {
   entries: CatalogEntry[];
   native: string;
@@ -54,20 +55,21 @@ export function Conversations({
   sessionFor: (id: string) => Session | undefined;
   onOpen: (id: string) => void;
   onChangePair: () => void;
+  t: Messages;
 }): preact.JSX.Element {
+  const nativeName = t.languageName(native);
+  const studyName = t.languageName(study);
   return (
     <div class="screen screen-list">
       <header class="screen-head">
-        <h1>Conversations</h1>
+        <h1>{t.conversations}</h1>
         <button type="button" class="quiet" onClick={onChangePair}>
-          {langName(native)} &rarr; {langName(study)} &middot; change
+          {t.pairLabel(nativeName, studyName)}
         </button>
       </header>
 
       {entries.length === 0 ? (
-        <p class="empty">
-          No conversations for {langName(native)} &rarr; {langName(study)} yet. Try another pair.
-        </p>
+        <p class="empty">{t.noConversations(nativeName, studyName)}</p>
       ) : (
         <ul class="conversation-list">
           {entries.map((entry) => {
@@ -78,8 +80,13 @@ export function Conversations({
                   <span class="conversation-title">{entry.title}</span>
                   <span class="conversation-meta">
                     {progress.complete
-                      ? 'Complete — play it again'
-                      : `${progress.beatsRevealed} of ${progress.beatsTotal} beats · ${progress.decisionsMade} of ${progress.decisionsTotal} decisions`}
+                      ? t.complete
+                      : t.progress(
+                          progress.beatsRevealed,
+                          progress.beatsTotal,
+                          progress.decisionsMade,
+                          progress.decisionsTotal,
+                        )}
                   </span>
                 </button>
                 <div class="conversation-bar" aria-hidden="true">

@@ -4,11 +4,20 @@
  * "G1 is a state machine, not a message." One derived state, recomputed whenever
  * engine capabilities change, `voiceschanged` fires, or `playAnyway` changes.
  * The app never sets `playAnyway` itself — only an explicit user action does.
+ *
+ * This module returns **message identities and parameters, never prose** (D4
+ * §18.3). It used to hand back finished English sentences, which no translation
+ * layer can reach, and which baked the language name into the sentence — but the
+ * name is grammar, not a noun, and has to be inflected by the catalog that
+ * renders it.
  */
 
 import type { Lang } from '../domain/types.ts';
 
 export type AudioStateName = 'voice-ok' | 'no-l2-voice' | 'play-anyway' | 'engine-absent';
+
+export type AudioNoticeId = 'no-l2-voice' | 'engine-absent' | 'play-anyway';
+export type AudioActionId = 'play-anyway';
 
 export type AudioState = {
   name: AudioStateName;
@@ -17,10 +26,10 @@ export type AudioState = {
   l1Available: boolean;
   /** Preview controls are disabled with a reason when false. */
   canPreview: boolean;
-  /** Notice text, when a notice is shown. Names the language, not the vendor. */
-  notice?: string;
+  /** Which notice to render, and the language it names. Resolved by the catalog. */
+  notice?: { id: AudioNoticeId; lang?: Lang };
   /** The actionable escape hatch, when one exists. */
-  action?: string;
+  action?: AudioActionId;
 };
 
 export type AudioStateInput = {
@@ -41,7 +50,7 @@ export function audioState(input: AudioStateInput): AudioState {
       l2Available: false,
       l1Available: false,
       canPreview: false,
-      notice: 'Audio is unavailable on this device. The transcript still works.',
+      notice: { id: 'engine-absent' },
     };
   }
   if (input.l2Voice !== null) {
@@ -58,7 +67,7 @@ export function audioState(input: AudioStateInput): AudioState {
       l2Available: true,
       l1Available: input.l1Voice !== null,
       canPreview: true,
-      notice: 'The spoken language is being played with a different voice.',
+      notice: { id: 'play-anyway' },
     };
   }
   return {
@@ -66,7 +75,7 @@ export function audioState(input: AudioStateInput): AudioState {
     l2Available: false,
     l1Available: input.l1Voice !== null,
     canPreview: false,
-    notice: 'No Spanish voice is installed on this device.',
-    action: 'Play anyway with the default voice',
+    notice: { id: 'no-l2-voice', lang: input.l2 },
+    action: 'play-anyway',
   };
 }

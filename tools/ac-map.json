@@ -337,6 +337,38 @@
       "milestone": "M1",
       "tests": ["engines/conformance.spec.ts"]
     },
+    "AC-I18N-01": {
+      "milestone": "M6",
+      "tests": ["ui/i18n.spec.tsx"]
+    },
+    "AC-I18N-02": {
+      "milestone": "M6",
+      "tests": ["ui/i18n.spec.tsx"]
+    },
+    "AC-I18N-03": {
+      "milestone": "M6",
+      "tests": ["ui/i18n.spec.tsx"]
+    },
+    "AC-I18N-04": {
+      "milestone": "M6",
+      "tests": ["ui/i18n.spec.tsx"]
+    },
+    "AC-I18N-05": {
+      "milestone": "M6",
+      "tests": ["ui/i18n.spec.tsx"]
+    },
+    "AC-I18N-06": {
+      "milestone": "M6",
+      "tests": ["ui/i18n.spec.tsx"]
+    },
+    "AC-I18N-07": {
+      "milestone": "M6",
+      "tests": ["ui/i18n.spec.tsx"]
+    },
+    "AC-I18N-08": {
+      "milestone": "M6",
+      "tests": ["ui/i18n.spec.tsx"]
+    },
     "AC-TOOL-01": {
       "milestone": "M1",
       "tests": ["tools/gate.spec.ts"]
@@ -540,6 +572,38 @@
     "AC-UI-27": {
       "milestone": "M1",
       "tests": ["ui/presentation.spec.tsx"]
+    },
+    "AC-UI-28": {
+      "milestone": "M5",
+      "tests": ["ui/shell.spec.tsx"]
+    },
+    "AC-UI-29": {
+      "milestone": "M5",
+      "tests": ["ui/shell.spec.tsx"]
+    },
+    "AC-UI-30": {
+      "milestone": "M5",
+      "tests": ["ui/language.spec.tsx"]
+    },
+    "AC-UI-31": {
+      "milestone": "M5",
+      "tests": ["ui/shell.spec.tsx"]
+    },
+    "AC-UI-32": {
+      "milestone": "M5",
+      "tests": ["ui/completion.spec.tsx"]
+    },
+    "AC-UI-33": {
+      "milestone": "M5",
+      "tests": ["ui/completion.spec.tsx"]
+    },
+    "AC-UI-34": {
+      "milestone": "M5",
+      "tests": ["ui/shell.spec.tsx"]
+    },
+    "AC-UI-35": {
+      "milestone": "M5",
+      "tests": ["ui/completion.spec.tsx"]
     }
   }
 }

@@ -19,20 +19,43 @@ import type {
   ResolvedOption,
 } from '../domain/types.ts';
 import { glossWords } from './gloss.ts';
-import { langName } from './language.ts';
+import type { Messages } from './i18n/index.ts';
 import { ANIMATE_IN_MS, MIN_TARGET_PX, SPEED_MAX, SPEED_MIN } from './constants.ts';
-import { M1_LICENCES, OFFLINE_STATEMENT } from './licenses.ts';
+import { M1_LICENCES, OPENRAIL_RESTRICTIONS, licencePurpose } from './licenses.ts';
+import { shortcutAction, type Shortcut } from './keys.ts';
 import { spokenLine } from './scheduler.ts';
 import { useStore } from './store.ts';
 
 /** Channel labels name the actual languages, so a reversed pair reads correctly. */
-function channelsFor(conversation: Conversation): Array<{ value: Channel; label: string }> {
+function channelsFor(
+  conversation: Conversation,
+  t: Messages,
+): Array<{ value: Channel; label: string }> {
   return [
-    { value: 'l1', label: `${langName(conversation.l1)} only` },
-    { value: 'l2', label: `${langName(conversation.l2)} only` },
-    { value: 'both', label: 'Both' },
-    { value: 'none', label: 'None' },
+    { value: 'l1', label: t.channelOnly(t.languageName(conversation.l1)) },
+    { value: 'l2', label: t.channelOnly(t.languageName(conversation.l2)) },
+    { value: 'both', label: t.channelBoth },
+    { value: 'none', label: t.channelNone },
   ];
+}
+
+/** Which content channel is the learner's native language, and which is the study one. */
+function labelLangs(
+  conversation: Conversation,
+  nativeChannel: Channel,
+): { native: string; study: string } {
+  return nativeChannel === 'l2'
+    ? { native: conversation.l2, study: conversation.l1 }
+    : { native: conversation.l1, study: conversation.l2 };
+}
+
+/**
+ * The option label in a given language. Every learner-facing label must go
+ * through this: `label.l1` is only "mine" when the pair is not reversed, and
+ * assuming it was a real bug for `es -> en`.
+ */
+function labelFor(option: ResolvedOption, lang: string, conversation: Conversation): string {
+  return lang === conversation.l1 ? option.label.l1 : option.label.l2;
 }
 
 function prefersReducedMotion(): boolean {
@@ -50,9 +73,10 @@ export function animateInMs(): number {
 /* ---------------------------------------------------------------- SkipToContent */
 
 export function SkipToContent(): preact.JSX.Element {
+  const { t } = useStore();
   return (
     <a class="skip-to-content" href="#transcript">
-      Skip to content
+      {t.skipToContent}
     </a>
   );
 }
@@ -68,7 +92,7 @@ export function AudioStatus({ message }: { message: string }): preact.JSX.Elemen
 }
 
 export function Transport(): preact.JSX.Element {
-  const { conversation, state, play, stop, sessionOp, status } = useStore();
+  const { conversation, state, play, stop, sessionOp, status, t } = useStore();
   const cursorIndex = conversation.order.indexOf(state.session.cursor);
   const current = resolveTimeline(conversation, state.session).find(
     (beat) => beat.beatId === state.session.cursor,
@@ -78,23 +102,21 @@ export function Transport(): preact.JSX.Element {
   return (
     <div class="transport">
       <button type="button" onClick={stop}>
-        Pause
+        {t.pause}
       </button>
-      <button type="button" onClick={play} aria-label="Play">
-        Play
+      <button type="button" class="primary-action" onClick={play} aria-label={t.play}>
+        {t.play}
       </button>
-      <button type="button" onClick={play} aria-label="Replay the current beat">
-        Replay
+      <button type="button" onClick={play} aria-label={t.replayCurrent}>
+        {t.replay}
       </button>
       <button type="button" onClick={() => sessionOp({ type: 'rewind' })}>
-        Previous
+        {t.previous}
       </button>
       <button type="button" disabled={pending} onClick={() => sessionOp({ type: 'advance' })}>
-        Next
+        {t.next}
       </button>
-      <span class="beat-counter">
-        Beat {cursorIndex + 1} of {conversation.order.length}
-      </span>
+      <span class="beat-counter">{t.beatOf(cursorIndex + 1, conversation.order.length)}</span>
       <AudioStatus message={status} />
     </div>
   );
@@ -111,11 +133,11 @@ function ChannelControl({
   value: Channel;
   onChange: (next: Channel) => void;
 }): preact.JSX.Element {
-  const { conversation } = useStore();
+  const { conversation, t } = useStore();
   return (
     <fieldset class="channel-control">
       <legend>{legend}</legend>
-      {channelsFor(conversation).map((channel) => (
+      {channelsFor(conversation, t).map((channel) => (
         <label key={channel.value}>
           <input
             type="radio"
@@ -132,10 +154,10 @@ function ChannelControl({
 }
 
 export function ReadChannelControl(): preact.JSX.Element {
-  const { state, dispatch } = useStore();
+  const { state, dispatch, t } = useStore();
   return (
     <ChannelControl
-      legend="Read"
+      legend={t.read}
       value={state.prefs.read}
       onChange={(read) => dispatch({ type: 'prefs', patch: { read } })}
     />
@@ -143,10 +165,10 @@ export function ReadChannelControl(): preact.JSX.Element {
 }
 
 export function HearChannelControl(): preact.JSX.Element {
-  const { state, dispatch } = useStore();
+  const { state, dispatch, t } = useStore();
   return (
     <ChannelControl
-      legend="Hear"
+      legend={t.hear}
       value={state.prefs.hear}
       onChange={(hear) => dispatch({ type: 'prefs', patch: { hear } })}
     />
@@ -154,7 +176,7 @@ export function HearChannelControl(): preact.JSX.Element {
 }
 
 export function HintToggle(): preact.JSX.Element {
-  const { state, dispatch } = useStore();
+  const { state, dispatch, t } = useStore();
   return (
     <label class="hint-toggle">
       <input
@@ -163,16 +185,16 @@ export function HintToggle(): preact.JSX.Element {
         checked={state.prefs.hint}
         onChange={() => dispatch({ type: 'prefs', patch: { hint: !state.prefs.hint } })}
       />
-      Hints
+      {t.hints}
     </label>
   );
 }
 
 export function SpeedControl(): preact.JSX.Element {
-  const { state, dispatch } = useStore();
+  const { state, dispatch, t } = useStore();
   return (
     <label class="speed-control">
-      Speed
+      {t.speed}
       <input
         type="range"
         min={SPEED_MIN}
@@ -197,16 +219,17 @@ export function VoiceAndAboutMenu({
 }: {
   onOpen: (dialog: DialogName, event?: Event) => void;
 }): preact.JSX.Element {
+  const { t } = useStore();
   return (
     <div class="menu">
       <button type="button" onClick={(event) => onOpen('voice', event)}>
-        Voices
+        {t.voices}
       </button>
       <button type="button" onClick={(event) => onOpen('licenses', event)}>
-        Licences
+        {t.licences}
       </button>
       <button type="button" onClick={(event) => onOpen('help', event)}>
-        Keyboard help
+        {t.keyboardHelp}
       </button>
     </div>
   );
@@ -235,12 +258,22 @@ export function AudioNotice({
 }: {
   onPlayAnyway: () => void;
 }): preact.JSX.Element | null {
-  const { state, dispatch } = useStore();
+  const { state, dispatch, t } = useStore();
   const { audio } = state;
   if (audio.name === 'voice-ok') return null;
+
+  const notice = audio.notice;
+  const text = !notice
+    ? ''
+    : notice.id === 'no-l2-voice'
+      ? t.audioNoL2Voice(t.languageName(notice.lang ?? ''))
+      : notice.id === 'engine-absent'
+        ? t.audioUnavailable
+        : t.audioDifferentVoice;
+
   return (
     <div class="audio-notice" role="note">
-      <span>{audio.notice}</span>
+      <span>{text}</span>
       {audio.action ? (
         <button
           type="button"
@@ -249,17 +282,13 @@ export function AudioNotice({
             dispatch({ type: 'dismiss-notice' });
           }}
         >
-          {audio.action}
+          {t.playAnyway}
         </button>
       ) : null}
       <button type="button" onClick={() => dispatch({ type: 'dismiss-notice' })}>
-        Dismiss
+        {t.dismiss}
       </button>
-      {state.noticeDismissed ? (
-        <span class="notice-marker" aria-label="Audio notice dismissed but the state remains">
-          audio degraded
-        </span>
-      ) : null}
+      {state.noticeDismissed ? <span class="notice-marker">{t.audioDegraded}</span> : null}
     </div>
   );
 }
@@ -278,10 +307,13 @@ export function GlossPopover({ text }: { text: string | undefined }): preact.JSX
 export function Glossable({
   line,
   lang,
+  role,
   onActivate,
 }: {
   line: ResolvedLine;
   lang: Lang;
+  /** Which side of the pair this line is on — the study line is de-emphasised. */
+  role: 'native' | 'study';
   onActivate: (text: string | undefined) => void;
 }): preact.JSX.Element {
   const { conversation } = useStore();
@@ -290,7 +322,7 @@ export function Glossable({
     [line.l2, conversation],
   );
   return (
-    <p class="dialogue-line" lang={lang}>
+    <p class="dialogue-line" lang={lang} data-role={role}>
       {units.map((unit, index) =>
         unit.entry ? (
           <span
@@ -329,16 +361,25 @@ export function HintLine({ hint }: { hint: string }): preact.JSX.Element {
   return <p class="hint-line">{hint}</p>;
 }
 
-export function DialogueLine({ text, lang }: { text: string; lang: Lang }): preact.JSX.Element {
+export function DialogueLine({
+  text,
+  lang,
+  role,
+}: {
+  text: string;
+  lang: Lang;
+  role: 'native' | 'study';
+}): preact.JSX.Element {
   return (
-    <p class="dialogue-line" lang={lang}>
+    <p class="dialogue-line" lang={lang} data-role={role}>
       {text}
     </p>
   );
 }
 
 export function L2NotSpokenMarker(): preact.JSX.Element {
-  return <span class="l2-not-spoken">Spanish audio is not being played</span>;
+  const { conversation, t } = useStore();
+  return <span class="l2-not-spoken">{t.l2NotSpoken(t.languageName(conversation.l2))}</span>;
 }
 
 export function PreviewButton({
@@ -350,40 +391,46 @@ export function PreviewButton({
   onPreview: (option: ResolvedOption) => void;
   disabled: boolean;
 }): preact.JSX.Element {
+  const { conversation, t, nativeChannel } = useStore();
+  const langs = labelLangs(conversation, nativeChannel);
   return (
     <button
       type="button"
       class="preview"
       disabled={disabled}
-      aria-label={`Preview ${option.label.l1}`}
+      aria-label={`${t.preview}: ${labelFor(option, langs.native, conversation)}`}
       onClick={(event) => {
         event.stopPropagation();
         onPreview(option);
       }}
     >
-      Preview
+      {t.preview}
     </button>
   );
 }
 
 export function OptionCard({
   option,
+  beatId,
   onChoose,
   onPreview,
   showL2,
   canPreview,
 }: {
   option: ResolvedOption;
+  /** The owning beat. Option keys are unique within a beat, not across a conversation. */
+  beatId: string;
   onChoose: (key: ChoiceKey) => void;
   onPreview: (option: ResolvedOption) => void;
   showL2: boolean;
   canPreview: boolean;
 }): preact.JSX.Element {
-  const { conversation } = useStore();
+  const { conversation, nativeChannel } = useStore();
+  const langs = labelLangs(conversation, nativeChannel);
   // `ResolvedOption` carries no icon (D2 §11); the icon is label-class data on
-  // the built option, so the UI reads it from the conversation (reported gap).
-  const icon = Object.values(conversation.beats)
-    .flatMap((beat) => beat.alternatives)
+  // the built option, so the UI reads it from the conversation — scoped to the
+  // owning beat, because option keys are only unique within one (AC-UI-35).
+  const icon = (conversation.beats[beatId]?.alternatives ?? [])
     .flatMap((alternative) => alternative.options ?? [])
     .find((built) => built.key === option.key)?.icon;
   return (
@@ -399,8 +446,10 @@ export function OptionCard({
             {icon}
           </span>
         ) : null}
-        {option.label.l1}
-        {showL2 ? <span lang="es"> · {option.label.l2}</span> : null}
+        {labelFor(option, langs.native, conversation)}
+        {showL2 ? (
+          <span lang={langs.study}> · {labelFor(option, langs.study, conversation)}</span>
+        ) : null}
       </button>
       <PreviewButton option={option} onPreview={onPreview} disabled={!canPreview} />
     </li>
@@ -426,6 +475,7 @@ export function ChoiceCards({
         <OptionCard
           key={option.key}
           option={option}
+          beatId={beat.beatId}
           onChoose={onChoose}
           onPreview={onPreview}
           showL2={showL2}
@@ -445,15 +495,17 @@ export function GhostOptions({
   onPreview: (option: ResolvedOption) => void;
   canPreview: boolean;
 }): preact.JSX.Element | null {
+  const { t, conversation, nativeChannel } = useStore();
+  const langs = labelLangs(conversation, nativeChannel);
   const ghosts = (beat.options ?? []).filter((option) => option.ghost);
   if (ghosts.length === 0) return null;
   return (
     <ul class="ghost-options">
       {ghosts.map((option) => (
         <li key={option.key} class="ghost-option">
-          <span>{option.label.l1}</span>
+          <span>{labelFor(option, langs.native, conversation)}</span>
           <button type="button" disabled={!canPreview} onClick={() => onPreview(option)}>
-            Replay
+            {t.replayOption}
           </button>
         </li>
       ))}
@@ -462,11 +514,11 @@ export function GhostOptions({
 }
 
 export function UnreachableTailNote({ count }: { count: number }): preact.JSX.Element | null {
+  const { t } = useStore();
   if (count <= 0) return null;
   return (
     <p class="unreachable-tail" role="note">
-      {count} later {count === 1 ? 'beat was' : 'beats were'} reset because the earlier change
-      changed them.
+      {t.laterBeatsReset(count)}
     </p>
   );
 }
@@ -489,13 +541,12 @@ export function CompletionPanel({
   onPlay: () => void;
   onChoose: (beatId: string, key: ChoiceKey) => void;
 }): preact.JSX.Element {
-  const { conversation } = useStore();
+  const { conversation, t, nativeChannel } = useStore();
+  const langs = labelLangs(conversation, nativeChannel);
   return (
     <section class="completion" aria-labelledby="completion-title">
-      <h2 id="completion-title">Your conversation is ready</h2>
-      <p class="completion-lede">
-        {decisions.length} decisions made. Tap the other option on any step to change it.
-      </p>
+      <h2 id="completion-title">{t.conversationReady}</h2>
+      <p class="completion-lede">{t.completionLede(decisions.length)}</p>
       <ol class="decision-chain">
         {decisions.map((beat) => (
           <li key={beat.beatId} class="decision-step">
@@ -513,7 +564,7 @@ export function CompletionPanel({
                     if (!option.chosen) onChoose(beat.beatId, option.key);
                   }}
                 >
-                  {option.label.l1}
+                  {labelFor(option, langs.native, conversation)}
                 </button>
               ))}
             </span>
@@ -521,7 +572,7 @@ export function CompletionPanel({
         ))}
       </ol>
       <button type="button" class="primary play-whole" onClick={onPlay}>
-        Play the whole conversation
+        {t.playWhole}
       </button>
     </section>
   );
@@ -543,7 +594,7 @@ export function BeatRow({
   playback?: boolean;
   active?: boolean;
 }): preact.JSX.Element {
-  const { conversation, state, visibility } = useStore();
+  const { conversation, state, visibility, nativeChannel } = useStore();
   const { audio } = state;
   const name = conversation.characters[beat.speaker]?.name ?? beat.speaker;
   const [activeGloss, setActiveGloss] = useState<string | undefined>(undefined);
@@ -559,9 +610,20 @@ export function BeatRow({
       <SpeakerLabel name={name} />
       {visibility.showHint && beat.hint ? <HintLine hint={beat.hint} /> : null}
       {line && visibility.showL2 ? (
-        <Glossable line={line} lang={conversation.l2} onActivate={setActiveGloss} />
+        <Glossable
+          line={line}
+          lang={conversation.l2}
+          role={nativeChannel === 'l2' ? 'native' : 'study'}
+          onActivate={setActiveGloss}
+        />
       ) : null}
-      {line && visibility.showL1 ? <DialogueLine text={line.l1} lang={conversation.l1} /> : null}
+      {line && visibility.showL1 ? (
+        <DialogueLine
+          text={line.l1}
+          lang={conversation.l1}
+          role={nativeChannel === 'l1' ? 'native' : 'study'}
+        />
+      ) : null}
       {line && !audio.l2Available && visibility.showL2 ? <L2NotSpokenMarker /> : null}
       <GlossPopover text={activeGloss} />
       {beat.kind === 'choice' && beat.status === 'pending' ? (
@@ -633,7 +695,8 @@ export function Transcript({
 /* ---------------------------------------------------------------- WhatIfPanel */
 
 export function WhatIfPanel(): preact.JSX.Element {
-  const { conversation, state, dispatch } = useStore();
+  const { conversation, state, dispatch, t, nativeChannel } = useStore();
+  const langs = labelLangs(conversation, nativeChannel);
   const beats = resolveTimeline(conversation, state.session);
   const decisions = beats.filter((beat) => beat.kind === 'choice' && beat.chosenKey);
   const [changes, setChanges] = useState<Record<string, ChoiceKey>>({});
@@ -648,9 +711,9 @@ export function WhatIfPanel(): preact.JSX.Element {
   }
 
   return (
-    <section class="what-if" aria-label="What if">
-      <h2>What if</h2>
-      <p>This view is read-only. Beats marked auto-picked were chosen for you.</p>
+    <section class="what-if" aria-label={t.whatIf}>
+      <h2>{t.whatIf}</h2>
+      <p>{t.whatIfLede}</p>
       {decisions.map((beat) => (
         <div key={beat.beatId} class="what-if-decision">
           <span>{beat.beatId}</span>
@@ -661,7 +724,7 @@ export function WhatIfPanel(): preact.JSX.Element {
               aria-pressed={(changes[beat.beatId] ?? beat.chosenKey) === option.key}
               onClick={() => setChanges((current) => ({ ...current, [beat.beatId]: option.key }))}
             >
-              {option.label.l1}
+              {labelFor(option, langs.native, conversation)}
             </button>
           ))}
           <button
@@ -670,7 +733,7 @@ export function WhatIfPanel(): preact.JSX.Element {
               makeReal(beat.beatId, changes[beat.beatId] ?? (beat.chosenKey as ChoiceKey))
             }
           >
-            Make this real
+            {t.makeThisReal}
           </button>
         </div>
       ))}
@@ -678,7 +741,7 @@ export function WhatIfPanel(): preact.JSX.Element {
         {projected.map((beat) => (
           <li key={beat.beatId} data-auto-picked={beat.autoPicked ? 'true' : 'false'}>
             {beat.beatId}
-            {beat.autoPicked ? ' (auto-picked)' : ''}
+            {beat.autoPicked ? t.autoPicked : ''}
           </li>
         ))}
       </ol>
@@ -697,13 +760,14 @@ function Dialog({
   onClose: () => void;
   children: preact.ComponentChildren;
 }): preact.JSX.Element {
+  const { t } = useStore();
   return (
     <div class="dialog-backdrop">
       <div class="dialog" role="dialog" aria-modal="true" aria-label={title}>
         <h2>{title}</h2>
         {children}
         <button type="button" onClick={onClose}>
-          Close
+          {t.close}
         </button>
       </div>
     </div>
@@ -711,14 +775,15 @@ function Dialog({
 }
 
 export function LicensesDialog({ onClose }: { onClose: () => void }): preact.JSX.Element {
+  const { t } = useStore();
   return (
-    <Dialog title="Licences" onClose={onClose}>
-      <p>{OFFLINE_STATEMENT}</p>
+    <Dialog title={t.licencesHeading} onClose={onClose}>
+      <p>{t.offlineStatement}</p>
       <ul>
         {M1_LICENCES.map((entry) => (
           <li key={entry.id}>
-            <strong>{entry.licence}</strong> — {entry.purpose}
-            {entry.restrictions ? <p>{entry.restrictions}</p> : null}
+            <strong>{entry.licence}</strong> — {licencePurpose(t, entry)}
+            {entry.restricted ? <p>{OPENRAIL_RESTRICTIONS}</p> : null}
           </li>
         ))}
       </ul>
@@ -733,14 +798,12 @@ export function VoiceOverridesDialog({
   onClose: () => void;
   onResolved: (characterId: string, lang: Lang) => string | null;
 }): preact.JSX.Element {
-  const { conversation, state, dispatch, engine } = useStore();
+  const { conversation, state, dispatch, engine, t } = useStore();
   const characters = Object.entries(conversation.characters);
   return (
-    <Dialog title="Voices" onClose={onClose}>
+    <Dialog title={t.voiceOverridesHeading} onClose={onClose}>
       {engine.capabilities.preservesVoiceIdentityAcrossLangs ? null : (
-        <p class="voice-independence">
-          With the built-in voices, each language uses a different voice.
-        </p>
+        <p class="voice-independence">{t.voiceIndependence}</p>
       )}
       <table>
         <tbody>
@@ -748,7 +811,7 @@ export function VoiceOverridesDialog({
             [conversation.l1, conversation.l2].map((lang) => (
               <tr key={`${characterId}-${lang}`}>
                 <td>{character.name}</td>
-                <td>{lang}</td>
+                <td>{t.languageName(lang)}</td>
                 <td>
                   <label>
                     <input
@@ -763,7 +826,7 @@ export function VoiceOverridesDialog({
                         dispatch({ type: 'prefs', patch: { voiceOverrides: next } });
                       }}
                     />
-                    Automatic ({onResolved(characterId, lang) ?? 'no voice'})
+                    {t.voiceAutomatic(onResolved(characterId, lang) ?? t.unresolvableVoice)}
                   </label>
                 </td>
               </tr>
@@ -780,10 +843,11 @@ export function KeyboardHelpDialog({
   shortcuts,
 }: {
   onClose: () => void;
-  shortcuts: Array<{ keys: string; action: string }>;
+  shortcuts: readonly Shortcut[];
 }): preact.JSX.Element {
+  const { t } = useStore();
   return (
-    <Dialog title="Keyboard" onClose={onClose}>
+    <Dialog title={t.keyboardHeading} onClose={onClose}>
       <table>
         <tbody>
           {shortcuts.map((shortcut) => (
@@ -791,7 +855,7 @@ export function KeyboardHelpDialog({
               <td>
                 <kbd>{shortcut.keys}</kbd>
               </td>
-              <td>{shortcut.action}</td>
+              <td>{shortcutAction(t, shortcut)}</td>
             </tr>
           ))}
         </tbody>

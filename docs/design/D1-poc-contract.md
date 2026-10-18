@@ -46,11 +46,20 @@ posture is *listening*, and text is a scaffold you reveal.
 - Hover/select translation of any word, offline, with no runtime model.
 - Per-beat audio with the engine behind a port.
 - Voice assignment per character.
+- **First-run language pair**, offered from the catalog so onboarding cannot dead-end; the same
+  conversation serves both directions because both languages are authored.
+- **A conversations list**, filtered by the learner's pair, with per-conversation progress.
+- **A completion state** once every beat is determined, showing the chain of decisions and allowing
+  any of them to be changed in place.
+- **Whole-conversation playback** — continuous, with no choice UI.
+- **Local persistence** of the pair, the channel preferences, and the composed session per
+  conversation.
+- **Full chrome localization** (English and Spanish): the app's own UI translates, not only the content.
 
 **OUT (explicitly, and not negotiable mid-milestone)**
 
-- Accounts, sync, persistence across devices.
-- More than one conversation.
+- Accounts, and sync across devices. Local persistence is in scope; a server is not.
+- A second conversation. The catalog surface exists and holds exactly one.
 - Languages beyond English and Spanish.
 - Audio export, sharing, or download of generated speech.
 - Pronunciation scoring, speech recognition, spaced repetition.
@@ -68,6 +77,8 @@ next milestone without my acceptance. Work may not start on a milestone whose de
 | **M2** | **Shipping content** | Run the real translator once on a development machine, produce the reviewed bilingual artifact, replace the fixture, retire it. No application code changes | The remaining `AC-CONTENT-*`, `bake:check` green against the shipped artifact, and complete provenance (`reviewedBy` non-null on every line and gloss) |
 | **M3** | **Real TTS** | Supertonic behind the frozen `TtsEngine` port, worker, cache, prefetch, Downloads panel | The M2-boundary `AC-ENG-*` |
 | **M4** | **Polish and offline** | Service worker, storage persistence and eviction UX, "what if" comparison view, hint tuning | M4 has no acceptance criteria yet — the service-worker and storage work is deliberately a *seam* in `D3`/`D5` and gets its ACs when M4 is specified |
+| **M5** | **Conversation flow and persistence** — *delivered out of order at the owner's direction* | First-run language pair, conversations list, completion state, whole-conversation playback, local persistence | `AC-UI-28..35`. Delivered before M2/M3/M4 because it is what makes the product legible; the content is still the fixture |
+| **M6** | **Chrome localization** | `AC-I18N-*`: typed message catalogs, pluralization, message identities out of `audio-state`, language names, `<html lang>` | `AC-I18N-01..08` |
 
 **The fixture boundary (a PM decision, recorded).** M1 needs a conversation to render, but the real
 artifact cannot exist until M2's bake pipeline does. So M1 runs against a fixture that lives **only**
@@ -107,18 +118,24 @@ generated, never hand-written.
 
 ## 7. Acceptance criteria register
 
-**135 criteria across six families.** This document does not restate them — restating acceptance text
+**151 criteria across seven families.** This document does not restate them — restating acceptance text
 invites the drift both D2 and D5 explicitly warn against. The docs own the text; this document owns the
 assignment, and `tools/ac-map.json` carries the per-id milestone that `check:ac-map` enforces.
+
+⚠ **Known defect in the enforcement:** `check:ac-map`'s scanner matches `AC-[A-Z]+-\d+`, which cannot see
+`AC-I18N-*` because the family name contains digits. The whole family is therefore invisible to the check —
+neither required nor covered. The scanner must widen to `AC-[A-Z0-9]+-\d+`. Until it does, the `AC-I18N-*`
+criteria are unenforced, which is worse than unmet.
 
 | Family | Count | Owned by | Lands at |
 |---|---|---|---|
 | `AC-DOM-*` | 24 | `D2` | M1 |
 | `AC-ENG-*` | 22 | `D3` | M1 and M3, split by `D3 §5` |
-| `AC-UI-*` | 27 | `D4` | M1 (storage/Downloads items land at M3) |
+| `AC-UI-*` | 35 | `D4` | M1 and M5 (storage/Downloads items land at M3) |
 | `AC-TOOL-*` | 24 | `D5` | M1 |
 | `AC-CONTENT-*` | 25 | `D6` | M1 and M2, split by whether a criterion needs the real translator |
 | `AC-ARCH-*` | 13 | `D7` | M1 — all thirteen describe properties of the M1 codebase; the M2 swap checklist is proved by a stub-engine build |
+| `AC-I18N-*` | 8 | `D4` §18 | M6 |
 
 **Ids are frozen.** They may not be renumbered, reused, or retired. A criterion discovered to be wrong
 is annotated in place, never silently changed — `check:ac-map` fails on a missing or orphaned id, and
@@ -140,7 +157,7 @@ re-check at each gate.
 | R7 | Segmentation quality is unbounded work | D2 | Bounded by a golden corpus of ≥20 boundaries (AC-DOM-13) |
 | R8 | Model binaries committed to git | D5 | Fetched at runtime; CI asserts no binary and no `.bin` under `src/` |
 | R9 | The browser silently acquires engine code | D5 | Bundle string assertions; no bake-only module reachable from `index.html` |
-| R10 | Schema change after the first bake | PM | Contract frozen at 135 ACs and 49 diagnostics; the icon field was added *before* the freeze for exactly this reason |
+| R10 | Schema change after the first bake | PM | Contract frozen at 151 ACs and 49 diagnostics; the icon field was added *before* the freeze for exactly this reason |
 | R11 | Scope creep into OUT-list territory | PM | OUT list is not negotiable mid-milestone |
 
 ## 9. Roles, and the escalation protocol
@@ -183,3 +200,4 @@ applies to the Designer against this document.
 | 2026-10-18 | Initial contract. Contracts frozen; `Option.icon` added before the freeze. |
 | 2026-10-18 | After the Engineer's M1 reconnaissance: counts corrected 48 → 49 diagnostics and 122 → 130 ACs, `AC-ARCH-*` reassigned to M1, fixture-shipping wording corrected (§4). |
 | 2026-10-18 | After the M1a gate: ACs raised 130 → 135 (`AC-TOOL-24` frozen-contract hashes, `AC-DOM-24` option read scope, `AC-CONTENT-23/24/25`). M1a accepted. |
+| 2026-10-18 | Scope revised by the owner: onboarding, a conversations list, a completion state, whole-conversation playback and local persistence are now IN (M5, delivered), and full chrome localization is IN (M6). ACs 135 → 151 across seven families (`AC-UI` 27 → 35, new `AC-I18N` 8). The docs had fallen behind the code; this closes that. |

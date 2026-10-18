@@ -26,6 +26,8 @@ import {
   WhatIfPanel,
   type DialogName,
 } from './components.tsx';
+import { messagesFor } from './i18n/index.ts';
+import { nativeChannel } from './language.ts';
 import { SHORTCUTS } from './keys.ts';
 import { Scheduler } from './scheduler.ts';
 import { StoreContext, createInitialState, reduceStore, type AppContext } from './store.ts';
@@ -67,6 +69,13 @@ export type AppProps = {
   onPersist?: (snapshot: { session: Session; prefs: Preferences }) => void;
   /** When present, the header shows a way back to the conversation list. */
   onBack?: () => void;
+  /**
+   * The learner's native language: it selects the chrome catalog *and* which
+   * content channel is "my language" (D4 §16.3, §18.7). Defaults to the
+   * conversation's first language so tests and callers that do not care get
+   * English and the forward orientation.
+   */
+  uiLang?: string;
 };
 
 export function App({
@@ -77,6 +86,7 @@ export function App({
   initialSession,
   onPersist,
   onBack,
+  uiLang = conversation.l1,
 }: AppProps): preact.JSX.Element {
   const [state, dispatch] = useReducer(
     (current: ReturnType<typeof createInitialState>, action: Parameters<typeof reduceStore>[2]) =>
@@ -122,8 +132,19 @@ export function App({
     trigger: Element | null;
   } | null>(null);
   const [glossMode, setGlossMode] = useState(false);
+  // The chrome catalog and the "my language" channel both come from the native
+  // language, so one value drives both (D4 §16.3, §18.7).
+  const t = useMemo(() => messagesFor(uiLang), [uiLang]);
+  const native = nativeChannel(conversation, uiLang);
+
+  // The page's own language must follow the chrome, while content spans keep
+  // their own `lang` (D4 §18.5). Screen readers and hyphenation both depend on it.
+  useEffect(() => {
+    document.documentElement.lang = uiLang;
+  }, [uiLang]);
+
   // The counter already says "Beat 1 of 10"; the live region must not repeat it.
-  const [status, setStatus] = useState('Ready to play');
+  const [status, setStatus] = useState(() => t.readyToPlay);
   const commandsRef = useRef<{ play: () => void; stop: () => void }>({
     play: () => undefined,
     stop: () => undefined,
@@ -168,7 +189,7 @@ export function App({
     scheduler.stop();
     setMode('compose');
     setActiveBeatId(null);
-    setStatus('Paused');
+    setStatus(t.paused);
   }
 
   /**
@@ -191,7 +212,7 @@ export function App({
       dispatch({ type: 'seek', beatId: beat.beatId });
       setActiveBeatId(beat.beatId);
       setStatus(
-        `Playing beat ${conversation.order.indexOf(beat.beatId) + 1} of ${conversation.order.length}`,
+        t.playingBeat(conversation.order.indexOf(beat.beatId) + 1, conversation.order.length),
       );
       await delayFn(0);
       const outcome = await scheduler.playBeat(beat, visibility(stateRef.current.prefs));
@@ -200,7 +221,7 @@ export function App({
     }
     setActiveBeatId(null);
     setMode('compose');
-    setStatus('Finished');
+    setStatus(t.finished);
   }
 
   async function playCurrent(): Promise<void> {
@@ -208,7 +229,7 @@ export function App({
       (beat) => beat.beatId === stateRef.current.session.cursor,
     );
     if (!current) return;
-    setStatus(`Playing beat ${cursorIndex + 1} of ${conversation.order.length}`);
+    setStatus(t.playingBeat(cursorIndex + 1, conversation.order.length));
     const outcome = await scheduler.playBeat(current, visibility(stateRef.current.prefs));
     if (outcome === 'finished') {
       // Autoplay advances only when audio actually played (D4 §6.4).
@@ -336,6 +357,8 @@ export function App({
     scheduler,
     engine,
     visibility: visibility(state.prefs),
+    t,
+    nativeChannel: native,
     status,
     setStatus,
     play: () => commandsRef.current.play(),

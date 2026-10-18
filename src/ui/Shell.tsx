@@ -13,6 +13,7 @@ import { conversationsFor, entryById } from '../data/catalog.ts';
 import type { Preferences } from '../domain/types.ts';
 import type { TtsEngine } from '../engines/ports.ts';
 import { App } from './App.tsx';
+import { messagesFor } from './i18n/index.ts';
 import { derivedPrefs } from './language.ts';
 import { loadPersisted, savePersisted, type Persisted } from './persistence.ts';
 import { Conversations } from './screens/Conversations.tsx';
@@ -45,6 +46,7 @@ export function Shell({
   const native = persisted.native ?? '';
   const study = persisted.study ?? '';
   const open = openId ? entryById(openId) : undefined;
+  const t = useMemo(() => messagesFor(native || 'en'), [native]);
 
   if (screen === 'welcome' || !native || !study) {
     return (
@@ -85,6 +87,7 @@ export function Shell({
           }))
         }
         onBack={() => setScreen('list')}
+        uiLang={native}
       />
     );
   }
@@ -100,6 +103,7 @@ export function Shell({
         setScreen('conversation');
       }}
       onChangePair={() => setScreen('welcome')}
+      t={t}
     />
   );
 }

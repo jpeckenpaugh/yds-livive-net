@@ -1,13 +1,13 @@
 # You Don't Say — UI (D4)
 
-> **Status:** 🟡 Draft — pending owner review
+> **Status:** ✅ Frozen · **Amended:** 2026-10-18 (shell, pair, list, completion, playback, chrome localization — §16–§19)
 > **Owner:** Designer · **Reviewer:** Project Manager
-> **Purpose:** The interface contract. Component tree, the store, the presentation matrix, every interaction state, **all playback sequencing and timing**, the choice-card interaction, the choice-blind fix, the degraded-audio state machine, keyboard and accessibility, and the About/Licenses surface.
+> **Purpose:** The interface contract. Component tree, the store, the presentation matrix, every interaction state, **all playback sequencing and timing**, the choice-card interaction, the choice-blind fix, the degraded-audio state machine, keyboard and accessibility, the About/Licenses surface, **the shell and its screens, the learner's language pair, and chrome localization**.
 > **Depends on:** D2 (`visibility()`, `ResolvedBeat`, session ops, the three carve-outs) · D3 (capabilities, the `PlaybackController` interface, the G1/G2 facts, licenses) · D6 (nothing here is authored content)
-> **Owns:** the component tree, the presentation half of the toggle matrix, **every timing constant**, the scheduler, all interaction states, keyboard map, a11y conformance, the About/Licenses surface, `AC-UI-*`
+> **Owns:** the component tree, the shell/routing contract, the presentation half of the toggle matrix, **every timing constant**, the scheduler, all interaction states, keyboard map, a11y conformance, the About/Licenses surface, chrome localization, `AC-UI-*`, `AC-I18N-*`
 > **Related:** D7 (module map) · D5 (test harness, mock `speechSynthesis`, a11y tooling)
 
-**Precedence.** Locked decisions > `docs/design/D2`–`D7` > `README.md`. Deliberate disagreements carry a **⚠ DIVERGES FROM README** marker.
+**Precedence.** Locked decisions > `docs/design/D2`–`D7` > `README.md`. Deliberate disagreements carry a **⚠ DIVERGES FROM README** marker; a disagreement with the PM contract carries a **⚠ DIVERGES FROM D1** marker.
 
 **Ownership line (PM Flag D).** D3 owns the `PlaybackController` **interface**. **This doc owns every sequencing rule and every timing number.** D2 owns `visibility()`'s 32→{show/play} derivation; **this doc owns what those flags look like.**
 
@@ -23,6 +23,9 @@
 | Choice-card interaction: pick, preview, ghost replay, re-pick | Build config, lint, CI, test harness → D5 |
 | G1/G2 surfaces, degraded states, About/Licenses | Module topology → D7 |
 | Keyboard, focus, a11y conformance | — |
+| Shell/routing, the language pair, the list, completion, playback, chrome localization (§16–§19) | — |
+
+**Amended surfaces.** §1–§15 are the original conversation screen. §16–§19 add the shell and the three screens it routes, the learner's language pair, whole-conversation playback, persistence, and chrome localization; all of them are built and tested. **⚠ DIVERGES FROM D1** §3, whose MVP OUT list still excludes "more than one conversation" and specifies no onboarding or catalog surface — the owner is amending D1 and this doc records the surfaces as built. See §16.
 
 **Visual design is not this doc's job.** No palettes, no type scale, no spacing. This doc fixes *states and behaviour*; anything a state document does not require is free.
 
@@ -68,6 +71,8 @@ Consequence worth stating because it is where UI work usually goes wrong: **if a
 
 M1 ships every component above except `WhatIfPanel`'s non-M1 parts (`WhatIfPanel` itself **is** in M1 — README §core loop step 6). `L2NotSpokenMarker`, `UnreachableTailNote` and `AudioNotice` are small but load-bearing: each represents a state that the design would otherwise be silently wrong about.
 
+This tree is the **conversation screen**. It is now reached through a shell that owns two more screens — `<Welcome>` and `<Conversations>` — which sit *above* `<App>` (§16.1). The shell is additive: this tree, and `<App>`'s contract, are unchanged, which is why the existing tests still render `<App>` directly.
+
 ---
 
 ## 4. Store
@@ -90,6 +95,8 @@ type Store = {
 | `playbackReducer` | transport queue (§6.4) | Never persisted; rebuilt from session on load. |
 
 `prefs` **is** persisted (`read`, `hear`, `hint`, `speed`, `voiceOverrides`, `playAnyway`) — a learner who sets "hear L2, read nothing" should not re-set it every visit. `session` is **not** persisted in M1 (README §First milestone: no persistence across devices, and a mid-conversation restore is a feature, not a default). `playAnyway` is persisted but never *set* by the app (§9).
+
+**Amended:** the store context also carries the resolved **messages** as `t` (§18.7), read from the catalog for `<App>`'s `uiLang`. The shell owns the persisted state across screens (§16.5); this store remains the conversation screen's own state and gains nothing else.
 
 ---
 
@@ -522,6 +529,33 @@ All timings (§6.3) and the presentation table (§5.2) are canonical here. Nothi
 | **AC-UI-25** | The first beat does not autoplay: the app loads in `idle` and the Play control is the required gesture. |
 | **AC-UI-27** | Option icons render as decoration: `aria-hidden`, never part of a card's accessible name, never targeted independently, never load-bearing, and their absence is not a defect. |
 | **AC-UI-26** | `prefers-reduced-motion: reduce` sets `ANIMATE_IN_MS` to 0 and no other motion occurs. |
+| **AC-UI-28** | `<Shell>` owns exactly the three screens `welcome`/`list`/`conversation`; `<App>` remains the conversation screen with its §3 contract unchanged, so a test may render `<App>` directly with no shell; `main.tsx` stays the single composition root and passes the engine factory to `<Shell>` as a prop, and `<Shell>` constructs no engine (AC-ARCH-04). |
+| **AC-UI-29** | The Welcome screen offers exactly two selects, labelled **I speak** and **I'm learning** (never primary/secondary); both option lists come from the catalog, so onboarding cannot dead-end; the first run shows **Start**, a later visit from the list shows **Save** plus **Cancel**; and choosing the same language for both is disallowed. |
+| **AC-UI-30** | The learner's pair is projected onto the conversation's positional `l1`/`l2` with no domain change: `derivedPrefs` sets `read: 'both'` and `hear` to the study channel; changing the pair clears explicit prefs; and channel labels are derived from the conversation's actual languages, never hardcoded. For a reversed pair the §5.3 option-label carve-out means the learner's native channel, not the conversation's `l1`. |
+| **AC-UI-31** | The list is filtered by pair; each entry shows title, `N of M beats · K of J decisions`, a thin progress bar, and `Complete — play it again` when every beat is revealed and every decision made; an empty pair shows an honest empty state; the pair switcher lives in the list header. |
+| **AC-UI-32** | Completion is a state within the conversation screen, not a route: when every beat is `resolved` a panel renders above the transcript showing the chain of decisions (speaker + each option as a pill, the chosen one filled), where tapping the other option runs the same `choose` the transcript uses so downstream beats are re-derived by the domain, plus a primary **Play the whole conversation** control. |
+| **AC-UI-33** | Compose and Play are modes of the same screen; in Play the completion panel and ghost options are hidden, the current beat is highlighted (`data-active`), and playback iterates the **resolved beat list** rather than re-reading the session cursor; Pause exits play mode. |
+| **AC-UI-34** | Persistence uses key `yds.v1` and stores `seenWelcome`, `native`, `study`, `prefs` and `sessions` keyed by conversation id; it validates what it reads and falls back to defaults on any surprise, so a corrupt entry can never make the app unopenable; `<App>` gains optional `initialSession`, `onPersist` and `onBack`, and `onPersist` fires only when the session or prefs **reference** changed. |
+| **AC-UI-35** | Option icons are resolved from the **owning beat's** built options by option key (keys are unique within a beat, not across a conversation), never by a conversation-wide search; `ResolvedOption` still carries no `icon`, which is a §2 violation to be closed by a D2 amendment (§19.2). |
+
+**AC-UI-28..35** are the amendment's shell, pair, list, completion, playback, persistence and icon-lookup criteria. **AC-UI-09** is annotated in place (§16.3): "at least L1" means "at least the learner's native channel".
+
+### 14.1 `AC-I18N-*` — chrome localization
+
+The `AC-I18N-*` family is new with this amendment. It owns the app's **own** language, which is distinct from the conversation's content languages (owned by D6) and from the channel prefs (owned by D2 §12). Its full specification is §18.
+
+| ID | Criterion |
+|---|---|
+| **AC-I18N-01** | Full chrome localization: the UI language is the learner's chosen native language, every chrome string renders from that language's catalog, and changing the pair re-renders the chrome without a reload. |
+| **AC-I18N-02** | The catalogs are typed functions, not key lookups: a `Messages` type has one member per message, `en` and `es` catalogs implement it, and TypeScript enforces completeness, so a missing translation is a compile error rather than a runtime fallback. |
+| **AC-I18N-03** | The plural-bearing messages named in §18.2 select their form from `count` through a catalog-local rule; the Spanish `unreachableTail` verb agrees (`se restableció 1 turno` / `se restablecieron N turnos`); no CLDR or plural-rules dependency is added. |
+| **AC-I18N-04** | `audio-state.ts` returns a message identity plus parameters, never a finished sentence; the notice's language name is resolved by the catalog, so it is both localized and inflected. |
+| **AC-I18N-05** | Language names are localized (English/Español), and a parameterized message resolves the name through the language-name message rather than assuming it is a bare noun. |
+| **AC-I18N-06** | `document.documentElement.lang` follows the UI language; content spans keep their own `lang` per AC-UI-20. |
+| **AC-I18N-07** | Licence identifiers and the use-restriction text are verbatim in every UI language; only the labels around them translate (AC-UI-23 is unaffected). |
+| **AC-I18N-08** | `<App>` takes `uiLang` (default `'en'`) and exposes the resolved messages as `t` through the store context; at `uiLang: 'en'` the rendered chrome is unchanged, so the existing tests pass without modification, and any assertion that pins chrome copy resolves the expected string from the catalog rather than a literal. |
+
+**⚠ Tooling gap this family exposes.** `tools/check-ac-map.mjs` scans the docs with `/AC-[A-Z]+-\d+/g`. `I18N` contains digits, so `AC-I18N-*` ids are **invisible to that scan**: they are neither required in `tools/ac-map.json` nor covered by it. The grammar must widen to `AC-[A-Z0-9]+-\d+` for the family to be indexed and enforced (D5 owns the tool; this is a one-character-class change plus the `tools/ac-map.json` entries). Until then the family exists in this doc but not in the gate, which is the exact "an id with no mapped test is not passing" failure D1 §6 warns about. The eight new `AC-UI-*` ids, by contrast, *are* seen and will fail `check:ac-map` until the Engineer adds them.
 
 ---
 
@@ -538,7 +572,9 @@ Everything else D3 pre-registered is absorbed without a change request: the four
 
 **Pushing back on D6 — nothing.** D4 renders the resolved artifact and touches no content.
 
-**Should this block M1?** One item only, and it is the `Option.icon` decision, because it is a schema question and schema changes get more expensive after the first bake. Everything else in this doc is additive implementation work with no cross-doc dependency. **No blocker for M1 beyond that decision.**
+**On D1 — a recorded divergence, not a pushback.** §16–§19 specify surfaces that D1 §3's MVP OUT list excludes: a first-run language pair, a catalog-backed conversation list, a completion state and whole-conversation playback. They are built, tested and live. The owner owns the scope call and is amending D1; this doc records the surfaces, extends `AC-UI-*` in place (§14) and adds the new `AC-I18N-*` family, and does not re-litigate the milestone boundary. D1 must reference `AC-UI-28..35` and `AC-I18N-01..08` for `check:ac-map` to stay whole.
+
+**Should this block M1?** One item only, and it is the `Option.icon` decision, because it is a schema question and schema changes get more expensive after the first bake. Everything else in this doc is additive implementation work with no cross-doc dependency. **No blocker for M1 beyond that decision.** The amendment's one open item is the `ResolvedOption.icon` gap (§19.2): it is a §2 violation and wants a D2 amendment, but the interim lookup is scoped and testable, so it does not block.
 
 **Open items for the owner:**
 
@@ -546,3 +582,224 @@ Everything else D3 pre-registered is absorbed without a change request: the four
 2. §11.1 — the letter shortcuts (`G`, `W`, `?`) are additions beyond the map you approved (Q12). Approved verbs; the letters are mine and are cheap to change.
 3. §12 — I have taken the position that turning off Read is a learner setting rather than a WCAG 1.2.1 failure. If you want the stricter reading, the fallback is to make `read: 'none'` a warned state with an inline note rather than a silent one.
 4. §7.6 — the ten icons themselves are content, owned by D6. If any of the ten is unimaginable for a learner, that is a one-line content change with no schema impact.
+
+---
+
+## 16. The shell, the pair, and the list
+
+> **Amendment (2026-10-18) — surfaces added after the freeze.** The owner added a first-run language pair, a conversation list, a completion state and whole-conversation playback. All four are built, tested and live. §16–§19 specify them; §14 carries their criteria. **⚠ DIVERGES FROM D1** §3, whose MVP OUT list still excludes "more than one conversation" and specifies no onboarding or catalog surface. The owner is amending D1; this doc records the surfaces as built and does not re-litigate the scope call.
+
+### 16.1 The shell and routing
+
+`<Shell>` (`src/ui/Shell.tsx`) sits **above** `<App>` and owns three screens:
+
+```
+<Shell>                                  engine factory injected as a prop (AC-ARCH-04)
+├─ <Welcome>                             screen 'welcome'       (§16.2)
+├─ <Conversations>                       screen 'list'          (§16.4)
+└─ <App>                                 screen 'conversation'  — the §3 tree, contract unchanged
+```
+
+| Rule | Detail |
+|---|---|
+| Three screens | `Screen = 'welcome' \| 'list' \| 'conversation'`. The initial screen is `'list'` when a pair is persisted, otherwise `'welcome'`; a missing `native` or `study` forces `'welcome'` regardless of the stored screen. |
+| `<App>` is unchanged | It stays the conversation screen and keeps every prop and behaviour in §3–§13. The shell is **additive**, which is why the existing tests still render `<App>` directly and pass. |
+| One composition root | `main.tsx` remains the single composition root (AC-ARCH-04): it constructs the engine factory and passes it to `<Shell>` as a prop. `<Shell>` constructs no engine; it forwards the factory to `<App>`. |
+| Screens, not routes | There is no router and no URL change. The three screens are `useState` in the shell, so a reload returns to the stored screen. |
+
+The shell is the only owner of persisted state; `<App>` reports snapshots upward (§16.5). Nothing in §3's tree changes.
+
+### 16.2 Welcome
+
+`<Welcome>` (`src/ui/screens/Welcome.tsx`) is the first run, and the place the pair is changed later.
+
+| Element | Behaviour |
+|---|---|
+| **I speak** | A `<select>` over `nativeOptions()` — the learner's native language. The label is never "primary". |
+| **I'm learning** | A `<select>` over `studyOptions(native)` — the study language. Re-derived when the native language changes; if the current study value is no longer offered it resets to the first option. The label is never "secondary". |
+| Catalog-sourced | Both lists come from `src/data/catalog.ts`, so onboarding can only ever offer a pair that has content and can never dead-end on an empty list. With one authored conversation this still offers two real directions over the same content (`en → es` and `es → en`). |
+| **Start** / **Save** | The first run (`!seenWelcome`) shows **Start**. A later visit, reached from the list's pair switcher, shows **Save** plus **Cancel** (`onCancel` is absent on the first run, so there is no Cancel back to a screen that does not exist yet). |
+| Same language disallowed | The primary action is disabled unless `native !== '' && study !== '' && study !== native`. |
+| Changing the pair clears prefs | Committing a pair resets `prefs` to `{}` (§16.3): the derived posture is a function of the pair, and an explicit choice made under the old pair must not leak into the new one. |
+
+### 16.3 The pair projection
+
+A conversation is authored in two languages, so **both directions are valid uses of the same content**. `en → es` and `es → en` are not two conversations; they are one conversation read from either end. `src/ui/language.ts` projects the learner's pair onto the conversation's **positional** `l1`/`l2`, which is why the domain needed no change at all.
+
+| Function | Meaning |
+|---|---|
+| `isReversed(c, native)` | true when the learner's native language is the conversation's `l2`. |
+| `nativeChannel(c, native)` | the channel carrying the learner's native language. |
+| `studyChannel(c, native)` | the channel carrying the study language. |
+| `derivedPrefs(c, native)` | `{ read: 'both', hear: studyChannel(c, native) }`. Reading both keeps the L2 text present, which is what makes the hover gloss reachable at all (§5.3). |
+
+Two consequences the UI must honour:
+
+1. **Changing the pair clears explicit prefs.** The positional channels swap meaning when the pair reverses, so a stored `hear: 'l2'` no longer denotes the same language. The shell resets `prefs` on every pair commit; the derived posture is re-applied. (Sessions are keyed by conversation id and are **not** cleared: a choice is a beat/option key, not a channel, so it survives the reversal.)
+2. **Channel labels are derived, never hardcoded.** `channelsFor()` labels each radio from `langName(conversation.l1)` / `langName(conversation.l2)`, so a reversed pair reads correctly. Hardcoding "Spanish only" was a latent bug for `es → en`; the label now names the actual language.
+
+**⚠ Annotation to AC-UI-09 / §5.3.** The carve-out says option labels always render in **at least L1**. Under the pair projection "L1" is positional, not the learner's language: for an `es → en` learner the native language is the conversation's `l2`. The carve-out's *intent* — a chooser whose buttons the learner can read — is satisfied by rendering the label in the learner's **native channel**. AC-UI-09 is annotated in place: "at least L1" means "at least the learner's native channel". This is a wording correction only; the id and the behaviour (never hide the readable label) are unchanged.
+
+### 16.4 Conversations list
+
+`<Conversations>` (`src/ui/screens/Conversations.tsx`) lists the conversations for the current pair.
+
+- **Filtered by pair.** `conversationsFor(native, study)` returns every entry usable in either orientation. The list header carries the **pair switcher** — `langName(native) → langName(study) · change` — which returns to Welcome with Save/Cancel.
+- **Per entry:** the title, `N of M beats · K of J decisions`, and a thin progress bar (`aria-hidden`, decorative; the counts carry the information).
+- **When complete:** the meta line becomes **`Complete — play it again`**, where "complete" means every beat revealed **and** every decision made (`beatsRevealed >= beatsTotal && decisionsMade >= decisionsTotal`). The count is not a substitute for the state: a conversation whose last beat is a pending choice is not complete.
+- **Empty state:** an honest line — "No conversations for *X* → *Y* yet. Try another pair." — never an empty list. Because the picker is catalog-sourced, this state is reachable only if the catalog changes underneath a stored pair.
+
+`progressOf()` reads the stored session when one exists; with no session it reports the initial session (beat 1 revealed, no decisions), which is what the learner would see on opening it.
+
+### 16.5 Persistence
+
+`src/ui/persistence.ts` is deliberately tiny and **total**.
+
+| Rule | Detail |
+|---|---|
+| One key | `yds.v1`. |
+| Stored shape | `seenWelcome: boolean`, `native: Lang \| null`, `study: Lang \| null`, `prefs: Partial<Preferences>`, `sessions: Record<conversationId, Session>`. |
+| Validate, never assert | `loadPersisted()` checks the shape of everything it reads — each session's `cursor`/`revealed`/`choices` and each choice's value — and **falls back to defaults on any surprise**. A corrupt entry must never make the app unopenable, because the only way out of that is clearing site data by hand. |
+| One writer | The shell owns storage. `<App>` never touches `localStorage`; it reports snapshots upward. |
+| `<App>` gains three optional props | `initialSession` (resume a composed session), `onPersist({ session, prefs })`, and `onBack` (render the back-to-list control). All three are optional, so the existing tests that render `<App>` without them are unaffected. |
+| `onPersist` fires on reference change only | The effect compares the previous `session` and `prefs` **by reference** and returns early when neither changed. Without this the effect re-fires on every render — `onPersist` is a fresh closure on each shell render — writing, re-rendering the shell, and never settling. **This was a real bug: the page hung and clicks never returned.** |
+
+`savePersisted()` swallows quota and private-mode failures; losing persistence is survivable, a thrown error mid-session is not.
+
+---
+
+## 17. Completion and playback
+
+### 17.1 Completion state
+
+Completion is a **state within the conversation screen, not a route.** When every beat's status is `resolved`, `<CompletionPanel>` renders **above** the transcript:
+
+- The **chain of decisions**: one step per choice beat, the speaker's name and each option rendered as a pill; the chosen pill is filled and carries `aria-pressed="true"`.
+- **Tapping the other option changes the decision.** It calls the *same* `choose` the transcript uses (`sessionOp({ type: 'choose', beatId, key })`), so the downstream beats are re-derived by D2's `reduce` and `resolveTimeline`, not by the component. D2 §10's clamp and `UnreachableTailNote` (§7.5) apply exactly as they do from a card.
+- A primary **"Play the whole conversation"** control (§17.2).
+- The panel is hidden in Play mode, because it is an editing surface and Play is a listening one.
+
+This is the moment the learner actually authored, which is why it gets its own surface rather than a status line. It introduces no new session op and no new state: it is a rendering of the resolved timeline.
+
+### 17.2 Playback mode
+
+Compose and Play are **modes of the same screen** (`mode: 'compose' | 'play'`), not two screens.
+
+| In Play | Detail |
+|---|---|
+| Completion panel hidden | It is an editing surface; Play is listening only. |
+| Ghost options hidden | The composed conversation reads cleanly; ghosts are a compose-time affordance. |
+| Current beat highlighted | The active row carries `data-active="true"`. |
+| Iterates the resolved list | Playback walks `resolveTimeline(conversation, session)` **directly**, dispatching a `seek` per beat to keep the cursor and the highlight in step. It does **not** re-read the session cursor each step: the session is a render behind the `seek`, so reading the cursor played whichever beat it happened to be on before playback started — the wrong beat. |
+| Pause exits | `stopPlayback()` stops the scheduler, sets `mode = 'compose'`, clears the active beat, and reports **Paused**. |
+| Only when fully resolved | `playWhole()` refuses unless every beat is `resolved`; the control is offered only from the completion panel, which exists only in that state. |
+| Inter-beat gap | After each beat's audio finishes, Play waits a gap before the next beat. It is not a fabricated duration (§6.4): it is the declared gap between known-complete utterances. **Open tuning item:** the built path uses `GAP_AFTER_CHOICE_MS` between every beat, but §6.3 defines `GAP_POST_BEAT_MS` for a plain beat and `GAP_AFTER_CHOICE_MS` for a chosen response; a fully-correct Play would pick by beat kind. Flagged rather than silently fixed. |
+
+Play mode adds no scheduler mode. It reuses `playBeat` per beat with the same `visibility()` the compose path uses, so the only difference from composing is that nothing pauses for input.
+
+---
+
+## 18. Chrome localization
+
+**Full chrome localization.** Picking a native language translates the app's own UI, not just the content. The UI language **is** the learner's chosen native language; there is no separate language setting. This section is the contract; its criteria are `AC-I18N-01..08`.
+
+### 18.1 Catalogs as typed functions, not key lookups
+
+A `Messages` type has **one member per message**. `en` and `es` catalogs implement it. TypeScript enforces completeness, so **a missing translation is a compile error, not a runtime fallback** — there is no `t('some.key')` lookup, no string key that can silently miss, and no English leak on a Spanish screen.
+
+```ts
+// src/ui/i18n/messages.ts
+export type UiLang = 'en' | 'es';
+export type Messages = {
+  iSpeak: () => string;
+  iAmLearning: () => string;
+  conversations: () => string;
+  beatCounter: (p: { index: number; total: number }) => string;
+  unreachableTail: (p: { count: number }) => string;
+  noVoiceFor: (p: { lang: Lang }) => string;   // the code, not a finished name
+  // …one member per message
+};
+```
+
+Messages are **functions**, not format strings: a message that needs a count or a language takes it as a parameter and owns the agreement (§18.2, §18.4). The `en` and `es` catalogs are plain objects satisfying `Messages`; a catalog missing a member fails `typecheck`.
+
+### 18.2 Pluralization
+
+Substitution is not enough, because agreement is not just the noun. Spanish needs the **verb** to agree: `se restableció 1 turno` but `se restablecieron N turnos`.
+
+**Three messages in the shipped catalogs carry a count and require a plural form:**
+
+| Message | What agrees | Example |
+|---|---|---|
+| `unreachableTail` | the noun **and the verb** | `1 turno se restableció` / `N turnos se restablecieron` |
+| `completionLede` | the noun | `1 decisión tomada` / `N decisiones tomadas` |
+| `listProgress` | two nouns (`beats`, `decisions`) | `1 de 1 turno` / `2 de 10 turnos` |
+
+The beat counter (`Beat 3 of 10`) is deliberately **singular** in both languages — the number labels the current beat, it does not count a set — so it needs no plural form.
+
+**Where the rule lives.** A one/other selector, `plural(count, one, other)`, lives beside the catalogs (`src/ui/i18n/plural.ts`) and is called *inside* the message functions. Both forms are therefore part of the function body and are type-checked; there is no separate message-table shape to keep in sync. **No CLDR and no plural-rules dependency is added** — the house rule forbids new runtime dependencies, English and Spanish both have a one/other rule, and a plural-rule engine for two languages and three messages is not worth a dependency.
+
+### 18.3 `audio-state.ts` returns identities, not prose
+
+`src/ui/audio-state.ts` currently returns finished English sentences (`notice: 'No Spanish voice is installed on this device.'`). It must return a **message identity plus parameters**, so the notice can be translated and so the language name inside it can itself be localized:
+
+```ts
+type MessageRef = { id: keyof Messages; params: Record<string, string | number> };
+// AudioState.notice?: MessageRef; AudioState.action?: MessageRef;
+```
+
+- `no-l2-voice` returns `{ id: 'noVoiceFor', params: { lang: 'es' } }`, not a sentence.
+- `engine-absent` returns `{ id: 'audioAbsent' }`; `play-anyway` returns `{ id: 'playAnywayNotice', params: { lang } }`.
+- The **language name is grammar, not a noun.** `params.lang` is the **code**; the catalog resolves the display name through the language-name message (§18.4), so the notice inflects correctly in each UI language and the name is produced in the right form for its position in the sentence.
+- The same rule applies to `L2NotSpokenMarker`, which currently hardcodes the English word "Spanish", and to the voice picker, which currently renders the bare code.
+
+The state machine in §9 is unchanged; only its *output* changes from prose to an identity.
+
+### 18.4 Language names
+
+Language names are localized — `en` → "English"/"Español", `es` → "Español"/"English". `langName()` becomes a catalog-backed message (`languageName({ code })`) rather than a module-level English `Record`.
+
+A **parameterized message must not assume the language name is a bare noun.** `noVoiceFor` takes the code and asks the catalog for the name, so a message can place it in a sentence ("No hay una voz de **español** instalada") without the caller having to know the grammatical form. Callers pass a code; only the catalog produces a name.
+
+### 18.5 `document.documentElement.lang`
+
+`document.documentElement.lang` follows the **UI language**, set by the shell when the pair is committed and on load. This is separate from content: every L2 block keeps `lang={conversation.l2}` and every L1 block keeps `lang={conversation.l1}` (AC-UI-20), so a screen reader pronounces the chrome in the learner's language and the dialogue in the conversation's. The markup already does the content half correctly; this clause adds the chrome half.
+
+### 18.6 Licences
+
+**Licence text stays verbatim in every UI language.** The licence identifiers (OpenRAIL-M, MIT, Apache-2.0) and the use-restriction statement are legal content, not chrome; they are not translated and not paraphrased. Only the **labels around them** translate: the dialog title, the offline statement, the button that opens the dialog, and each entry's purpose label. This keeps AC-UI-23's claims — the restriction is stated in plain language and no model/repo name appears — true in both languages.
+
+### 18.7 Wiring: `uiLang` and `t`
+
+- `<App>` gains an optional **`uiLang`** prop, defaulting to `'en'`.
+- `<App>` resolves `messages = catalogs[uiLang]` once and exposes it through the **store context** as **`t`**. Components read `t.play()`, `t.beatCounter({…})`, and so on. No component reaches for a catalog directly, and no component holds a literal chrome string.
+- Because the default is `'en'`, **the existing tests that render `<App>` without `uiLang` keep passing unchanged**: the rendered English is identical to today's literals.
+- The shell passes the learner's `native` as `uiLang`.
+
+### 18.8 Test consequence
+
+Any assertion that pins chrome copy must resolve the expected string **through the catalog** — `t.play()` or the `en` catalog — rather than a bare literal. A literal is how a copy change silently passes in English and fails only when Spanish ships; a catalog reference keeps the assertion true in both languages. At `uiLang: 'en'` this is a mechanical substitution and changes no expectation's meaning.
+
+---
+
+## 19. Vocabulary, and the option-icon deviation
+
+### 19.1 The UI says "Conversations"
+
+The list screen and every label that names it say **"Conversations"**, never "Lessons". This matches the schema (`Conversation`), the catalog (`conversationsFor`), and the frozen docs; "lesson" survives only in the clean-room record's prose about third-party course material, where it belongs. A learner's authored version is a *conversation*, and the app should not introduce a second noun for it.
+
+### 19.2 Option icons — the gap is still open
+
+`Option.icon` / `BuiltOption.icon` exist (§7.6, D2 §4.3) but **`ResolvedOption` carries no `icon`**, so the UI cannot read it from the resolved beat it is rendering. The built implementation works around this by searching the whole conversation's built options for a matching key.
+
+**This is a §2 violation, recorded rather than accepted.** The rule in §2 is explicit: if a component wants a fact the domain does not expose, the response is to request a domain change, not to compute it locally. The correct fix is a D2 amendment adding `icon?: string` to `ResolvedOption`, resolved with the option.
+
+**The lookup rule until then** (and the rule any interim test must assert):
+
+| Rule | Detail |
+|---|---|
+| Scope | Resolve the icon from the **owning beat's** built options by option key. |
+| Why scoped | `Option.key` is unique **within a beat**, across all of its choice sets (D2 §4.3) — it is **not** globally unique. A conversation-wide search can return a different beat's icon whenever two beats reuse a key. |
+| Current implementation | Searches every beat's alternatives in the whole conversation. It happens to be correct only because the fixture's ten keys are globally unique; it is a latent bug, not a rule. |
+
+AC-UI-35 states the scoped rule; the conversation-wide search is recorded here as a known deviation to close with the D2 amendment or a beat-scoped lookup.

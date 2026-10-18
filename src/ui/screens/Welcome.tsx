@@ -9,7 +9,7 @@
 
 import { useState } from 'preact/hooks';
 import { nativeOptions, studyOptions } from '../../data/catalog.ts';
-import { langName } from '../language.ts';
+import { messagesFor } from '../i18n/index.ts';
 
 export function Welcome({
   initialNative,
@@ -30,6 +30,9 @@ export function Welcome({
   const [study, setStudy] = useState(
     initialStudy && studies.includes(initialStudy) ? initialStudy : (studies[0] ?? 'es'),
   );
+  // The welcome screen follows the language being chosen, not the persisted one,
+  // so the effect of the choice is visible before it is committed.
+  const t = messagesFor(native);
 
   function changeNative(next: string): void {
     setNative(next);
@@ -42,29 +45,26 @@ export function Welcome({
   return (
     <div class="screen screen-welcome">
       <div class="welcome-card">
-        <h1>You Don&rsquo;t Say</h1>
-        <p class="welcome-lede">
-          Listen to a conversation between two people, and decide what one of them says next. You
-          build the conversation; then you can hear it whole.
-        </p>
+        <h1>{t.appName}</h1>
+        <p class="welcome-lede">{t.welcomeLede}</p>
 
         <label class="field">
-          <span class="field-label">I speak</span>
+          <span class="field-label">{t.iSpeak}</span>
           <select value={native} onChange={(event) => changeNative(event.currentTarget.value)}>
             {natives.map((code) => (
               <option key={code} value={code}>
-                {langName(code)}
+                {t.languageName(code)}
               </option>
             ))}
           </select>
         </label>
 
         <label class="field">
-          <span class="field-label">I&rsquo;m learning</span>
+          <span class="field-label">{t.imLearning}</span>
           <select value={study} onChange={(event) => setStudy(event.currentTarget.value)}>
             {studies.map((code) => (
               <option key={code} value={code}>
-                {langName(code)}
+                {t.languageName(code)}
               </option>
             ))}
           </select>
@@ -77,11 +77,11 @@ export function Welcome({
             disabled={!ready}
             onClick={() => onStart(native, study)}
           >
-            {isFirstRun ? 'Start' : 'Save'}
+            {isFirstRun ? t.start : t.save}
           </button>
           {onCancel ? (
             <button type="button" onClick={onCancel}>
-              Cancel
+              {t.cancel}
             </button>
           ) : null}
         </div>
