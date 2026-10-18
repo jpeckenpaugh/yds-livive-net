@@ -1,0 +1,108 @@
+/**
+ * The store (D4 §4).
+ *
+ * Hand-rolled `useReducer` + context, no new dependency. Three concerns:
+ * `session` (the only mutable domain state), `prefs` (persisted), and `playback`
+ * (UI-local, never persisted). The session reducer contains no domain logic of
+ * its own — it delegates to D2's `reduce`.
+ */
+
+import { createContext } from 'preact';
+import { useContext } from 'preact/hooks';
+import { initialSession, reduce } from '../domain/session.ts';
+import {
+  DEFAULT_SPEED,
+  type ChoiceKey,
+  type Conversation,
+  type Preferences,
+  type Session,
+  type SessionOp,
+} from '../domain/types.ts';
+import { visibility } from '../domain/visibility.ts';
+import type { PlaybackState, TtsEngine } from '../engines/ports.ts';
+import { audioState, type AudioState } from './audio-state.ts';
+import type { Scheduler } from './scheduler.ts';
+
+export const DEFAULT_PREFS: Preferences = {
+  read: 'l2',
+  hear: 'l2',
+  hint: true,
+  speed: DEFAULT_SPEED,
+  voiceOverrides: {},
+  playAnyway: false,
+};
+
+export type StoreState = {
+  session: Session;
+  prefs: Preferences;
+  playback: PlaybackState;
+  /** Derived from engine capabilities + voice availability; recomputed on every change. */
+  audio: AudioState;
+  noticeDismissed: boolean;
+};
+
+export type StoreAction =
+  | { type: 'session'; op: SessionOp }
+  | { type: 'prefs'; patch: Partial<Preferences> }
+  | { type: 'playback'; state: PlaybackState }
+  | { type: 'audio'; audio: AudioState }
+  | { type: 'dismiss-notice' }
+  | { type: 'restore'; state: StoreState };
+
+export function createInitialState(conversation: Conversation, audio: AudioState): StoreState {
+  return {
+    session: initialSession(conversation),
+    prefs: DEFAULT_PREFS,
+    playback: 'idle',
+    audio,
+    noticeDismissed: false,
+  };
+}
+
+export function reduceStore(
+  conversation: Conversation,
+  state: StoreState,
+  action: StoreAction,
+): StoreState {
+  switch (action.type) {
+    case 'session':
+      return { ...state, session: reduce(conversation, state.session, action.op) };
+    case 'prefs':
+      return { ...state, prefs: { ...state.prefs, ...action.patch } };
+    case 'playback':
+      return { ...state, playback: action.state };
+    case 'audio':
+      return { ...state, audio: action.audio };
+    case 'dismiss-notice':
+      return { ...state, noticeDismissed: true };
+    case 'restore':
+      return action.state;
+  }
+}
+
+export type AppContext = {
+  conversation: Conversation;
+  state: StoreState;
+  dispatch: (action: StoreAction) => void;
+  scheduler: Scheduler;
+  engine: TtsEngine;
+  /** The 32→4 projection the UI renders from; components never read `prefs.read`. */
+  visibility: ReturnType<typeof visibility>;
+  /** The single polite status string (AC-UI-19). */
+  status: string;
+  setStatus: (message: string) => void;
+  play: () => void;
+  stop: () => void;
+  sessionOp: (op: SessionOp) => void;
+  choose: (key: ChoiceKey) => void;
+};
+
+export const StoreContext = createContext<AppContext | null>(null);
+
+export function useStore(): AppContext {
+  const context = useContext(StoreContext);
+  if (!context) throw new Error('useStore must be used inside <App>');
+  return context;
+}
+
+export { audioState };

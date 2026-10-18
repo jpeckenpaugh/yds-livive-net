@@ -1,0 +1,220 @@
+{
+  "id": "m1-fixture",
+  "title": "Making Plans",
+  "l1": "en",
+  "l2": "es",
+  "characters": {
+    "ron": { "name": "Ron", "voice": "M2" },
+    "bobby": { "name": "Bobby", "voice": "M4" }
+  },
+  "variables": [
+    { "name": "activity", "values": [{ "key": "dinner" }, { "key": "movie" }] },
+    {
+      "name": "spot",
+      "values": [
+        { "key": "dinner-plan", "l1": "a nice dinner" },
+        { "key": "movie-plan", "l1": "a new movie" }
+      ]
+    },
+    {
+      "name": "cuisine",
+      "values": [
+        { "key": "chinese", "l1": "Chinese" },
+        { "key": "pizza", "l1": "pizza" }
+      ]
+    },
+    {
+      "name": "genre",
+      "values": [
+        { "key": "comedy", "l1": "a comedy" },
+        { "key": "action", "l1": "an action movie" }
+      ]
+    },
+    {
+      "name": "time",
+      "values": [
+        { "key": "early", "l1": "early" },
+        { "key": "late", "l1": "later" }
+      ]
+    },
+    {
+      "name": "who",
+      "values": [
+        { "key": "us", "l1": "just the two of us" },
+        { "key": "friends", "l1": "the whole crew" }
+      ]
+    }
+  ],
+  "beats": [
+    {
+      "id": "b1",
+      "speaker": "ron",
+      "hint": "Ron wants to make plans for tomorrow.",
+      "line": [
+        { "id": "b1-l1", "template": "Hi Bobby. Do you want to get together tomorrow?" }
+      ]
+    },
+    {
+      "id": "b2",
+      "speaker": "bobby",
+      "hint": "Bobby is about to suggest a plan.",
+      "choiceSets": [
+        {
+          "id": "b2-s1",
+          "options": [
+            {
+              "key": "dinner",
+              "label": { "l1": "Dinner", "l2": "Cena" },
+              "icon": "🍽️",
+              "template": "Sure Ron! Why don't we get together for {spot}.",
+              "sets": { "activity": "dinner", "spot": "dinner-plan" }
+            },
+            {
+              "key": "movie",
+              "label": { "l1": "Movie", "l2": "Película" },
+              "icon": "🎬",
+              "template": "Ok Ron. Let's meet at the theater to watch {spot}.",
+              "sets": { "activity": "movie", "spot": "movie-plan" }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b3",
+      "speaker": "ron",
+      "hint": "Ron likes the idea.",
+      "line": [{ "id": "b3-l1", "template": "Perfect, {spot} sounds great." }]
+    },
+    {
+      "id": "b4",
+      "speaker": "bobby",
+      "hint": "Bobby picks a detail.",
+      "choiceSets": [
+        {
+          "id": "b4-dinner",
+          "when": { "activity": "dinner" },
+          "options": [
+            {
+              "key": "chinese",
+              "label": { "l1": "Chinese", "l2": "Chino" },
+              "icon": "🥡",
+              "template": "Let's get {cuisine}.",
+              "sets": { "cuisine": "chinese" }
+            },
+            {
+              "key": "pizza",
+              "label": { "l1": "Pizza", "l2": "Pizza" },
+              "icon": "🍕",
+              "template": "I could go for {cuisine}.",
+              "sets": { "cuisine": "pizza" }
+            }
+          ]
+        },
+        {
+          "id": "b4-movie",
+          "when": { "activity": "movie" },
+          "options": [
+            {
+              "key": "comedy",
+              "label": { "l1": "Comedy", "l2": "Comedia" },
+              "icon": "😂",
+              "template": "Let's see {genre}.",
+              "sets": { "genre": "comedy" }
+            },
+            {
+              "key": "action",
+              "label": { "l1": "Action", "l2": "Acción" },
+              "icon": "💥",
+              "template": "I'm in the mood for {genre}.",
+              "sets": { "genre": "action" }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "speaker": "ron",
+      "hint": "Ron agrees with the choice.",
+      "line": [
+        { "id": "b5-chinese", "when": { "cuisine": "chinese" }, "template": "Let's go with {cuisine}." },
+        { "id": "b5-pizza", "when": { "cuisine": "pizza" }, "template": "Let's go with {cuisine}." },
+        { "id": "b5-comedy", "when": { "genre": "comedy" }, "template": "Let's go with {genre}." },
+        { "id": "b5-action", "when": { "genre": "action" }, "template": "Let's go with {genre}." }
+      ]
+    },
+    {
+      "id": "b6",
+      "speaker": "bobby",
+      "hint": "Bobby suggests a time.",
+      "choiceSets": [
+        {
+          "id": "b6-s1",
+          "options": [
+            {
+              "key": "early",
+              "label": { "l1": "Early", "l2": "Temprano" },
+              "icon": "🌅",
+              "template": "{time} works better for me, honestly.",
+              "sets": { "time": "early" }
+            },
+            {
+              "key": "late",
+              "label": { "l1": "Later", "l2": "Más tarde" },
+              "icon": "🌙",
+              "template": "Let's go with {time}, then.",
+              "sets": { "time": "late" }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b7",
+      "speaker": "ron",
+      "hint": "Ron settles the time.",
+      "line": [{ "id": "b7-l1", "template": "Great, {time} it is." }]
+    },
+    {
+      "id": "b8",
+      "speaker": "bobby",
+      "hint": "Bobby decides who is coming.",
+      "choiceSets": [
+        {
+          "id": "b8-s1",
+          "options": [
+            {
+              "key": "us",
+              "label": { "l1": "Just us", "l2": "Solo nosotros" },
+              "icon": "👤",
+              "template": "Perfect. I'd like to keep it {who}.",
+              "sets": { "who": "us" }
+            },
+            {
+              "key": "friends",
+              "label": { "l1": "Friends", "l2": "Con amigos" },
+              "icon": "👥",
+              "template": "Perfect. I'll invite {who}.",
+              "sets": { "who": "friends" }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b9",
+      "speaker": "ron",
+      "hint": "Ron repeats the plan.",
+      "line": [
+        { "id": "b9-l1", "template": "Perfect. See you {time} on Saturday for {spot} with {who}." }
+      ]
+    },
+    {
+      "id": "b10",
+      "speaker": "bobby",
+      "hint": "They say goodbye.",
+      "line": [{ "id": "b10-l1", "template": "See you then, Ron!" }]
+    }
+  ]
+}

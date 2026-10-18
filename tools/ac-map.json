@@ -1,0 +1,545 @@
+{
+  "currentMilestone": "M1",
+  "ids": {
+    "AC-ARCH-01": {
+      "milestone": "M1",
+      "tests": ["domain/architecture.spec.ts"]
+    },
+    "AC-ARCH-02": {
+      "milestone": "M1",
+      "tests": ["domain/architecture.spec.ts"]
+    },
+    "AC-ARCH-03": {
+      "milestone": "M1",
+      "tests": ["tools/bundle.spec.ts"]
+    },
+    "AC-ARCH-04": {
+      "milestone": "M1",
+      "tests": ["domain/architecture.spec.ts"]
+    },
+    "AC-ARCH-05": {
+      "milestone": "M1",
+      "tests": ["domain/architecture.spec.ts"]
+    },
+    "AC-ARCH-06": {
+      "milestone": "M1",
+      "tests": ["domain/architecture.spec.ts"]
+    },
+    "AC-ARCH-07": {
+      "milestone": "M1",
+      "tests": ["domain/architecture.spec.ts"]
+    },
+    "AC-ARCH-08": {
+      "milestone": "M1",
+      "tests": ["domain/architecture.spec.ts"]
+    },
+    "AC-ARCH-09": {
+      "milestone": "M1",
+      "tests": ["domain/architecture.spec.ts"]
+    },
+    "AC-ARCH-10": {
+      "milestone": "M1",
+      "tests": ["domain/architecture.spec.ts"]
+    },
+    "AC-ARCH-11": {
+      "milestone": "M1",
+      "tests": ["domain/architecture.spec.ts"]
+    },
+    "AC-ARCH-12": {
+      "milestone": "M1",
+      "tests": ["domain/architecture.spec.ts"]
+    },
+    "AC-ARCH-13": {
+      "milestone": "M1",
+      "tests": ["domain/architecture.spec.ts"]
+    },
+    "AC-CONTENT-01": {
+      "milestone": "M1",
+      "tests": ["bake/bake.spec.ts"]
+    },
+    "AC-CONTENT-02": {
+      "milestone": "M1",
+      "tests": ["bake/bake.spec.ts"]
+    },
+    "AC-CONTENT-03": {
+      "milestone": "M1",
+      "tests": ["bake/bake.spec.ts"]
+    },
+    "AC-CONTENT-04": {
+      "milestone": "M1",
+      "tests": ["bake/bake.spec.ts"]
+    },
+    "AC-CONTENT-05": {
+      "milestone": "M1",
+      "tests": ["bake/bake.spec.ts"]
+    },
+    "AC-CONTENT-06": {
+      "milestone": "M1",
+      "tests": ["bake/content.spec.ts"]
+    },
+    "AC-CONTENT-07": {
+      "milestone": "M1",
+      "tests": ["bake/content.spec.ts"]
+    },
+    "AC-CONTENT-08": {
+      "milestone": "M1",
+      "tests": ["bake/content.spec.ts"]
+    },
+    "AC-CONTENT-09": {
+      "milestone": "M1",
+      "tests": ["bake/content.spec.ts"]
+    },
+    "AC-CONTENT-10": {
+      "milestone": "M1",
+      "tests": ["bake/content.spec.ts"]
+    },
+    "AC-CONTENT-11": {
+      "milestone": "M1",
+      "tests": ["bake/content.spec.ts"]
+    },
+    "AC-CONTENT-12": {
+      "milestone": "M1",
+      "tests": ["bake/content.spec.ts"]
+    },
+    "AC-CONTENT-13": {
+      "milestone": "M1",
+      "tests": ["bake/bake.spec.ts"]
+    },
+    "AC-CONTENT-14": {
+      "milestone": "M1",
+      "tests": ["bake/bake.spec.ts"]
+    },
+    "AC-CONTENT-15": {
+      "milestone": "M1",
+      "tests": ["bake/bake.spec.ts"]
+    },
+    "AC-CONTENT-16": {
+      "milestone": "M1",
+      "tests": ["bake/bake.spec.ts"]
+    },
+    "AC-CONTENT-17": {
+      "milestone": "M1",
+      "tests": ["bake/bake.spec.ts"]
+    },
+    "AC-CONTENT-18": {
+      "milestone": "M2",
+      "tests": []
+    },
+    "AC-CONTENT-19": {
+      "milestone": "M1",
+      "tests": ["bake/content.spec.ts"]
+    },
+    "AC-CONTENT-20": {
+      "milestone": "M1",
+      "tests": ["bake/content.spec.ts"]
+    },
+    "AC-CONTENT-21": {
+      "milestone": "M1",
+      "tests": ["bake/bake.spec.ts"]
+    },
+    "AC-CONTENT-22": {
+      "milestone": "M1",
+      "tests": ["domain/architecture.spec.ts"]
+    },
+    "AC-CONTENT-23": {
+      "milestone": "M3",
+      "tests": []
+    },
+    "AC-CONTENT-24": {
+      "milestone": "M1",
+      "tests": ["bake/bake.spec.ts"]
+    },
+    "AC-CONTENT-25": {
+      "milestone": "M3",
+      "tests": []
+    },
+    "AC-DOM-01": {
+      "milestone": "M1",
+      "tests": ["domain/architecture.spec.ts"]
+    },
+    "AC-DOM-02": {
+      "milestone": "M1",
+      "tests": ["domain/purity.spec.ts"]
+    },
+    "AC-DOM-03": {
+      "milestone": "M1",
+      "tests": ["domain/validate.spec.ts"]
+    },
+    "AC-DOM-04": {
+      "milestone": "M1",
+      "tests": ["domain/validate.spec.ts"]
+    },
+    "AC-DOM-05": {
+      "milestone": "M1",
+      "tests": ["domain/validate.spec.ts"]
+    },
+    "AC-DOM-06": {
+      "milestone": "M1",
+      "tests": ["domain/validate.spec.ts"]
+    },
+    "AC-DOM-07": {
+      "milestone": "M1",
+      "tests": ["domain/validate.spec.ts"]
+    },
+    "AC-DOM-08": {
+      "milestone": "M1",
+      "tests": ["domain/resolve.spec.ts"]
+    },
+    "AC-DOM-09": {
+      "milestone": "M1",
+      "tests": ["domain/variant-key.spec.ts"]
+    },
+    "AC-DOM-10": {
+      "milestone": "M1",
+      "tests": ["bake/provenance.spec.ts"]
+    },
+    "AC-DOM-11": {
+      "milestone": "M1",
+      "tests": ["bake/provenance.spec.ts"]
+    },
+    "AC-DOM-12": {
+      "milestone": "M1",
+      "tests": ["bake/gloss.spec.ts"]
+    },
+    "AC-DOM-13": {
+      "milestone": "M1",
+      "tests": ["domain/segment.spec.ts"]
+    },
+    "AC-DOM-14": {
+      "milestone": "M1",
+      "tests": ["domain/walk.spec.ts"]
+    },
+    "AC-DOM-15": {
+      "milestone": "M1",
+      "tests": ["domain/session.spec.ts"]
+    },
+    "AC-DOM-16": {
+      "milestone": "M1",
+      "tests": ["domain/session.spec.ts"]
+    },
+    "AC-DOM-17": {
+      "milestone": "M1",
+      "tests": ["domain/resolve.spec.ts"]
+    },
+    "AC-DOM-18": {
+      "milestone": "M1",
+      "tests": ["domain/resolve.spec.ts"]
+    },
+    "AC-DOM-19": {
+      "milestone": "M1",
+      "tests": ["domain/visibility.spec.ts"]
+    },
+    "AC-DOM-20": {
+      "milestone": "M1",
+      "tests": ["domain/validate.spec.ts"]
+    },
+    "AC-DOM-21": {
+      "milestone": "M1",
+      "tests": ["domain/diagnostics.spec.ts", "bake/provenance.spec.ts"]
+    },
+    "AC-DOM-22": {
+      "milestone": "M1",
+      "tests": ["domain/validate.spec.ts"]
+    },
+    "AC-DOM-23": {
+      "milestone": "M1",
+      "tests": ["domain/session.spec.ts"]
+    },
+    "AC-DOM-24": {
+      "milestone": "M1",
+      "tests": ["domain/walk.spec.ts"]
+    },
+    "AC-ENG-01": {
+      "milestone": "M1",
+      "tests": ["engines/registry.spec.ts"]
+    },
+    "AC-ENG-02": {
+      "milestone": "M1",
+      "tests": ["engines/conformance.spec.ts"]
+    },
+    "AC-ENG-03": {
+      "milestone": "M1",
+      "tests": ["engines/conformance.spec.ts"]
+    },
+    "AC-ENG-04": {
+      "milestone": "M1",
+      "tests": ["engines/conformance.spec.ts"]
+    },
+    "AC-ENG-05": {
+      "milestone": "M3",
+      "tests": ["engines/conformance.spec.ts"]
+    },
+    "AC-ENG-06": {
+      "milestone": "M1",
+      "tests": ["engines/registry.spec.ts", "ui/audio.spec.tsx"]
+    },
+    "AC-ENG-07": {
+      "milestone": "M1",
+      "tests": ["engines/conformance.spec.ts"]
+    },
+    "AC-ENG-08": {
+      "milestone": "M1",
+      "tests": ["engines/conformance.spec.ts"]
+    },
+    "AC-ENG-09": {
+      "milestone": "M1",
+      "tests": ["engines/conformance.spec.ts"]
+    },
+    "AC-ENG-10": {
+      "milestone": "M1",
+      "tests": ["engines/registry.spec.ts"]
+    },
+    "AC-ENG-11": {
+      "milestone": "M1",
+      "tests": ["engines/registry.spec.ts"]
+    },
+    "AC-ENG-12": {
+      "milestone": "M1",
+      "tests": ["tools/gate.spec.ts"]
+    },
+    "AC-ENG-13": {
+      "milestone": "M3",
+      "tests": []
+    },
+    "AC-ENG-14": {
+      "milestone": "M3",
+      "tests": []
+    },
+    "AC-ENG-15": {
+      "milestone": "M3",
+      "tests": []
+    },
+    "AC-ENG-16": {
+      "milestone": "M1",
+      "tests": ["bake/content.spec.ts"]
+    },
+    "AC-ENG-17": {
+      "milestone": "M1",
+      "tests": ["engines/registry.spec.ts"]
+    },
+    "AC-ENG-18": {
+      "milestone": "M3",
+      "tests": []
+    },
+    "AC-ENG-19": {
+      "milestone": "M1",
+      "tests": ["bake/content.spec.ts"]
+    },
+    "AC-ENG-20": {
+      "milestone": "M1",
+      "tests": ["tools/bundle.spec.ts"]
+    },
+    "AC-ENG-21": {
+      "milestone": "M3",
+      "tests": []
+    },
+    "AC-ENG-22": {
+      "milestone": "M1",
+      "tests": ["engines/conformance.spec.ts"]
+    },
+    "AC-TOOL-01": {
+      "milestone": "M1",
+      "tests": ["tools/gate.spec.ts"]
+    },
+    "AC-TOOL-02": {
+      "milestone": "M1",
+      "tests": ["tools/gate.spec.ts"]
+    },
+    "AC-TOOL-03": {
+      "milestone": "M1",
+      "tests": ["tools/gate.spec.ts"]
+    },
+    "AC-TOOL-04": {
+      "milestone": "M1",
+      "tests": ["tools/tooling.spec.ts"]
+    },
+    "AC-TOOL-05": {
+      "milestone": "M1",
+      "tests": ["tools/tooling.spec.ts"]
+    },
+    "AC-TOOL-06": {
+      "milestone": "M1",
+      "tests": ["tools/tooling.spec.ts"]
+    },
+    "AC-TOOL-07": {
+      "milestone": "M1",
+      "tests": ["tools/gate.spec.ts"]
+    },
+    "AC-TOOL-08": {
+      "milestone": "M1",
+      "tests": ["tools/gate.spec.ts"]
+    },
+    "AC-TOOL-09": {
+      "milestone": "M1",
+      "tests": ["tools/bundle.spec.ts"]
+    },
+    "AC-TOOL-10": {
+      "milestone": "M1",
+      "tests": ["tools/gate.spec.ts"]
+    },
+    "AC-TOOL-11": {
+      "milestone": "M1",
+      "tests": ["tools/gate.spec.ts"]
+    },
+    "AC-TOOL-12": {
+      "milestone": "M1",
+      "tests": ["tools/gate.spec.ts"]
+    },
+    "AC-TOOL-13": {
+      "milestone": "M1",
+      "tests": ["tools/tooling.spec.ts"]
+    },
+    "AC-TOOL-14": {
+      "milestone": "M1",
+      "tests": ["bake/content.spec.ts"]
+    },
+    "AC-TOOL-15": {
+      "milestone": "M1",
+      "tests": ["tools/tooling.spec.ts"]
+    },
+    "AC-TOOL-16": {
+      "milestone": "M1",
+      "tests": ["tools/tooling.spec.ts"]
+    },
+    "AC-TOOL-17": {
+      "milestone": "M1",
+      "tests": ["tools/tooling.spec.ts"]
+    },
+    "AC-TOOL-18": {
+      "milestone": "M1",
+      "tests": ["browser/smoke.spec.ts"]
+    },
+    "AC-TOOL-19": {
+      "milestone": "M1",
+      "tests": ["tools/bundle.spec.ts"]
+    },
+    "AC-TOOL-20": {
+      "milestone": "M1",
+      "tests": ["tools/gate.spec.ts"]
+    },
+    "AC-TOOL-21": {
+      "milestone": "M1",
+      "tests": ["tools/gate.spec.ts"]
+    },
+    "AC-TOOL-22": {
+      "milestone": "M1",
+      "tests": ["tools/tooling.spec.ts"]
+    },
+    "AC-TOOL-23": {
+      "milestone": "M1",
+      "tests": ["tools/gate.spec.ts"]
+    },
+    "AC-TOOL-24": {
+      "milestone": "M1",
+      "tests": ["tools/gate.spec.ts"]
+    },
+    "AC-UI-01": {
+      "milestone": "M1",
+      "tests": ["ui/presentation.spec.tsx"]
+    },
+    "AC-UI-02": {
+      "milestone": "M1",
+      "tests": ["ui/presentation.spec.tsx"]
+    },
+    "AC-UI-03": {
+      "milestone": "M1",
+      "tests": ["ui/presentation.spec.tsx"]
+    },
+    "AC-UI-04": {
+      "milestone": "M1",
+      "tests": ["ui/transport.spec.tsx"]
+    },
+    "AC-UI-05": {
+      "milestone": "M1",
+      "tests": ["ui/transport.spec.tsx"]
+    },
+    "AC-UI-06": {
+      "milestone": "M1",
+      "tests": ["ui/transport.spec.tsx"]
+    },
+    "AC-UI-07": {
+      "milestone": "M1",
+      "tests": ["ui/transport.spec.tsx"]
+    },
+    "AC-UI-08": {
+      "milestone": "M1",
+      "tests": ["ui/transport.spec.tsx"]
+    },
+    "AC-UI-09": {
+      "milestone": "M1",
+      "tests": ["ui/presentation.spec.tsx"]
+    },
+    "AC-UI-10": {
+      "milestone": "M1",
+      "tests": ["ui/transport.spec.tsx"]
+    },
+    "AC-UI-11": {
+      "milestone": "M1",
+      "tests": ["ui/transport.spec.tsx"]
+    },
+    "AC-UI-12": {
+      "milestone": "M1",
+      "tests": ["ui/transport.spec.tsx"]
+    },
+    "AC-UI-13": {
+      "milestone": "M1",
+      "tests": ["ui/transport.spec.tsx"]
+    },
+    "AC-UI-14": {
+      "milestone": "M1",
+      "tests": ["ui/audio.spec.tsx"]
+    },
+    "AC-UI-15": {
+      "milestone": "M1",
+      "tests": ["ui/audio.spec.tsx"]
+    },
+    "AC-UI-16": {
+      "milestone": "M1",
+      "tests": ["ui/audio.spec.tsx"]
+    },
+    "AC-UI-17": {
+      "milestone": "M1",
+      "tests": ["ui/keyboard.spec.tsx"]
+    },
+    "AC-UI-18": {
+      "milestone": "M1",
+      "tests": ["ui/keyboard.spec.tsx"]
+    },
+    "AC-UI-19": {
+      "milestone": "M1",
+      "tests": ["ui/presentation.spec.tsx"]
+    },
+    "AC-UI-20": {
+      "milestone": "M1",
+      "tests": ["ui/presentation.spec.tsx"]
+    },
+    "AC-UI-21": {
+      "milestone": "M1",
+      "tests": ["ui/a11y.spec.tsx"]
+    },
+    "AC-UI-22": {
+      "milestone": "M1",
+      "tests": ["ui/a11y.spec.tsx", "browser/a11y.spec.ts"]
+    },
+    "AC-UI-23": {
+      "milestone": "M1",
+      "tests": ["ui/presentation.spec.tsx"]
+    },
+    "AC-UI-24": {
+      "milestone": "M1",
+      "tests": ["ui/presentation.spec.tsx"]
+    },
+    "AC-UI-25": {
+      "milestone": "M1",
+      "tests": ["ui/presentation.spec.tsx"]
+    },
+    "AC-UI-26": {
+      "milestone": "M1",
+      "tests": ["ui/a11y.spec.tsx"]
+    },
+    "AC-UI-27": {
+      "milestone": "M1",
+      "tests": ["ui/presentation.spec.tsx"]
+    }
+  }
+}

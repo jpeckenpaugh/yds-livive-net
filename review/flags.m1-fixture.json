@@ -1,0 +1,13 @@
+{
+  "conversationId": "m1-fixture",
+  "sourceDigest": "sha256:v1:192c6e574fc4d10aad345f8caf04167e9ee8ccac291a52ef6c6e2f44c8ca5110",
+  "translatorRev": "fixture-1",
+  "reviewer": {
+    "kind": "agent",
+    "model": "no-triage-fixture",
+    "contextId": "m1-fixture",
+    "ranAt": "2026-10-18"
+  },
+  "targets": { "lines": 28, "glosses": 68 },
+  "flags": []
+}

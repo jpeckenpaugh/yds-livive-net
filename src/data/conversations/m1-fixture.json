@@ -1,0 +1,1113 @@
+{
+  "id": "m1-fixture",
+  "title": "Making Plans",
+  "l1": "en",
+  "l2": "es",
+  "characters": {
+    "ron": {
+      "name": "Ron",
+      "voice": "M2"
+    },
+    "bobby": {
+      "name": "Bobby",
+      "voice": "M4"
+    }
+  },
+  "order": [
+    "b1",
+    "b2",
+    "b3",
+    "b4",
+    "b5",
+    "b6",
+    "b7",
+    "b8",
+    "b9",
+    "b10"
+  ],
+  "beats": {
+    "b1": {
+      "id": "b1",
+      "index": 0,
+      "speaker": "ron",
+      "kind": "line",
+      "hint": "Ron wants to make plans for tomorrow.",
+      "alternatives": [
+        {
+          "id": "b1-l1",
+          "slotNames": []
+        }
+      ]
+    },
+    "b2": {
+      "id": "b2",
+      "index": 1,
+      "speaker": "bobby",
+      "kind": "choice",
+      "hint": "Bobby is about to suggest a plan.",
+      "alternatives": [
+        {
+          "id": "b2-s1",
+          "slotNames": [
+            "spot"
+          ],
+          "options": [
+            {
+              "key": "dinner",
+              "label": {
+                "l1": "Dinner",
+                "l2": "Cena"
+              },
+              "icon": "🍽️",
+              "sets": {
+                "activity": "dinner",
+                "spot": "dinner-plan"
+              },
+              "slotNames": [
+                "spot"
+              ]
+            },
+            {
+              "key": "movie",
+              "label": {
+                "l1": "Movie",
+                "l2": "Película"
+              },
+              "icon": "🎬",
+              "sets": {
+                "activity": "movie",
+                "spot": "movie-plan"
+              },
+              "slotNames": [
+                "spot"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "b3": {
+      "id": "b3",
+      "index": 2,
+      "speaker": "ron",
+      "kind": "line",
+      "hint": "Ron likes the idea.",
+      "alternatives": [
+        {
+          "id": "b3-l1",
+          "slotNames": [
+            "spot"
+          ]
+        }
+      ]
+    },
+    "b4": {
+      "id": "b4",
+      "index": 3,
+      "speaker": "bobby",
+      "kind": "choice",
+      "hint": "Bobby picks a detail.",
+      "alternatives": [
+        {
+          "id": "b4-dinner",
+          "when": {
+            "activity": "dinner"
+          },
+          "slotNames": [
+            "cuisine"
+          ],
+          "options": [
+            {
+              "key": "chinese",
+              "label": {
+                "l1": "Chinese",
+                "l2": "Chino"
+              },
+              "icon": "🥡",
+              "sets": {
+                "cuisine": "chinese"
+              },
+              "slotNames": [
+                "cuisine"
+              ]
+            },
+            {
+              "key": "pizza",
+              "label": {
+                "l1": "Pizza",
+                "l2": "Pizza"
+              },
+              "icon": "🍕",
+              "sets": {
+                "cuisine": "pizza"
+              },
+              "slotNames": [
+                "cuisine"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "b4-movie",
+          "when": {
+            "activity": "movie"
+          },
+          "slotNames": [
+            "genre"
+          ],
+          "options": [
+            {
+              "key": "comedy",
+              "label": {
+                "l1": "Comedy",
+                "l2": "Comedia"
+              },
+              "icon": "😂",
+              "sets": {
+                "genre": "comedy"
+              },
+              "slotNames": [
+                "genre"
+              ]
+            },
+            {
+              "key": "action",
+              "label": {
+                "l1": "Action",
+                "l2": "Acción"
+              },
+              "icon": "💥",
+              "sets": {
+                "genre": "action"
+              },
+              "slotNames": [
+                "genre"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "b5": {
+      "id": "b5",
+      "index": 4,
+      "speaker": "ron",
+      "kind": "line",
+      "hint": "Ron agrees with the choice.",
+      "alternatives": [
+        {
+          "id": "b5-chinese",
+          "when": {
+            "cuisine": "chinese"
+          },
+          "slotNames": [
+            "cuisine"
+          ]
+        },
+        {
+          "id": "b5-pizza",
+          "when": {
+            "cuisine": "pizza"
+          },
+          "slotNames": [
+            "cuisine"
+          ]
+        },
+        {
+          "id": "b5-comedy",
+          "when": {
+            "genre": "comedy"
+          },
+          "slotNames": [
+            "genre"
+          ]
+        },
+        {
+          "id": "b5-action",
+          "when": {
+            "genre": "action"
+          },
+          "slotNames": [
+            "genre"
+          ]
+        }
+      ]
+    },
+    "b6": {
+      "id": "b6",
+      "index": 5,
+      "speaker": "bobby",
+      "kind": "choice",
+      "hint": "Bobby suggests a time.",
+      "alternatives": [
+        {
+          "id": "b6-s1",
+          "slotNames": [
+            "time"
+          ],
+          "options": [
+            {
+              "key": "early",
+              "label": {
+                "l1": "Early",
+                "l2": "Temprano"
+              },
+              "icon": "🌅",
+              "sets": {
+                "time": "early"
+              },
+              "slotNames": [
+                "time"
+              ]
+            },
+            {
+              "key": "late",
+              "label": {
+                "l1": "Later",
+                "l2": "Más tarde"
+              },
+              "icon": "🌙",
+              "sets": {
+                "time": "late"
+              },
+              "slotNames": [
+                "time"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "b7": {
+      "id": "b7",
+      "index": 6,
+      "speaker": "ron",
+      "kind": "line",
+      "hint": "Ron settles the time.",
+      "alternatives": [
+        {
+          "id": "b7-l1",
+          "slotNames": [
+            "time"
+          ]
+        }
+      ]
+    },
+    "b8": {
+      "id": "b8",
+      "index": 7,
+      "speaker": "bobby",
+      "kind": "choice",
+      "hint": "Bobby decides who is coming.",
+      "alternatives": [
+        {
+          "id": "b8-s1",
+          "slotNames": [
+            "who"
+          ],
+          "options": [
+            {
+              "key": "us",
+              "label": {
+                "l1": "Just us",
+                "l2": "Solo nosotros"
+              },
+              "icon": "👤",
+              "sets": {
+                "who": "us"
+              },
+              "slotNames": [
+                "who"
+              ]
+            },
+            {
+              "key": "friends",
+              "label": {
+                "l1": "Friends",
+                "l2": "Con amigos"
+              },
+              "icon": "👥",
+              "sets": {
+                "who": "friends"
+              },
+              "slotNames": [
+                "who"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "b9": {
+      "id": "b9",
+      "index": 8,
+      "speaker": "ron",
+      "kind": "line",
+      "hint": "Ron repeats the plan.",
+      "alternatives": [
+        {
+          "id": "b9-l1",
+          "slotNames": [
+            "time",
+            "spot",
+            "who"
+          ]
+        }
+      ]
+    },
+    "b10": {
+      "id": "b10",
+      "index": 9,
+      "speaker": "bobby",
+      "kind": "line",
+      "hint": "They say goodbye.",
+      "alternatives": [
+        {
+          "id": "b10-l1",
+          "slotNames": []
+        }
+      ]
+    }
+  },
+  "lines": {
+    "b1|b1-l1": {
+      "beatId": "b1",
+      "alternativeId": "b1-l1",
+      "variantKey": "b1|b1-l1",
+      "l1": "Hi Bobby. Do you want to get together tomorrow?",
+      "l2": "Hola Bobby. ¿Quieres que nos juntemos mañana?",
+      "mt": "Hola Bobby. ¿Quieres que nos juntemos mañana?",
+      "sourceHash": "sha256:v1:76bc0712f92a804db4df8f8b2b9c9b6ebd175ba1b2e657a616ce4b6e805a8a6b",
+      "reviewedBy": "agent",
+      "translationRev": "fixture-1"
+    },
+    "b2|dinner|spot=dinner-plan": {
+      "beatId": "b2",
+      "alternativeId": "b2-s1",
+      "optionKey": "dinner",
+      "variantKey": "b2|dinner|spot=dinner-plan",
+      "l1": "Sure Ron! Why don't we get together for a nice dinner.",
+      "l2": "¡Claro, Ron! ¿Por qué no nos juntamos para una buena cena?",
+      "mt": "¡Claro, Ron! ¿Por qué no nos juntamos para una buena cena?",
+      "sourceHash": "sha256:v1:c4ed841e0941c2eab11e301271081c2443ab5859f057f9300a3a7f0827ed7bd2",
+      "reviewedBy": "agent",
+      "translationRev": "fixture-1"
+    },
+    "b2|movie|spot=movie-plan": {
+      "beatId": "b2",
+      "alternativeId": "b2-s1",
+      "optionKey": "movie",
+      "variantKey": "b2|movie|spot=movie-plan",
+      "l1": "Ok Ron. Let's meet at the theater to watch a new movie.",
+      "l2": "Está bien, Ron. Nos vemos en el cine para ver una película nueva.",
+      "mt": "Está bien, Ron. Nos vemos en el cine para ver una película nueva.",
+      "sourceHash": "sha256:v1:dff41787a90489cb3688566f4ed841c8461148767fd379eaea6900756f7e24fe",
+      "reviewedBy": "agent",
+      "translationRev": "fixture-1"
+    },
+    "b3|b3-l1|spot=dinner-plan": {
+      "beatId": "b3",
+      "alternativeId": "b3-l1",
+      "variantKey": "b3|b3-l1|spot=dinner-plan",
+      "l1": "Perfect, a nice dinner sounds great.",
+      "l2": "Perfecto, una buena cena suena genial.",
+      "mt": "Perfecto, una buena cena suena genial.",
+      "sourceHash": "sha256:v1:1f067a68d4a9ddade2a1513f05eb6d536c0121761b726012af07ce947b190820",
+      "reviewedBy": "agent",
+      "translationRev": "fixture-1"
+    },
+    "b3|b3-l1|spot=movie-plan": {
+      "beatId": "b3",
+      "alternativeId": "b3-l1",
+      "variantKey": "b3|b3-l1|spot=movie-plan",
+      "l1": "Perfect, a new movie sounds great.",
+      "l2": "Perfecto, una película nueva suena genial.",
+      "mt": "Perfecto, una película nueva suena genial.",
+      "sourceHash": "sha256:v1:1741f509d06164a251cc940ad0ab5fd644cb934dbc076ac5a9e479405b5a591f",
+      "reviewedBy": "agent",
+      "translationRev": "fixture-1"
+    },
+    "b4|chinese|cuisine=chinese": {
+      "beatId": "b4",
+      "alternativeId": "b4-dinner",
+      "optionKey": "chinese",
+      "variantKey": "b4|chinese|cuisine=chinese",
+      "l1": "Let's get Chinese.",
+      "l2": "Vamos por comida china.",
+      "mt": "Vamos por comida china.",
+      "sourceHash": "sha256:v1:ff24b6635bcfa8d9ef809299935655a52324b151b2241b12427412621263845c",
+      "reviewedBy": "agent",
+      "translationRev": "fixture-1"
+    },
+    "b4|pizza|cuisine=pizza": {
+      "beatId": "b4",
+      "alternativeId": "b4-dinner",
+      "optionKey": "pizza",
+      "variantKey": "b4|pizza|cuisine=pizza",
+      "l1": "I could go for pizza.",
+      "l2": "Me apetece una pizza.",
+      "mt": "Me apetece una pizza.",
+      "sourceHash": "sha256:v1:a95862a7357d621599fb31a834ca6552d86707bf9e88fd4a5ea1c4d1491f0350",
+      "reviewedBy": "agent",
+      "translationRev": "fixture-1"
+    },
+    "b4|comedy|genre=comedy": {
+      "beatId": "b4",
+      "alternativeId": "b4-movie",
+      "optionKey": "comedy",
+      "variantKey": "b4|comedy|genre=comedy",
+      "l1": "Let's see a comedy.",
+      "l2": "Veamos una comedia.",
+      "mt": "Veamos una comedia.",
+      "sourceHash": "sha256:v1:0b804d811761f0abecbe2fe013908a55bcb6b076398e4cb768565701faf676e6",
+      "reviewedBy": "agent",
+      "translationRev": "fixture-1"
+    },
+    "b4|action|genre=action": {
+      "beatId": "b4",
+      "alternativeId": "b4-movie",
+      "optionKey": "action",
+      "variantKey": "b4|action|genre=action",
+      "l1": "I'm in the mood for an action movie.",
+      "l2": "Tengo ganas de una película de acción.",
+      "mt": "Tengo ganas de una película de acción.",
+      "sourceHash": "sha256:v1:7b31c244982e24e8b3f7d6c4e471468ae50520eb55a9e599a18261ada95265ec",
+      "reviewedBy": "agent",
+      "translationRev": "fixture-1"
+    },
+    "b5|b5-chinese|cuisine=chinese": {
+      "beatId": "b5",
+      "alternativeId": "b5-chinese",
+      "variantKey": "b5|b5-chinese|cuisine=chinese",
+      "l1": "Let's go with Chinese.",
+      "l2": "Vamos con la comida china.",
+      "mt": "Vamos con la comida china.",
+      "sourceHash": "sha256:v1:12ee9c10b2f8a7a25583f4149bc1f2f072321c7e10106e2205b2ed7e68f267b8",
+      "reviewedBy": "agent",
+      "translationRev": "fixture-1"
+    },
+    "b5|b5-pizza|cuisine=pizza": {
+      "beatId": "b5",
+      "alternativeId": "b5-pizza",
+      "variantKey": "b5|b5-pizza|cuisine=pizza",
+      "l1": "Let's go with pizza.",
+      "l2": "Vamos con la pizza.",
+      "mt": "Vamos con la pizza.",
+      "sourceHash": "sha256:v1:fe23e431201c86088fe9fec88e5c6b1f7a2b4828a2393bcf25ce816fe1d913a1",
+      "reviewedBy": "agent",
+      "translationRev": "fixture-1"
+    },
+    "b5|b5-comedy|genre=comedy": {
+      "beatId": "b5",
+      "alternativeId": "b5-comedy",
+      "variantKey": "b5|b5-comedy|genre=comedy",
+      "l1": "Let's go with a comedy.",
+      "l2": "Vamos con una comedia.",
+      "mt": "Vamos con una comedia.",
+      "sourceHash": "sha256:v1:509ed50551c73ee3c359c8ee8e523c35fdc9dc02f94a95583e3064e88fe3856e",
+      "reviewedBy": "agent",
+      "translationRev": "fixture-1"
+    },
+    "b5|b5-action|genre=action": {
+      "beatId": "b5",
+      "alternativeId": "b5-action",
+      "variantKey": "b5|b5-action|genre=action",
+      "l1": "Let's go with an action movie.",
+      "l2": "Vamos con una película de acción.",
+      "mt": "Vamos con una película de acción.",
+      "sourceHash": "sha256:v1:ab20a8b7e53bdda58284d3f8e18ee8aae3334f4a8e70eda9ca06dba4c6d20842",
+      "reviewedBy": "agent",
+      "translationRev": "fixture-1"
+    },
+    "b6|early|time=early": {
+      "beatId": "b6",
+      "alternativeId": "b6-s1",
+      "optionKey": "early",
+      "variantKey": "b6|early|time=early",
+      "l1": "early works better for me, honestly.",
+      "l2": "Temprano me viene mejor, la verdad.",
+      "mt": "Temprano me viene mejor, la verdad.",
+      "sourceHash": "sha256:v1:dbf345111dc75b46d5fcbf5e45db0f7e5cfc28b45739777f7d14cda1e868f013",
+      "reviewedBy": "agent",
+      "translationRev": "fixture-1"
+    },
+    "b6|late|time=late": {
+      "beatId": "b6",
+      "alternativeId": "b6-s1",
+      "optionKey": "late",
+      "variantKey": "b6|late|time=late",
+      "l1": "Let's go with later, then.",
+      "l2": "Entonces quedamos más tarde.",
+      "mt": "Entonces quedamos más tarde.",
+      "sourceHash": "sha256:v1:649ccff79c99522431e7bbf281a180480370fd9fa7f48d4e47a42f123637df89",
+      "reviewedBy": "agent",
+      "translationRev": "fixture-1"
+    },
+    "b7|b7-l1|time=early": {
+      "beatId": "b7",
+      "alternativeId": "b7-l1",
+      "variantKey": "b7|b7-l1|time=early",
+      "l1": "Great, early it is.",
+      "l2": "Genial, temprano entonces.",
+      "mt": "Genial, temprano entonces.",
+      "sourceHash": "sha256:v1:4821b1ce1790494b1b1d03d7c1c8431c543f1b9776c14684a75af9cb560eae67",
+      "reviewedBy": "agent",
+      "translationRev": "fixture-1"
+    },
+    "b7|b7-l1|time=late": {
+      "beatId": "b7",
+      "alternativeId": "b7-l1",
+      "variantKey": "b7|b7-l1|time=late",
+      "l1": "Great, later it is.",
+      "l2": "Genial, más tarde entonces.",
+      "mt": "Genial, más tarde entonces.",
+      "sourceHash": "sha256:v1:e81b44f31110ec633844b63aac98e06371c5ae3beb523178b813eee9e4e543cd",
+      "reviewedBy": "agent",
+      "translationRev": "fixture-1"
+    },
+    "b8|us|who=us": {
+      "beatId": "b8",
+      "alternativeId": "b8-s1",
+      "optionKey": "us",
+      "variantKey": "b8|us|who=us",
+      "l1": "Perfect. I'd like to keep it just the two of us.",
+      "l2": "Perfecto. Prefiero que seamos solo nosotros dos.",
+      "mt": "Perfecto. Prefiero que seamos solo nosotros dos.",
+      "sourceHash": "sha256:v1:e03d97e5c4463a153875b5bda5c7057bc7843ed892bbc25ec9668ca2397cbad1",
+      "reviewedBy": "agent",
+      "translationRev": "fixture-1"
+    },
+    "b8|friends|who=friends": {
+      "beatId": "b8",
+      "alternativeId": "b8-s1",
+      "optionKey": "friends",
+      "variantKey": "b8|friends|who=friends",
+      "l1": "Perfect. I'll invite the whole crew.",
+      "l2": "Perfecto. Invitaré a todo el equipo.",
+      "mt": "Perfecto. Invitaré a todo el equipo.",
+      "sourceHash": "sha256:v1:26d251edeab12346375c88020211934ae7ce35d57dc22f7e4472dbae99821f6c",
+      "reviewedBy": "agent",
+      "translationRev": "fixture-1"
+    },
+    "b9|b9-l1|spot=dinner-plan|time=early|who=us": {
+      "beatId": "b9",
+      "alternativeId": "b9-l1",
+      "variantKey": "b9|b9-l1|spot=dinner-plan|time=early|who=us",
+      "l1": "Perfect. See you early on Saturday for a nice dinner with just the two of us.",
+      "l2": "Perfecto. Nos vemos temprano el sábado para una buena cena con nosotros dos.",
+      "mt": "Perfecto. Nos vemos temprano el sábado para una buena cena con nosotros dos.",
+      "sourceHash": "sha256:v1:44b21d3a01b690853c2e8ceebf4a785926dd149bc88b1f5f7ce6770a39b99567",
+      "reviewedBy": "agent",
+      "translationRev": "fixture-1"
+    },
+    "b9|b9-l1|spot=dinner-plan|time=early|who=friends": {
+      "beatId": "b9",
+      "alternativeId": "b9-l1",
+      "variantKey": "b9|b9-l1|spot=dinner-plan|time=early|who=friends",
+      "l1": "Perfect. See you early on Saturday for a nice dinner with the whole crew.",
+      "l2": "Perfecto. Nos vemos temprano el sábado para una buena cena con todo el equipo.",
+      "mt": "Perfecto. Nos vemos temprano el sábado para una buena cena con todo el equipo.",
+      "sourceHash": "sha256:v1:d499a84c91fdf218e07af378fa7f59740867bfb46c4f38004c45aba0073831b2",
+      "reviewedBy": "agent",
+      "translationRev": "fixture-1"
+    },
+    "b9|b9-l1|spot=dinner-plan|time=late|who=us": {
+      "beatId": "b9",
+      "alternativeId": "b9-l1",
+      "variantKey": "b9|b9-l1|spot=dinner-plan|time=late|who=us",
+      "l1": "Perfect. See you later on Saturday for a nice dinner with just the two of us.",
+      "l2": "Perfecto. Nos vemos más tarde el sábado para una buena cena con nosotros dos.",
+      "mt": "Perfecto. Nos vemos más tarde el sábado para una buena cena con nosotros dos.",
+      "sourceHash": "sha256:v1:625c074f45dbfdbe78d40e666d3360e6968162b9153eb65870a0b9ea82cb91ca",
+      "reviewedBy": "agent",
+      "translationRev": "fixture-1"
+    },
+    "b9|b9-l1|spot=dinner-plan|time=late|who=friends": {
+      "beatId": "b9",
+      "alternativeId": "b9-l1",
+      "variantKey": "b9|b9-l1|spot=dinner-plan|time=late|who=friends",
+      "l1": "Perfect. See you later on Saturday for a nice dinner with the whole crew.",
+      "l2": "Perfecto. Nos vemos más tarde el sábado para una buena cena con todo el equipo.",
+      "mt": "Perfecto. Nos vemos más tarde el sábado para una buena cena con todo el equipo.",
+      "sourceHash": "sha256:v1:5b361543ac2cd91c19121c48735d8a808c10d317e7bb79889cfc5cc4f3ebd9e8",
+      "reviewedBy": "agent",
+      "translationRev": "fixture-1"
+    },
+    "b9|b9-l1|spot=movie-plan|time=early|who=us": {
+      "beatId": "b9",
+      "alternativeId": "b9-l1",
+      "variantKey": "b9|b9-l1|spot=movie-plan|time=early|who=us",
+      "l1": "Perfect. See you early on Saturday for a new movie with just the two of us.",
+      "l2": "Perfecto. Nos vemos temprano el sábado para una película nueva con nosotros dos.",
+      "mt": "Perfecto. Nos vemos temprano el sábado para una película nueva con nosotros dos.",
+      "sourceHash": "sha256:v1:614fd096e6d8f9072e75e619765d67160d3e1d31b55f3fe33e281eda090cb014",
+      "reviewedBy": "agent",
+      "translationRev": "fixture-1"
+    },
+    "b9|b9-l1|spot=movie-plan|time=early|who=friends": {
+      "beatId": "b9",
+      "alternativeId": "b9-l1",
+      "variantKey": "b9|b9-l1|spot=movie-plan|time=early|who=friends",
+      "l1": "Perfect. See you early on Saturday for a new movie with the whole crew.",
+      "l2": "Perfecto. Nos vemos temprano el sábado para una película nueva con todo el equipo.",
+      "mt": "Perfecto. Nos vemos temprano el sábado para una película nueva con todo el equipo.",
+      "sourceHash": "sha256:v1:64c4002bab39970d07f3beaf1b869cdef66fabe6a4858049e87be1bd9cb1c98a",
+      "reviewedBy": "agent",
+      "translationRev": "fixture-1"
+    },
+    "b9|b9-l1|spot=movie-plan|time=late|who=us": {
+      "beatId": "b9",
+      "alternativeId": "b9-l1",
+      "variantKey": "b9|b9-l1|spot=movie-plan|time=late|who=us",
+      "l1": "Perfect. See you later on Saturday for a new movie with just the two of us.",
+      "l2": "Perfecto. Nos vemos más tarde el sábado para una película nueva con nosotros dos.",
+      "mt": "Perfecto. Nos vemos más tarde el sábado para una película nueva con nosotros dos.",
+      "sourceHash": "sha256:v1:c78ab93e5fc0e6cbb586dbc69d3ec378afdba1095416bea90f8c4cb1a5b463ba",
+      "reviewedBy": "agent",
+      "translationRev": "fixture-1"
+    },
+    "b9|b9-l1|spot=movie-plan|time=late|who=friends": {
+      "beatId": "b9",
+      "alternativeId": "b9-l1",
+      "variantKey": "b9|b9-l1|spot=movie-plan|time=late|who=friends",
+      "l1": "Perfect. See you later on Saturday for a new movie with the whole crew.",
+      "l2": "Perfecto. Nos vemos más tarde el sábado para una película nueva con todo el equipo.",
+      "mt": "Perfecto. Nos vemos más tarde el sábado para una película nueva con todo el equipo.",
+      "sourceHash": "sha256:v1:90c7828fbcd46338cc7f6437d5ca21f30269de6c796aec603def3f288716e1ae",
+      "reviewedBy": "agent",
+      "translationRev": "fixture-1"
+    },
+    "b10|b10-l1": {
+      "beatId": "b10",
+      "alternativeId": "b10-l1",
+      "variantKey": "b10|b10-l1",
+      "l1": "See you then, Ron!",
+      "l2": "¡Nos vemos entonces, Ron!",
+      "mt": "¡Nos vemos entonces, Ron!",
+      "sourceHash": "sha256:v1:4ecf15514fcba237224e9b38e8d87cdb5a435e9932a2e635945b369704814c93",
+      "reviewedBy": "agent",
+      "translationRev": "fixture-1"
+    }
+  },
+  "gloss": {
+    "hola bobby. ¿quieres que nos juntemos mañana": {
+      "l1": "Hi Bobby. Do you want to get together tomorrow?",
+      "origin": "mt",
+      "mt": "Hi Bobby. Do you want to get together tomorrow?",
+      "reviewedBy": "agent"
+    },
+    "hola bobby": {
+      "l1": "Hola Bobby.",
+      "origin": "mt",
+      "mt": "Hola Bobby.",
+      "reviewedBy": "agent"
+    },
+    "quieres que nos juntemos mañana": {
+      "l1": "¿Quieres que nos juntemos mañana?",
+      "origin": "mt",
+      "mt": "¿Quieres que nos juntemos mañana?",
+      "reviewedBy": "agent"
+    },
+    "quieres": {
+      "l1": "¿Quieres",
+      "origin": "mt",
+      "mt": "¿Quieres",
+      "reviewedBy": "agent"
+    },
+    "que nos juntemos mañana": {
+      "l1": "que nos juntemos mañana?",
+      "origin": "mt",
+      "mt": "que nos juntemos mañana?",
+      "reviewedBy": "agent"
+    },
+    "nos juntemos": {
+      "l1": "nos juntemos",
+      "origin": "mt",
+      "mt": "nos juntemos",
+      "reviewedBy": "agent"
+    },
+    "claro, ron! ¿por qué no nos juntamos para una buena cena": {
+      "l1": "Sure Ron! Why don't we get together for a nice dinner.",
+      "origin": "mt",
+      "mt": "Sure Ron! Why don't we get together for a nice dinner.",
+      "reviewedBy": "agent"
+    },
+    "claro, ron": {
+      "l1": "¡Claro, Ron!",
+      "origin": "mt",
+      "mt": "¡Claro, Ron!",
+      "reviewedBy": "agent"
+    },
+    "claro": {
+      "l1": "¡Claro,",
+      "origin": "mt",
+      "mt": "¡Claro,",
+      "reviewedBy": "agent"
+    },
+    "ron": {
+      "l1": "Ron!",
+      "origin": "mt",
+      "mt": "Ron!",
+      "reviewedBy": "agent"
+    },
+    "por qué no nos juntamos para una buena cena": {
+      "l1": "¿Por qué no nos juntamos para una buena cena?",
+      "origin": "mt",
+      "mt": "¿Por qué no nos juntamos para una buena cena?",
+      "reviewedBy": "agent"
+    },
+    "por qué no nos juntamos": {
+      "l1": "Por qué no nos juntamos",
+      "origin": "mt",
+      "mt": "Por qué no nos juntamos",
+      "reviewedBy": "agent"
+    },
+    "está bien, ron. nos vemos en el cine para ver una película nueva": {
+      "l1": "Ok Ron. Let's meet at the theater to watch a new movie.",
+      "origin": "mt",
+      "mt": "Ok Ron. Let's meet at the theater to watch a new movie.",
+      "reviewedBy": "agent"
+    },
+    "está bien, ron": {
+      "l1": "Está bien, Ron.",
+      "origin": "mt",
+      "mt": "Está bien, Ron.",
+      "reviewedBy": "agent"
+    },
+    "está bien": {
+      "l1": "Está bien,",
+      "origin": "mt",
+      "mt": "Está bien,",
+      "reviewedBy": "agent"
+    },
+    "nos vemos en el cine para ver una película nueva": {
+      "l1": "Nos vemos en el cine para ver una película nueva.",
+      "origin": "mt",
+      "mt": "Nos vemos en el cine para ver una película nueva.",
+      "reviewedBy": "agent"
+    },
+    "nos vemos": {
+      "l1": "Nos vemos",
+      "origin": "mt",
+      "mt": "Nos vemos",
+      "reviewedBy": "agent"
+    },
+    "perfecto, una buena cena suena genial": {
+      "l1": "Perfect, a nice dinner sounds great.",
+      "origin": "mt",
+      "mt": "Perfect, a nice dinner sounds great.",
+      "reviewedBy": "agent"
+    },
+    "perfecto": {
+      "l1": "Perfecto,",
+      "origin": "mt",
+      "mt": "Perfecto,",
+      "reviewedBy": "agent"
+    },
+    "una buena cena suena genial": {
+      "l1": "una buena cena suena genial.",
+      "origin": "mt",
+      "mt": "una buena cena suena genial.",
+      "reviewedBy": "agent"
+    },
+    "perfecto, una película nueva suena genial": {
+      "l1": "Perfect, a new movie sounds great.",
+      "origin": "mt",
+      "mt": "Perfect, a new movie sounds great.",
+      "reviewedBy": "agent"
+    },
+    "una película nueva suena genial": {
+      "l1": "una película nueva suena genial.",
+      "origin": "mt",
+      "mt": "una película nueva suena genial.",
+      "reviewedBy": "agent"
+    },
+    "vamos por comida china": {
+      "l1": "Let's get Chinese.",
+      "origin": "mt",
+      "mt": "Let's get Chinese.",
+      "reviewedBy": "agent"
+    },
+    "vamos": {
+      "l1": "Vamos",
+      "origin": "mt",
+      "mt": "Vamos",
+      "reviewedBy": "agent"
+    },
+    "me apetece una pizza": {
+      "l1": "I could go for pizza.",
+      "origin": "mt",
+      "mt": "I could go for pizza.",
+      "reviewedBy": "agent"
+    },
+    "veamos una comedia": {
+      "l1": "Let's see a comedy.",
+      "origin": "mt",
+      "mt": "Let's see a comedy.",
+      "reviewedBy": "agent"
+    },
+    "tengo ganas de una película de acción": {
+      "l1": "I'm in the mood for an action movie.",
+      "origin": "mt",
+      "mt": "I'm in the mood for an action movie.",
+      "reviewedBy": "agent"
+    },
+    "tengo ganas": {
+      "l1": "Tengo ganas",
+      "origin": "mt",
+      "mt": "Tengo ganas",
+      "reviewedBy": "agent"
+    },
+    "vamos con la comida china": {
+      "l1": "Let's go with Chinese.",
+      "origin": "mt",
+      "mt": "Let's go with Chinese.",
+      "reviewedBy": "agent"
+    },
+    "vamos con la pizza": {
+      "l1": "Let's go with pizza.",
+      "origin": "mt",
+      "mt": "Let's go with pizza.",
+      "reviewedBy": "agent"
+    },
+    "vamos con una comedia": {
+      "l1": "Let's go with a comedy.",
+      "origin": "mt",
+      "mt": "Let's go with a comedy.",
+      "reviewedBy": "agent"
+    },
+    "vamos con una película de acción": {
+      "l1": "Let's go with an action movie.",
+      "origin": "mt",
+      "mt": "Let's go with an action movie.",
+      "reviewedBy": "agent"
+    },
+    "temprano me viene mejor, la verdad": {
+      "l1": "early works better for me, honestly.",
+      "origin": "mt",
+      "mt": "early works better for me, honestly.",
+      "reviewedBy": "agent"
+    },
+    "temprano me viene mejor": {
+      "l1": "Temprano me viene mejor,",
+      "origin": "mt",
+      "mt": "Temprano me viene mejor,",
+      "reviewedBy": "agent"
+    },
+    "la verdad": {
+      "l1": "la verdad.",
+      "origin": "mt",
+      "mt": "la verdad.",
+      "reviewedBy": "agent"
+    },
+    "entonces quedamos más tarde": {
+      "l1": "Let's go with later, then.",
+      "origin": "mt",
+      "mt": "Let's go with later, then.",
+      "reviewedBy": "agent"
+    },
+    "genial, temprano entonces": {
+      "l1": "Great, early it is.",
+      "origin": "mt",
+      "mt": "Great, early it is.",
+      "reviewedBy": "agent"
+    },
+    "genial": {
+      "l1": "Genial,",
+      "origin": "mt",
+      "mt": "Genial,",
+      "reviewedBy": "agent"
+    },
+    "temprano entonces": {
+      "l1": "temprano entonces.",
+      "origin": "mt",
+      "mt": "temprano entonces.",
+      "reviewedBy": "agent"
+    },
+    "genial, más tarde entonces": {
+      "l1": "Great, later it is.",
+      "origin": "mt",
+      "mt": "Great, later it is.",
+      "reviewedBy": "agent"
+    },
+    "más tarde entonces": {
+      "l1": "más tarde entonces.",
+      "origin": "mt",
+      "mt": "más tarde entonces.",
+      "reviewedBy": "agent"
+    },
+    "perfecto. prefiero que seamos solo nosotros dos": {
+      "l1": "Perfect. I'd like to keep it just the two of us.",
+      "origin": "mt",
+      "mt": "Perfect. I'd like to keep it just the two of us.",
+      "reviewedBy": "agent"
+    },
+    "prefiero que seamos solo nosotros dos": {
+      "l1": "Prefiero que seamos solo nosotros dos.",
+      "origin": "mt",
+      "mt": "Prefiero que seamos solo nosotros dos.",
+      "reviewedBy": "agent"
+    },
+    "prefiero": {
+      "l1": "Prefiero",
+      "origin": "mt",
+      "mt": "Prefiero",
+      "reviewedBy": "agent"
+    },
+    "que seamos solo nosotros dos": {
+      "l1": "que seamos solo nosotros dos.",
+      "origin": "mt",
+      "mt": "que seamos solo nosotros dos.",
+      "reviewedBy": "agent"
+    },
+    "seamos solo nosotros dos": {
+      "l1": "seamos solo nosotros dos.",
+      "origin": "mt",
+      "mt": "seamos solo nosotros dos.",
+      "reviewedBy": "agent"
+    },
+    "perfecto. invitaré a todo el equipo": {
+      "l1": "Perfect. I'll invite the whole crew.",
+      "origin": "mt",
+      "mt": "Perfect. I'll invite the whole crew.",
+      "reviewedBy": "agent"
+    },
+    "invitaré a todo el equipo": {
+      "l1": "Invitaré a todo el equipo.",
+      "origin": "mt",
+      "mt": "Invitaré a todo el equipo.",
+      "reviewedBy": "agent"
+    },
+    "perfecto. nos vemos temprano el sábado para una buena cena con nosotros dos": {
+      "l1": "Perfect. See you early on Saturday for a nice dinner with just the two of us.",
+      "origin": "mt",
+      "mt": "Perfect. See you early on Saturday for a nice dinner with just the two of us.",
+      "reviewedBy": "agent"
+    },
+    "nos vemos temprano el sábado para una buena cena con nosotros dos": {
+      "l1": "Nos vemos temprano el sábado para una buena cena con nosotros dos.",
+      "origin": "mt",
+      "mt": "Nos vemos temprano el sábado para una buena cena con nosotros dos.",
+      "reviewedBy": "agent"
+    },
+    "nos vemos temprano": {
+      "l1": "Nos vemos temprano",
+      "origin": "mt",
+      "mt": "Nos vemos temprano",
+      "reviewedBy": "agent"
+    },
+    "perfecto. nos vemos temprano el sábado para una buena cena con todo el equipo": {
+      "l1": "Perfect. See you early on Saturday for a nice dinner with the whole crew.",
+      "origin": "mt",
+      "mt": "Perfect. See you early on Saturday for a nice dinner with the whole crew.",
+      "reviewedBy": "agent"
+    },
+    "nos vemos temprano el sábado para una buena cena con todo el equipo": {
+      "l1": "Nos vemos temprano el sábado para una buena cena con todo el equipo.",
+      "origin": "mt",
+      "mt": "Nos vemos temprano el sábado para una buena cena con todo el equipo.",
+      "reviewedBy": "agent"
+    },
+    "perfecto. nos vemos más tarde el sábado para una buena cena con nosotros dos": {
+      "l1": "Perfect. See you later on Saturday for a nice dinner with just the two of us.",
+      "origin": "mt",
+      "mt": "Perfect. See you later on Saturday for a nice dinner with just the two of us.",
+      "reviewedBy": "agent"
+    },
+    "nos vemos más tarde el sábado para una buena cena con nosotros dos": {
+      "l1": "Nos vemos más tarde el sábado para una buena cena con nosotros dos.",
+      "origin": "mt",
+      "mt": "Nos vemos más tarde el sábado para una buena cena con nosotros dos.",
+      "reviewedBy": "agent"
+    },
+    "nos vemos más tarde": {
+      "l1": "Nos vemos más tarde",
+      "origin": "mt",
+      "mt": "Nos vemos más tarde",
+      "reviewedBy": "agent"
+    },
+    "perfecto. nos vemos más tarde el sábado para una buena cena con todo el equipo": {
+      "l1": "Perfect. See you later on Saturday for a nice dinner with the whole crew.",
+      "origin": "mt",
+      "mt": "Perfect. See you later on Saturday for a nice dinner with the whole crew.",
+      "reviewedBy": "agent"
+    },
+    "nos vemos más tarde el sábado para una buena cena con todo el equipo": {
+      "l1": "Nos vemos más tarde el sábado para una buena cena con todo el equipo.",
+      "origin": "mt",
+      "mt": "Nos vemos más tarde el sábado para una buena cena con todo el equipo.",
+      "reviewedBy": "agent"
+    },
+    "perfecto. nos vemos temprano el sábado para una película nueva con nosotros dos": {
+      "l1": "Perfect. See you early on Saturday for a new movie with just the two of us.",
+      "origin": "mt",
+      "mt": "Perfect. See you early on Saturday for a new movie with just the two of us.",
+      "reviewedBy": "agent"
+    },
+    "nos vemos temprano el sábado para una película nueva con nosotros dos": {
+      "l1": "Nos vemos temprano el sábado para una película nueva con nosotros dos.",
+      "origin": "mt",
+      "mt": "Nos vemos temprano el sábado para una película nueva con nosotros dos.",
+      "reviewedBy": "agent"
+    },
+    "perfecto. nos vemos temprano el sábado para una película nueva con todo el equipo": {
+      "l1": "Perfect. See you early on Saturday for a new movie with the whole crew.",
+      "origin": "mt",
+      "mt": "Perfect. See you early on Saturday for a new movie with the whole crew.",
+      "reviewedBy": "agent"
+    },
+    "nos vemos temprano el sábado para una película nueva con todo el equipo": {
+      "l1": "Nos vemos temprano el sábado para una película nueva con todo el equipo.",
+      "origin": "mt",
+      "mt": "Nos vemos temprano el sábado para una película nueva con todo el equipo.",
+      "reviewedBy": "agent"
+    },
+    "perfecto. nos vemos más tarde el sábado para una película nueva con nosotros dos": {
+      "l1": "Perfect. See you later on Saturday for a new movie with just the two of us.",
+      "origin": "mt",
+      "mt": "Perfect. See you later on Saturday for a new movie with just the two of us.",
+      "reviewedBy": "agent"
+    },
+    "nos vemos más tarde el sábado para una película nueva con nosotros dos": {
+      "l1": "Nos vemos más tarde el sábado para una película nueva con nosotros dos.",
+      "origin": "mt",
+      "mt": "Nos vemos más tarde el sábado para una película nueva con nosotros dos.",
+      "reviewedBy": "agent"
+    },
+    "perfecto. nos vemos más tarde el sábado para una película nueva con todo el equipo": {
+      "l1": "Perfect. See you later on Saturday for a new movie with the whole crew.",
+      "origin": "mt",
+      "mt": "Perfect. See you later on Saturday for a new movie with the whole crew.",
+      "reviewedBy": "agent"
+    },
+    "nos vemos más tarde el sábado para una película nueva con todo el equipo": {
+      "l1": "Nos vemos más tarde el sábado para una película nueva con todo el equipo.",
+      "origin": "mt",
+      "mt": "Nos vemos más tarde el sábado para una película nueva con todo el equipo.",
+      "reviewedBy": "agent"
+    },
+    "nos vemos entonces, ron": {
+      "l1": "See you then, Ron!",
+      "origin": "mt",
+      "mt": "See you then, Ron!",
+      "reviewedBy": "agent"
+    },
+    "nos vemos entonces": {
+      "l1": "¡Nos vemos entonces,",
+      "origin": "mt",
+      "mt": "¡Nos vemos entonces,",
+      "reviewedBy": "agent"
+    }
+  },
+  "meta": {
+    "schemaVersion": 1,
+    "segmentationVersion": 1,
+    "generatedFrom": "m1-fixture.source.json",
+    "sourceDigest": "sha256:v1:192c6e574fc4d10aad345f8caf04167e9ee8ccac291a52ef6c6e2f44c8ca5110",
+    "reviewPolicy": "fixture",
+    "translator": {
+      "en2romance": "fixture-1",
+      "romance2en": "fixture-1"
+    }
+  }
+}

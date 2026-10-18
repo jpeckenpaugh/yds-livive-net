@@ -1,0 +1,3 @@
+{
+  "scanRootExcludes": ["src/domain/validate.ts"]
+}

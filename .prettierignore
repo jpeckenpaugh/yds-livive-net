@@ -1,0 +1,12 @@
+docs/**
+dist/**
+test-artifacts/**
+node_modules/**
+package-lock.json
+src/data/**/*.json
+# `bake --report` owns this file's format; idempotence is the check (E3's rationale).
+review/report.*.md
+# The two frozen contract files are read-only to the Engineer; formatting them
+# would be a contract change. D5 §10's list omits them (reported).
+src/domain/types.ts
+src/engines/ports.ts

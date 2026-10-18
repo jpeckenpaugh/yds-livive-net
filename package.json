@@ -1,0 +1,52 @@
+{
+  "name": "yds-livive-net",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "You Don't Say — an offline, listen-first interactive conversation reader.",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.node.json",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "bake": "node tools/bake/main.mjs --conversation src/data/conversations/m1-fixture.source.json",
+    "bake:check": "node tools/bake/main.mjs --check --author-only --conversation src/data/conversations/m1-fixture.source.json",
+    "bake:fixture": "node tools/bake/fixtures/generate.mjs",
+    "check:contracts": "node tools/check-contracts.mjs",
+    "contracts:update": "node tools/check-contracts.mjs --update",
+    "check:vocabulary": "node tools/check-vocabulary.mjs",
+    "check:bundle": "node tools/check-bundle.mjs",
+    "check:assets": "node tools/check-assets.mjs",
+    "check:ac-map": "node tools/check-ac-map.mjs",
+    "check": "npm run check:contracts && npm run format:check && npm run lint && npm run typecheck && npm run check:vocabulary && npm run bake:check && npm run test && npm run build && npm run check:bundle && npm run check:assets && npm run check:ac-map",
+    "e2e": "playwright test",
+    "evidence": "node tools/test-runner/run.mjs"
+  },
+  "dependencies": {
+    "preact": "^11.0.1"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.14.0",
+    "@playwright/test": "^1.64.1",
+    "@preact/preset-vite": "^2.10.6",
+    "@testing-library/preact": "^3.2.4",
+    "@types/node": "^26.6.5",
+    "eslint": "^10.13.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "jsdom": "^30.1.3",
+    "prettier": "^3.9.10",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.71.2",
+    "vite": "^8.3.4",
+    "vitest": "^5.0.5",
+    "vitest-axe": "^0.1.0"
+  }
+}

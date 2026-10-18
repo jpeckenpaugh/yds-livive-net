@@ -1,0 +1,14 @@
+node_modules/
+dist/
+coverage/
+test-artifacts/*
+!test-artifacts/README.md
+*.log
+.DS_Store
+.cache/
+.hf-cache/
+.huggingface/
+*.onnx
+*.onnx_data
+*.bin
+*.wasm
