@@ -20,7 +20,11 @@ env:
   # reaches for the network it fails loudly instead of pulling 214 MB.
   HF_HUB_OFFLINE: '1'
   TRANSFORMERS_OFFLINE: '1'
-  HF_HOME: ${{ runner.temp }}/hf-home    # ephemeral on purpose, never cached
+  # Must be a literal: the `runner` context does not exist at workflow-level
+  # `env` (only `github`, `inputs` and `vars` do), so referencing runner.temp
+  # here is a workflow parse error and no job runs at all. /tmp is ephemeral
+  # on the runner and is never cached.
+  HF_HOME: /tmp/hf-home
 
 jobs:
   verify:
