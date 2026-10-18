@@ -1,0 +1,287 @@
+# You Don't Say — Architecture (D7)
+
+> **Status:** 🟡 Draft — pending owner review
+> **Owner:** Designer · **Reviewer:** Project Manager
+> **Purpose:** The map, written last so it describes reality rather than intent. Layer boundaries and their dependency rules, the end-to-end data flow, runtime and worker topology, the accurate Supertonic swap checklist, build vs runtime topology, the cross-cutting invariants with their owners and enforcement, and the failure topology.
+> **Depends on:** D2, D3, D4, D5, D6 (all of them — this doc adds no semantics)
+> **Owns:** the layer map, the data-flow and topology diagrams, the swap checklist, the invariant index, the failure topology, `AC-ARCH-*`
+> **Related:** D2 §2 is the canonical glossary and is **not restated here**
+
+**Precedence.** Locked decisions > `docs/design/D2`–`D7` > `README.md`. `README.md` is the concept narrative; it is superseded wherever it disagrees, and it is not edited further.
+
+**This doc contains no new rules.** Every statement below is a pointer to, or a synthesis of, a decision owned by another doc. If this doc and an owning doc disagree, **the owning doc wins** and this doc has a bug. That is stated first because a synthesis is exactly where a silent contradiction would hide.
+
+---
+
+## 1. Vocabulary and ownership
+
+The canonical glossary is **D2 §2**. This doc uses its terms without redefining them: *beat*, *alternative*, *line*, *option*, *variable*, *selector*/*display* variable, *bound pair*, *assignment*, *read scope*, *variant*, *variant key*, *session*, *walk*.
+
+| Doc | Owns | Frozen artefacts |
+|---|---|---|
+| **D1** | The contract, the milestone map, the AC registry | — |
+| **D2** | Domain semantics, both schemas, the walk, the diagnostic registry | `src/domain/types.ts` |
+| **D3** | Engine ports, model/revision/precision facts, capabilities, licenses | `src/engines/ports.ts` |
+| **D4** | Component tree, presentation, **all timings**, a11y | — |
+| **D5** | Build, lint, test, CI, bundle assertions | config files, `tools/check-*.mjs` |
+| **D6** | The bake pipeline, the triage workflow, the 10-beat content | `tools/bake/**`, the content files |
+| **D7** | This map | — |
+
+---
+
+## 2. Layer map
+
+```
+┌───────────────────────────────────────────────────────────────────────┐
+│  src/ui/            components, the store, the scheduler, a11y         │  D4
+│    depends on ──▶ domain, engines/ports (types), the generated data    │
+├───────────────────────────────────────────────────────────────────────┤
+│  src/engines/       the TTS adapter(s), the cache, the registry (data) │  D3
+│    depends on ──▶ domain                                              │
+├───────────────────────────────────────────────────────────────────────┤
+│  src/domain/        schemas, the walk, reduce, resolve, visibility,    │  D2
+│                     segmentation, validation        ← DEPENDENCY BASE  │
+│    depends on ──▶ nothing                                              │
+└───────────────────────────────────────────────────────────────────────┘
+        ▲ not part of the runtime bundle, and not reachable from it:
+┌───────┴───────────────────────────────────────────────────────────────┐
+│  tools/bake/        the Node program: enumerate, translate, gloss,     │  D6
+│                     assemble, check          depends on ──▶ domain     │  D5 (harness)
+│  tests/             four Vitest projects, the mocks, the fixtures      │
+└───────────────────────────────────────────────────────────────────────┘
+```
+
+**Dependency rules, all mechanically enforced:**
+
+| Rule | Enforced by |
+|---|---|
+| `domain` imports nothing from `engines` or `ui`; it is the base layer | import-graph assertion in the `domain` test project |
+| `ui` never imports a bake-only module or a `*.source.json` | D5's `no-restricted-imports` over `tools/scan-excludes.json` (a single machine-readable copy; a Node ESM lint config cannot import a TS constant) |
+| `tools/**` is outside `src/` entirely, so no bake path needs an exception | D2 §13's scan root |
+| `src/engines/ports.ts` is **not** a domain file | it lives in `engines/`; D2's contract file must not import from it |
+| Only `src/engines/registry.ts` names a repo id, revision, packaging or precision | D5's `check:bundle` string scan |
+
+The last row is why the layer map has a `registry` box: **D3's facts are data, not code.** A packaging decision, a precision chain, a license, a byte total and a pinned revision are all one object in one file, so the M2 decision is a data change and so is a license correction.
+
+---
+
+## 3. Data flow, end to end
+
+```
+        AUTHORED (human)                    DRAFTED (machine)              REVIEWED (human)
+┌──────────────────────────┐        ┌───────────────────────────┐      ┌────────────────────┐
+│ <id>.source.json         │        │ mt (English → Spanish)    │      │ glossary.es.json   │
+│ English, {slots}, hints  │        │ gloss spans (RO→English)  │      │ (authored overrides)│
+│ labels (both languages)  │◀───────│ E_SENTINEL_IGNORED smoke  │      └─────────┬──────────┘
+└───────────┬──────────────┘        └───────────┬───────────────┘                │
+            │                                   │                                │
+            ▼                                   ▼                                ▼
+   ┌──────────────────────────────────────────────────────────────────────────────────┐
+   │  tools/bake  —  phases 0–8  (D6)                                                 │
+   │  validate → walk(exhaustive) → render L1 → draft L2 → segment → gloss → merge    │
+   └──────────┬───────────────────────────────────────────────────────────────────────┘
+              │ writes (never in CI; CI only --check --author-only, offline)
+              ▼
+   ┌──────────────────────────────┐        ┌────────────────────────────────────┐
+   │ <id>.json   Conversation     │        │ review/flags.<id>.json  ◀──▶ owner │
+   │ <id>.glossary.json           │        │ review/report.<id>.md              │
+   └──────────┬───────────────────┘        └────────────────────────────────────┘
+              │ import (resolveJsonModule)          │ CI: regenerate report to temp, compare
+              ▼                                     ▼
+   ┌──────────────────────────┐
+   │  vite build  →  dist/    │   ← asserted: no engine string, no registry id, no origin
+   └──────────┬───────────────┘
+              ▼
+   ┌──────────────────────────────────────────────────────────────────────────────┐
+   │  RUNTIME (browser, no server, no network after first load)                    │
+   │                                                                              │
+   │  Conversation ──▶ session:reduce ──▶ resolveTimeline ──▶ ResolvedBeat[]        │
+   │                                          │                    │               │
+   │                                    visibility()               ▼               │
+   │                                          │            src/ui renders           │
+   │                                          ▼                    │               │
+   │                                    playOrder ──▶ Scheduler builds Steps        │
+   │                                                        │                     │
+   │                             TtsEngine.synth(text from a VariantRecord)         │
+   │                                        │                                      │
+   │                          speechSynthesis (M1) │ Supertonic in a Worker (M2)     │
+   └──────────────────────────────────────────────────────────────────────────────┘
+```
+
+Three things this diagram exists to make unmissable:
+
+1. **The browser has no translator.** There is no arrow from the runtime box to any model. Locked decision 3 is a topology fact, not a policy.
+2. **`bake` is upstream of the build and is not invoked by it.** No `prebuild` hook (D5 §8). A build that re-drafted Spanish would be non-reproducible and could rewrite a human's edit.
+3. **The engine's input comes from a `VariantRecord`, never from a template.** The only path into `synth` is through a rendered `l1`/`l2` string (D2 §8 INV-1, D3 AC-ENG-04).
+
+---
+
+## 4. Runtime module graph
+
+```
+src/ui/App ──▶ Store ──┬──▶ domain/session.reduce
+                       ├──▶ domain/resolve.resolveTimeline
+                       ├──▶ domain/visibility.visibility
+                       └──▶ Scheduler ──▶ engines/tts/index.createTtsEngine
+                                                    ├── engines/tts/speech-synthesis   (M1)
+                                                    ├── engines/tts/supertonic         (M2)
+                                                    └── engines/audio-cache.withAudioCache
+                       └──▶ domain/segment.segmentL2 (+ gloss lookup)   ← hover, offline
+```
+
+- **`createTtsEngine` is the only engine constructor** and the only place `__TTS_ENGINE__` is read.
+- **`segmentL2` is one function in one module**, imported by both `src/ui` and `tools/bake` (D2 §9.1 / R8). If build-time and runtime segmentation ever diverge, every gloss lookup misses; a single module is the only structure that makes that impossible rather than unlikely.
+- The **Scheduler** is the only component that talks to an engine, and it attaches `beatId`/`lineId` to each `Step` because an `Utterance`'s identity is the speech tuple, not the variant (D3 §3.1).
+
+---
+
+## 5. Worker topology
+
+| | M1 | M2 |
+|---|---|---|
+| Workers | **zero** | one, for ONNX inference |
+| Why | `speechSynthesis` is not exposed on `WorkerGlobalScope` (D3 §4.2.4) | 138–248 MB of weights and the runtime must not be on the main thread |
+| The port | a **service** interface | unchanged, still a service interface |
+| Where the worker lives | — | inside `src/engines/tts/supertonic.*`, behind the port |
+
+**M1's diagram contains no worker box, and neither should any future revision of this diagram.** The port is deliberately a *service* interface rather than a *worker* interface, and that is the entire reason the M2 swap is small: the UI awaits a promise either way, and "is this beat's audio ready?" is answered by the same call whether or not a worker exists behind it.
+
+Corollary worth stating: **`prefetch` and `duration` are capabilities, not assumptions.** M1 reports both as `false` and the UI must therefore contain no preparing state and no per-line progress (D4 §6.6, AC-UI-24).
+
+---
+
+## 6. The Supertonic swap, stated accurately
+
+The locked claim is "the swap touches one file". The accurate claim, and the one an Engineer should be held to:
+
+> **The swap adds one adapter inside `src/engines/tts/` and changes three one-line registrations. No component, no domain module and no store changes.**
+
+| # | Change | Kind |
+|---|---|---|
+| 1 | add `src/engines/tts/supertonic.ts` | **the only new code file** |
+| 2 | add one branch to `src/engines/tts/index.ts` (the factory) | code, a few lines |
+| 3 | flip one registry entry's `decision` from `'deferred'` and set its `revision` | **data** (D3 §11) |
+| 4 | add one dependency to `package.json` | config |
+| 5 | set `TTS_ENGINE=supertonic-*` for the build | config |
+| 6 | *(only if the adapter uses a worker)* set `worker.format`, already present in `vite.config.ts` | config |
+
+The honest caveat, from D3 §6: **packaging B (`int8-sherpa`) is not just a different file.** It is a second runtime with its own session and fetch path, so it also brings its own adapter internals and its own conformance pass. Packaging A (`fp32-transformers`) fits the port almost directly. That difference is why the packaging decision is deferred to the M2 gate rather than made now, and it is why the claim above is about *the port's stability* rather than about the size of the smallest possible diff.
+
+---
+
+## 7. Build vs runtime topology
+
+| | Build machine (dev / CI) | Learner's browser |
+|---|---|---|
+| Runs | `tools/bake`, `vite build`, tests | the built bundle only |
+| Dependencies | `@huggingface/transformers`, `onnxruntime-node` (devDeps) | `preact` **only** |
+| Network | MT models, ~214 MB, on a dev machine's first bake | **none, in M1** |
+| Content | authored English → drafted Spanish | the committed artifact, bundled |
+| Verification | `bake --check --author-only`, offline, in CI | — |
+| Assets | none committed (D3 C10) | M2 only: ~0.5 MB of voice styles + 138–248 MB of weights, cached |
+
+**Deployment is a static directory.** One HTML file, one JS bundle (the conversation JSON is `import`ed, so it is in the bundle rather than fetched), no server, no accounts, no keys. `base: './'` means it works from a project subpath, which is how the sibling project in this workspace is served.
+
+**M4 reserve, not M1 work:** a service worker with a versioned precache, with model weights kept in IndexedDB rather than the SW cache (D5 §11, PM Q9).
+
+---
+
+## 8. Cross-cutting invariants, with owners
+
+The index exists so that a reader can find the invariant without re-reading six docs, and so that a violation has exactly one owner.
+
+| # | Invariant | Owner | Enforced by |
+|---|---|---|---|
+| 1 | Locked decisions > docs > README | D1/D7 | this header, and D1's contract |
+| 2 | No template reaches the browser or an engine | D2 §8 (INV-1), D3 | D5's lint boundary (`tools/scan-excludes.json`); AC-ENG-04 |
+| 3 | One walk, three projections — the validator, the enumerator and the app cannot disagree | D2 §5.1 | AC-DOM-14 |
+| 4 | No rendered string contains `{`, `}` or `${` | D2 §8 (INV-3) | AC-DOM-08 |
+| 5 | Variant keys are injective; a collision is an error, never an overwrite | D2 §5.3 | `E_VARIANT_KEY_COLLISION` (permanent guard) |
+| 6 | Nothing ships unreviewed; a human edit is attributable forever | D2 §7.2, D6 §8 | `E_UNREVIEWED`, `E_EDITED_NOT_OWNER`, `l2 !== mt` ⇒ `owner` |
+| 7 | The browser ships zero translation code and downloads zero models in M1 | locked decision 3 | D5's `check:bundle` + devDeps-only assertion + offline CI env |
+| 8 | Engines receive fully-formed strings; capabilities are declared, never probed | D3 §3, §4.1 | AC-ENG-02, AC-ENG-04 |
+| 9 | G1/G2 are recorded deviations, and the UI never claims otherwise | D3 §4.4, D4 §9 | AC-ENG-06, AC-UI-15 |
+| 10 | No beat whose status is `unreached` is ever rendered as content | D2 §10, D4 §7.5 | AC-UI-12 |
+| 11 | Model binaries are never committed | D3 C10 | `.gitignore` + `check:assets` (no `.bin`/`.onnx`/`.wasm` under `src/`) |
+| 12 | Every AC id has a test | D5 §7.4 | `check:ac-map` |
+
+---
+
+## 9. Failure topology
+
+What breaks, how it is detected, and what recovers. Nothing here may block reading, because the transcript is the app.
+
+| Failure | Detected by | Learner sees | Recovery |
+|---|---|---|---|
+| No L2 OS voice (G1) | `resolveVoice(_, l2) === null` | non-modal notice, L2 audio unavailable, previews disabled with a reason | install a voice → `voiceschanged` re-evaluates (D4 §9); or the explicit `playAnyway` escape hatch |
+| No `speechSynthesis` at all | `typeof speechSynthesis === 'undefined'` | `engine-absent`; every beat manual | reading only; terminal in M1 |
+| M2 engine cannot init | the adapter's init | `engine-absent`, the failing registry entry named | the M1-style degraded path |
+| M2 storage full | `QuotaExceededError` | download stops, size shown | "delete cached audio"; retry |
+| M2 cache evicted | a missing model file | identical to "never downloaded", plus a one-time notice | re-download |
+| M2 WebGPU unavailable | the precision chain | silently falls back through the chain | or a loud failure naming the entry if the chain is exhausted |
+| A variant key is missing at runtime | `lines[key]` undefined | — | **unreachable by construction**; dev throw, and `E_VARIANT_MISSING` catches it at build time |
+| The artifact is stale | `bake --check` in CI | nothing (a build-machine failure) | re-bake; `E_SOURCE_STALE` decides what changed |
+| The conversation JSON is malformed | bundled at build time → Vite/TS error | nothing (the build fails) | fix the source and re-bake |
+| Test glue / a11y regression | CI | nothing | the failing job |
+
+**What the app never does** — each is one of the invariants above wearing a UX hat, and each is asserted somewhere:
+
+1. never silently plays L2 text in a mismatched voice (AC-ENG-07);
+2. never claims one voice identity across languages while M1 is active (AC-UI-15);
+3. never renders text for a beat whose variables are unknown (AC-UI-12);
+4. never fabricates a duration or a preparing state the engine cannot report (AC-UI-24);
+5. never blocks the UI on audio (D3 §6.5, D4 §6.4);
+6. never writes a human's `l2` out from under them (D6 §7.2).
+
+---
+
+## 10. Reading order for the Engineer
+
+An index by task, because the brief cannot answer questions and this is the closest thing to one.
+
+| If you are building… | Read, in order |
+|---|---|
+| the domain, session, or resolution | D2 §2 → §4–§6 → §10–§12, then `src/domain/types.ts` |
+| the TTS adapter or anything audio | D3 §3–§4 (M1) or §6 (M2), then D4 §6 |
+| a component or an interaction state | D4 §3–§5, then §7 and §9; D2 §12 for the three channel carve-outs |
+| the bake pipeline | D6 §3–§8, then D2 §5 (the walk) and D3 §10 (the port) |
+| build, lint, tests, CI | D5 §2–§9 |
+| anything where two docs disagree | the precedence rule, then the owning doc in §1 above |
+
+---
+
+## 11. Acceptance criteria (`AC-ARCH-*`)
+
+| ID | Criterion |
+|---|---|
+| **AC-ARCH-01** | The import graph matches §2: `domain` imports nothing from `engines`/`ui`; `ui` imports no bake-only module or `*.source.json`; a test asserts the graph. |
+| **AC-ARCH-02** | `src/engines/registry.ts` is the only module in `src/**` containing a repo id, a pinned revision, a packaging name or a precision name. |
+| **AC-ARCH-03** | The M1 build contains no worker and no `new Worker` call, and the emitted `index.html` references no absolute origin. |
+| **AC-ARCH-04** | `createTtsEngine` is the only engine constructor and the only reader of `__TTS_ENGINE__`. |
+| **AC-ARCH-05** | `segmentL2` is defined once and imported by both the runtime and `tools/bake`; a test asserts a single definition and byte-identical span boundaries across both. |
+| **AC-ARCH-06** | The Scheduler is the only module that calls `TtsEngine.synth`, and every `Step` carries `beatId` and `lineId`. |
+| **AC-ARCH-07** | The swap checklist in §6 is accurate: adding a second adapter changes no file outside `src/engines/tts/` except the three registrations, demonstrated by a test that builds with a stub engine id. |
+| **AC-ARCH-08** | No `prebuild`/`postbuild` hook invokes bake, and `npm run build` succeeds with the bake program's dependencies uninstalled. |
+| **AC-ARCH-09** | Every invariant in §8 has a named owner and a named enforcement mechanism, and the enforcement exists (the AC it cites resolves through `tools/ac-map.json`). |
+| **AC-ARCH-10** | Every failure in §9 is either covered by a test or marked unreachable-by-construction with the diagnostic that proves it. |
+| **AC-ARCH-11** | The runtime bundle contains no translator path: no arrow from `src/**` to a `Translator`, asserted by the D5 bundle scan. |
+| **AC-ARCH-12** | D7 contains no rule that contradicts its owning doc — reviewed as a checklist against D2–D6, one row of §8 per invariant. |
+
+---
+
+## 12. Cross-doc notes — final pushback before D1
+
+**On D2** — one item, non-blocking, already raised in D4 §7.6: `Option.icon` does not exist, so the README's emoji option tags are not representable. It is a schema question, so it is cheap now and expensive after the first bake. Everything else in D2 survives the synthesis unchanged, including the amended variant key, which this map confirms is the only key composition referenced anywhere.
+
+**On D3** — one item, already in D5 §13: `sourceDigest` stability needs `.gitattributes eol=lf`. D3 pins model revisions to stop MT output drifting; nothing pinned the *input* bytes. It is fixed in D5 rather than D3, and recorded here only so the invariant index (§8 row 6/11) points at the right place.
+
+**On D4** — one item: `AC-UI-22` needs two evidence sources (jsdom structure, Playwright contrast/zoom) and D4's table does not currently say which requirement is checked where. Non-blocking; a wording change, not an id change.
+
+**On D6** — nothing.
+
+**Should anything block M1?** Only two decisions, both of which are cheap now and expensive later, and both already on your desk:
+
+1. **`Option.icon`** (D4 §7.6) — drop the emoji, or amend D2 before the first bake.
+2. **Playwright in M1** (D5 §9.4) — keep it (it is the only real check for contrast/zoom *and* it exercises the G1 path on every run because headless Chromium has no `es` voice), or defer the browser-based half of `AC-UI-22` to M2 and record the deferral.
+
+Everything else in D2–D7 is implementation work with no cross-doc dependency, and the milestone is unblocked as soon as those two are decided.
