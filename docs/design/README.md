@@ -10,11 +10,12 @@ Lean, design-time resources for the "You Don't Say" SPA. Tables and lists over p
 |----------|-----|----------|-------|--------|
 | **D1** | `D1-poc-contract.md` | Contract: north star, loop, MVP IN/OUT, Definition of Done, milestone map, **AC registry** (indexes the `AC-*` ids owned by D2–D6) | Project Manager | ✅ Frozen |
 | **D2** | [`D2-domain-model.md`](./D2-domain-model.md) | Authored source schema, generated artifact, `when` discipline, variable discipline + bound pairs, the timeline walk and its three projections, variant keys, provenance record and review policy, gloss index, `segmentL2`, session ops, `resolveTimeline`, `visibility`, **canonical semantic constants**, **diagnostic registry (49 codes)**, `AC-DOM-01..24` | Designer | ✅ **Frozen** |
-| **D3** | [`D3-engines.md`](./D3-engines.md) | TTS port + M1 `speechSynthesis` adapter + M2 Supertonic adapter, capability flags and recorded M1 deviations, cache + cache keys + stable-key fallback, Web Worker seam, `Translator` port, model/revision/precision facts, the two-file asset registry, Downloads seam, `AC-ENG-01..22` | Designer | ✅ **Frozen** |
+| **D3** | [`D3-engines.md`](./D3-engines.md) | TTS port + M1 `speechSynthesis` adapter + M3 Supertonic adapter, capability flags and recorded M1 deviations, cache + cache keys + stable-key fallback, Web Worker seam, `Translator` port, model/revision/precision facts, the **three-file** asset registry, `ModelSource`, Downloads seam, `AC-ENG-01..23` | Designer | ✅ **Frozen** |
 | **D4** | [`D4-ui.md`](./D4-ui.md) | Component tree, store shape, the presentation matrix (8 rows, proven equivalent to all 32 preference states), **all playback sequencing and timing**, choice cards (pick / preview / replay-ghost), option icons, the `revealed` clamp decision, "What if", the G1/G2 state machine, keyboard, WCAG 2.2 AA, About/Licences, the shell / pair / list / completion / playback surfaces, chrome localization, `AC-UI-01..35` and `AC-I18N-01..08` | Designer | ✅ **Frozen** |
 | **D5** | [`D5-tooling.md`](./D5-tooling.md) | Exact compiler flags, npm scripts and exit codes, dependency split, the INV-1 lint boundary, the scoped vocabulary check, engine-derived bundle assertions, four Vitest projects, the CI job (never generates), the milestone-aware AC→test map, the M4 service-worker reserve, `AC-TOOL-01..23` | Designer | ✅ **Frozen** |
 | **D6** | [`D6-content-and-bake.md`](./D6-content-and-bake.md) | Authoring guide, the four files + the conversation entry module, the **entire bake pipeline** (phases 0–8, enumeration, injected `Translator`, staleness, human-edit preservation, review policy, pruning, `--conversation`, `--check`), triage/adjudication and flag-list format, coverage report, and the **10-beat English/Spanish spec**, `AC-CONTENT-01..25` | Designer | ✅ **Frozen** |
 | **D7** | [`D7-architecture.md`](./D7-architecture.md) | Layer map and dependency rules, end-to-end data flow, runtime module graph, worker topology (no worker box in M1), the accurate swap checklist, build vs runtime topology, the cross-cutting invariant index, the failure topology, an Engineer reading order, `AC-ARCH-01..13` | Designer | ✅ **Frozen** |
+| — | [`spike-m3-packaging.md`](./spike-m3-packaging.md) | M3 packaging evidence, the decision and its override, and the risks it accepts — **D3 §6.1 references it rather than restating the numbers** | Project Manager | Decided |
 | — | `src/domain/types.ts` | Frozen domain contracts (D2 owns) | Designer | ✅ **Frozen** |
 | — | `src/engines/ports.ts` | Frozen engine ports (D3 owns) | Designer | ✅ **Frozen** |
 | — | `docs/legal/clean-room-record.md` | Provenance and licensing position | Project Manager | PM's artefact |
@@ -22,8 +23,8 @@ Lean, design-time resources for the "You Don't Say" SPA. Tables and lists over p
 ## Locked decisions (do not re-litigate)
 
 - **Branching:** variable-seeded linear timeline. A choice = label + response line + the variables it sets. `when` scopes a choice set to a variable value. **The timeline never forks.**
-- **M1 TTS:** `speechSynthesis` behind the narrow TTS port — **zero model downloads in M1**. Supertonic arrives in M2 behind the same port.
-- **M2 TTS:** Supertonic 3, `onnx-community/Supertonic-TTS-ONNX`, default device WebGPU with automatic WASM fallback, voices `M1`–`M5` / `F1`–`F5`. One voice identity per character across languages.
+- **M1 TTS:** `speechSynthesis` behind the narrow TTS port — **zero model downloads in M1**. Supertonic arrives in M3 behind the same port.
+- **M3 TTS:** Supertonic 3, `onnx-community/Supertonic-TTS-ONNX`, default device WebGPU with automatic WASM fallback, voices `M1`–`M5` / `F1`–`F5`. One voice identity per character across languages.
 - **Translation:** build-time only, in Node, via `bake`. The browser ships **zero translation code and zero translation models**.
 - **Stack:** Vite + Preact + TypeScript. Hand-rolled `useReducer` + context for state; no additional runtime dependency.
 - **A translator is a draft tool, and the only drafter.** It drafts every line and every gloss span — a pinned MT model **or** an authored bilingual table, recorded in the artifact as `meta.translator`/`translationRev` (D2 §7.2); a separate review agent triages suspected errors; **the owner adjudicates the flag list**. `reviewedBy` is recorded per line and per gloss and CI fails on `null`.
@@ -36,7 +37,7 @@ Lean, design-time resources for the "You Don't Say" SPA. Tables and lists over p
 | **G2** | "One voice identity across languages" | An accepted, **recorded** M1 deviation. The M1 engine reports `preservesVoiceIdentityAcrossLangs: false` and the UI must not claim otherwise. |
 | **C1–C5** | README schema contradictions (`{slot}` inside `l2`, `when` on the beat, duplicated beat ids, `SlotState`, `cuisine: null`) | Superseded by D2; each carries a `⚠ DIVERGES FROM README` marker. |
 | **C6** | Runtime hover translation | Impossible under locked decision 3. Clause-windowing moves into `bake`; the shipped `segmentL2` maps cursor → span offline. |
-| **C11/C12** | Supertonic packaging and dtype | Model and dtype become **registry entries with the decision deferred to the M2 gate**; both packaging options are documented honestly in D3. |
+| **C11/C12** | Supertonic packaging and dtype | Model and dtype become **registry entries with the decision deferred to the gate**; the packaging options are documented honestly in D3 (**now three — amendment Z1, D3 §6.1**). |
 | **Q9** | Service worker | **M4, not M1.** M1 has nothing to cache; the seam is reserved in D5 §11. |
 | **A1** | Variant-key injectivity | **Amended in D2 §5.3**: `[beatId, parentId, …vars].join('|')`, `parentId` = `Line.id` or `Option.key`. `E_VARIANT_KEY_COLLISION` remains a permanent guard. Admissible only because nothing had been baked. |
 | **A2** | Bake program path | `tools/bake/**` (D6 §2.1). The INV-1 boundary lives in `tools/scan-excludes.json` (D5 §6) and names no bake path. |
@@ -93,6 +94,51 @@ Round 3 fixed the *provenance* rules for two translation sources, but the framin
 
 **AC totals unchanged at 151; diagnostics unchanged at 49.** No id added, renumbered or retired.
 
+## Freeze amendments, round 5 (2026-10-18) — the M3 TTS gate: a third packaging, and three reconciliations
+
+Real TTS (M3) is starting. The owner priced a third Supertonic packaging and reaffirmed the identity requirement. Documentation only.
+
+| # | Item | Resolution |
+|---|---|---|
+| **Z1** | A third packaging option exists, at 91 MB | **D3 §6.1 now lists three options** — A fp32/transformers (~248 MB), B int8/sherpa **v3** (~138 MB), C int8/sherpa **v2** (~91 MB, `opensource-multilingual2`). C is 157 MB smaller than A and covers exactly our four languages. Two things are recorded as **unverified preconditions for the gate**, not facts: C's **ten voice styles** and C's **license**. The **quality trade** (v3 claims fewer repeat/skip failures than v2 on short and long utterances) is the spike's question and is explicitly **not resolved**. |
+| **Z2** | The identity requirement was re-tested and reaffirmed | **D3 §6.1.1** records that one voice identity per character across languages is **decisive**: it eliminates an engine family, so the choice is *which Supertonic build*, not *which engine*. The rejected alternatives (Kokoro-82M, Piper, Kitten TTS) and their reasons are recorded so this is not re-litigated. **Framing correction:** Supertonic 3 is ~99M parameters and Kokoro-82M ~82M — comparable; the 248 MB is an **fp32 artifact** cost, not a model-size cost, and quantization is the lever. |
+| **Z3** | `AC-CONTENT-23` / `AC-CONTENT-25` read as pending | **They are satisfied.** The authored content conversations carry `authored-1` provenance and a real gloss at every level with zero `GLOSS-IDENTITY`. D6 §2.4 and the AC milestone note now say so; `AC-CONTENT-25`'s "every record adjudicated" is corrected to a **non-null `reviewedBy`** (the authored route is agent-authored and agent-triaged, and does not claim owner adjudication). The PM is correcting the milestone in `tools/ac-map.json`. |
+| **Z4** | `AC-ENG-18` (and its D6 twin `AC-CONTENT-18`) cannot be satisfied by the authored pipeline | **Marked inapplicable, not satisfied vacuously.** The phase-0 `>>es<<` sentinel test is a property of a **model** translator; an authored table has no sentinel, so phase 0 is skipped. The authored route's equivalent guarantee is a **content** property (every rendered line has an authored entry; a missing one is a diagnostic), already covered by `AC-CONTENT-*`. D3 §13/§10.3 and D6 §4/§4.1/§13 record it. |
+
+**AC totals unchanged at 151; diagnostics unchanged at 49.** No id added, renumbered or retired.
+
+## Freeze amendments, round 6 (2026-10-18) — the parameter counts, the M3 rename, and the licence set
+
+Three corrections to round 5, all documentation only.
+
+| # | Item | Resolution |
+|---|---|---|
+| **Z5** | The parameter comparison was still a characterisation | **Stated with the numbers** (D3 §6.1.1): Kokoro-82M **82M** / ~40 MB q8; Supertonic 2 (option C) **66M** / 91 MB int8; Supertonic 3 (A, B) **99M** / 138 MB int8 · 248 MB fp32. So **Kokoro is smaller than Supertonic 3 on both axes**; **C is smaller than Kokoro in parameters but a larger download**; and the 248 MB is *partly* fp32 and *partly* a bigger model. The cost is justified by the identity requirement, not by size. |
+| **Z6** | The real-TTS milestone was labelled **M2** in D3 (and D4/D5/D7/the index) while D1 and `ac-map.json` call it **M3** | **Renamed to M3 everywhere it means the real-TTS milestone** — D3 (purpose, scope, §4.5/§4.6, §5 boundary → **M1/M3 boundary**, §6–§7, §9, §11.1, §14), D4, D5, D7 and the design README. The stopgap mapping note is removed. "M2" now means **shipping content** only. The VoiceId `M2` and the content-milestone uses are untouched. |
+| **Z7** | D4 §13 assumed a fixed two-model licence set | **The set is a function of the selected packaging** (D4 §13, cross-referencing D3 §6.7): the surface lists the licence of whichever packaging the gate selects, including **the selected runtime's own licences**; and **an entry with an unverified licence cannot be selected**, so option C is blocked until its licence is checked. |
+
+**AC totals unchanged at 151; diagnostics unchanged at 49.** No id added, renumbered or retired.
+
+## Freeze amendments, round 7 (2026-10-18) — the M3 decision, the spike rule fixes, and the port
+
+The packaging spike is done and the owner decided. Part A records the decision and the measured rule fixes; Part B amends the frozen port, which was blocking all adapter code.
+
+| # | Item | Resolution |
+|---|---|---|
+| **Z8** | The M3 packaging decision | **Option C is selected** (v2 int8/sherpa, 91.9 MB, `5dec5897…`). D3 §6.1 now **references [`spike-m3-packaging.md`](./spike-m3-packaging.md)** instead of restating the numbers, and records the decision **as an override**: the Engineer's pre-registered rule said A, and the owner chose C on learner download size (105 vs 278 MB). **A stays selectable** (`'deferred'`); **B is rejected** (C dominates it); **C's licence is unverified and blocking** (AC-ENG-21); C's ten styles are verified **but they are Supertonic 2's, not v3's**. Any option must pin a public mirror with a revision — B's old repo id is dead (HTTP 401). |
+| **Z9** | `D3 §6.4`'s precision chain was the wrong shape | The chain is now an ordered **`PrecisionStep[]` that crosses backends** (D3 §6.4, §11): `webgpu+fp16 → wasm+fp32` for A, `wasm+int8` for C. **Never `webgpu+fp32`** — WebGPU without `shader-f16` measured 15–20× slower than WASM. The old `Backend → Precision[]` map could not express the fallback. |
+| **Z10** | The port could not carry the M3 requirements | **`src/engines/ports.ts` amended (B1–B4):** `Utterance.blob?: Blob` (the cache could never be populated); `ModelSource` + `ModelFileRef` + `DownloadProgress` and `CreateTtsEngineOptions.models` (no models-store/Downloads seam); `RegistryDecision` gains `'m3'` (the documented swap step had no target); `CandidateAssetRegistry` + a **third registry file** `tools/registry.candidates.ts` (deferred entries had no home). D3 §9/§11.1, D7 §2/§6. |
+| **Z11** | `check:bundle` forbade `.wasm`, and the gzip budget was a flat 90 | **The selected runtime `.wasm` is allowed** as a `purpose: 'runtime'` asset; model weights stay forbidden in `dist/`. The **gzip budget is engine-derived** (A's JS alone measured 162.66 KB, so 90 fails a valid build). D5 §6.3 checks 3–4. |
+| **Z12** | `AC-TOOL-04` / D5 §2's "one runtime dependency" | **Restated**: one runtime dep in M1 (`preact`), two at M3 (the selected TTS runtime ships in the bundle); the selected runtime's transitive tree is checked at selection, and **sherpa-onnx has no hard dependencies**. D5 §2. |
+| **Z13** | The accepted quality risk had no criterion | **`AC-ENG-23` added:** every shipping line is synthesised and auditioned for repeats, skips and truncation before M3 is done, recorded in `test-artifacts/`. This is the criterion for v2's short-utterance weakness, the one risk the decision accepts. **AC totals become 152**; `tools/ac-map.json` carries the new id (M3, no test yet) and **D1's register still says 151 — PM.** |
+| **Z14** | `D5` said the `AC-UI-22` downgrade moves to M2 | **Re-pointed to M4** (M2 is shipping content, no UI work). D5 §9.4, §13. |
+| **Z15** | The sherpa `.data` integration had no home | **D5 §3.2 added:** runtime and model are not separable (the model is baked into a 145 MB `.data`), so the `.data` build/injection is a real step, and the **Downloads byte total is the whole `.data` plus wasm**, not "runtime" + "model". D3 §9. |
+| **Z16** | `D7 §6`'s swap claim was wrong, and two smaller port gaps | The swap **touches `src/main.tsx`** (the `ModelSource` wiring), so "no file outside `src/engines/tts/`" is corrected; step 3 now sets `decision: 'm3'`. `voices(lang)` is documented as **narrowing** a language-agnostic style set, and the runtime's licence gets a `purpose: 'runtime'` registry entry. D7 §6/§7, D3 §6.6/§11. |
+
+**AC totals: 151 → 152** (`AC-ENG-23`). Diagnostics unchanged at **49**. No id renumbered or retired.
+
+**`src/engines/ports.ts` moved** (Z10), so `check:contracts` fails until the PM runs `contracts:update`. The manifest is the owner's to regenerate, never this amendment's.
+
 ## Freeze amendments (2026-10-18, gate defects found by the Engineer's M1 recon)
 
 Applied after the first freeze attempt. These are corrections, not redesigns; no AC id was renumbered.
@@ -133,7 +179,7 @@ Applied after the first freeze attempt. These are corrections, not redesigns; no
 
 D1 §7 assigned `AC-ARCH-*` to M4. **All thirteen are M1**, because each describes a property of the M1 codebase: the import graph, the two registry files, the absence of a worker, the single engine constructor, the single `segmentL2`, the Scheduler's exclusivity, the swap checklist (proved by a stub-engine build), the absent `prebuild` hook, the invariant index, the failure topology, the no-translator-path assertion, D7's internal consistency, and the single conversation import.
 
-`AC-ARCH-07` is the one that is arguable: its *subject* is the M2 swap, but the test that proves it runs in M1 against a stub engine id, so it protects the M1 architecture and belongs at M1. **No AC currently describes an M4 deliverable** — the service-worker reserve is deliberately a seam rather than work (D5 §11), and it should get an AC when M4 is specified.
+`AC-ARCH-07` is the one that is arguable: its *subject* is the M3 swap, but the test that proves it runs in M1 against a stub engine id, so it protects the M1 architecture and belongs at M1. **No AC currently describes an M4 deliverable** — the service-worker reserve is deliberately a seam rather than work (D5 §11), and it should get an AC when M4 is specified.
 | **A3** | Registry legibility | Every diagnostic code is spelled out in full in D2 §14, one row each, so D5's CI can grep them literally. |
 | **A4** | Licenses | Supertonic weights **OpenRAIL-M** (use restrictions must be surfaced as restrictions), code **MIT**. OPUS-MT **Apache-2.0** — **no attribution line required**. |
 | **—** | Frozen contracts | Two files: `src/domain/types.ts` (D2) and `src/engines/ports.ts` (D3). `ports.ts` is not a domain file. |

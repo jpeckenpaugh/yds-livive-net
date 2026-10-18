@@ -74,8 +74,8 @@ next milestone without my acceptance. Work may not start on a milestone whose de
 | | Milestone | Deliverable | Gate |
 |---|---|---|---|
 | **M1** | **Domain + playable app + tooling** | `types.ts` implemented; the pure domain functions (`resolveTimeline`, `reduce`, `deriveVariables`, `visibility`, `segmentL2`); the UI; the `speechSynthesis` engine; and **the entire `tools/` tree**, including the bake CLI in `--author-only` mode — because the M1 gate runs `bake:check` (`D5 §3`, `§3.1`). Playable end to end against a **development fixture** conversation | `AC-DOM-*`, `AC-UI-*`, `AC-TOOL-*`, the M1-adapter `AC-ENG-*`, and every `AC-CONTENT-*` that does not require the real translator. **First demoable milestone.** Zero browser downloads. |
-| **M2** | **Shipping content** | Run the real translator once on a development machine, produce the reviewed bilingual artifact, replace the fixture, retire it. No application code changes | The remaining `AC-CONTENT-*`, `bake:check` green against the shipped artifact, and complete provenance (`reviewedBy` non-null on every line and gloss) |
-| **M3** | **Real TTS** | Supertonic behind the frozen `TtsEngine` port, worker, cache, prefetch, Downloads panel | The M2-boundary `AC-ENG-*` |
+| **M2** | **Shipping content** | Author and generate the content conversations, and retire the fixture. The Spanish is **authored**, not machine-translated: the translator port is fed an authored bilingual table, so no model is downloaded. | The `AC-CONTENT-*` that apply to an authored route, `bake:check` green across every conversation, and complete provenance (`reviewedBy` non-null on every line and gloss) |
+| **M3** | **Real TTS** | Supertonic behind the frozen `TtsEngine` port, worker, cache, prefetch, Downloads panel. Packaging decided by spike. | The `AC-ENG-*` that `D3 §5`'s boundary table assigns to the real engine |
 | **M4** | **Polish and offline** | Service worker, storage persistence and eviction UX, "what if" comparison view, hint tuning | M4 has no acceptance criteria yet — the service-worker and storage work is deliberately a *seam* in `D3`/`D5` and gets its ACs when M4 is specified |
 | **M5** | **Conversation flow and persistence** — *delivered out of order at the owner's direction* | First-run language pair, conversations list, completion state, whole-conversation playback, local persistence | `AC-UI-28..35`. Delivered before M2/M3/M4 because it is what makes the product legible; the content is still the fixture |
 | **M6** | **Chrome localization** | `AC-I18N-*`: typed message catalogs, pluralization, message identities out of `audio-state`, language names, `<html lang>` | `AC-I18N-01..08` |
@@ -93,7 +93,7 @@ learner is taught from.
 A milestone is **done** when all four hold:
 
 1. **Every acceptance criterion assigned to that milestone passes.** Assignment is by rule: an AC belongs
-   to the milestone whose deliverable it describes, and `D3 §5`'s M1/M2 boundary table is authoritative
+   to the milestone whose deliverable it describes, and `D3 §5`'s M1/M3 boundary table is authoritative
    wherever an engine AC could fall on either side. Where a doc's own AC table names its milestone, that
    wins.
 2. **`npm run check` exits 0.** Locally and in CI, same script, same order (D5 §3):
@@ -119,7 +119,7 @@ generated, never hand-written.
 
 ## 7. Acceptance criteria register
 
-**151 criteria across seven families.** This document does not restate them — restating acceptance text
+**151 → 152 criteria across seven families.** This document does not restate them — restating acceptance text
 invites the drift both D2 and D5 explicitly warn against. The docs own the text; this document owns the
 assignment, and `tools/ac-map.json` carries the per-id milestone that `check:ac-map` enforces.
 
@@ -131,11 +131,11 @@ criteria are unenforced, which is worse than unmet.
 | Family | Count | Owned by | Lands at |
 |---|---|---|---|
 | `AC-DOM-*` | 24 | `D2` | M1 |
-| `AC-ENG-*` | 22 | `D3` | M1 and M3, split by `D3 §5` |
+| `AC-ENG-*` | 23 | `D3` | M1 and M3, split by `D3 §5` |
 | `AC-UI-*` | 35 | `D4` | M1 and M5 (storage/Downloads items land at M3) |
 | `AC-TOOL-*` | 24 | `D5` | M1 |
 | `AC-CONTENT-*` | 25 | `D6` | M1 and M2, split by whether a criterion needs the real translator |
-| `AC-ARCH-*` | 13 | `D7` | M1 — all thirteen describe properties of the M1 codebase; the M2 swap checklist is proved by a stub-engine build |
+| `AC-ARCH-*` | 13 | `D7` | M1 — all thirteen describe properties of the M1 codebase; the M3 swap checklist is proved by a stub-engine build |
 | `AC-I18N-*` | 8 | `D4` §18 | M6 |
 
 **Ids are frozen.** They may not be renumbered, reused, or retired. A criterion discovered to be wrong
@@ -158,7 +158,7 @@ re-check at each gate.
 | R7 | Segmentation quality is unbounded work | D2 | Bounded by a golden corpus of ≥20 boundaries (AC-DOM-13) |
 | R8 | Model binaries committed to git | D5 | Fetched at runtime; CI asserts no binary and no `.bin` under `src/` |
 | R9 | The browser silently acquires engine code | D5 | Bundle string assertions; no bake-only module reachable from `index.html` |
-| R10 | Schema change after the first bake | PM | Contract frozen at 151 ACs and 49 diagnostics; the icon field was added *before* the freeze for exactly this reason |
+| R10 | Schema change after the first bake | PM | Contract frozen at 152 ACs and 49 diagnostics; the icon field was added *before* the freeze for exactly this reason |
 | R11 | Scope creep into OUT-list territory | PM | OUT list is not negotiable mid-milestone |
 
 ## 9. Roles, and the escalation protocol
@@ -179,9 +179,7 @@ applies to the Designer against this document.
 
 - **Product name.** "You Don't Say" is unverified for trademark. Must be resolved before any public
   branding. Recorded in `docs/legal/clean-room-record.md` §9.
-- **Supertonic packaging** — 248 MB fp32 via `transformers.js` versus 138 MB int8 via the sherpa-onnx
-  runtime. Deliberately deferred, decided at the M3 gate when the trade-off is measurable rather than
-  guessed. Both are documented in `D3 §6`.
+- **Supertonic packaging** — **three** options, decided by spike: **A** fp32 via `transformers.js` (~248 MB, a direct fit to the port), **B** int8 via sherpa-onnx v3 (~138 MB), **C** int8 via sherpa-onnx v2 (~91 MB, and the only one whose languages are exactly ours). All three are documented in `D3 §6.1`; C's ten voice styles and licence are unverified preconditions. The owner has reaffirmed that **one voice identity per character across languages is decisive**, which rules out Kokoro (~40 MB q8) despite it being smaller on both axes.
 - **OpenRAIL-M use restrictions** must be surfaced in-app (M3, `D4`).
 - **Licences surface scope.** M1 ships no model weights, so M1's Licences surface lists the licences of
   what M1 actually ships, and the model licences (OpenRAIL-M, Apache-2.0) arrive at M3 with the weights
@@ -202,3 +200,4 @@ applies to the Designer against this document.
 | 2026-10-18 | After the Engineer's M1 reconnaissance: counts corrected 48 → 49 diagnostics and 122 → 130 ACs, `AC-ARCH-*` reassigned to M1, fixture-shipping wording corrected (§4). |
 | 2026-10-18 | After the M1a gate: ACs raised 130 → 135 (`AC-TOOL-24` frozen-contract hashes, `AC-DOM-24` option read scope, `AC-CONTENT-23/24/25`). M1a accepted. |
 | 2026-10-18 | Scope revised by the owner: onboarding, a conversations list, a completion state, whole-conversation playback and local persistence are now IN (M5, delivered), and full chrome localization is IN (M6). ACs 135 → 151 across seven families (`AC-UI` 27 → 35, new `AC-I18N` 8). The docs had fallen behind the code; this closes that. |
+| 2026-10-18 | M3 (real TTS) scoped: the packaging spike measured three options and the owner selected **C** (v2 int8 via sherpa-onnx), overriding the Engineer's pre-registered rule on learner download size — recorded as an override, with A kept selectable and B rejected. `AC-ENG-23` added for the listening check the decision's accepted risk requires. ACs 151 → 152. The frozen `TtsEngine` port was amended: it could not carry audio bytes, so the cache could never be populated. |

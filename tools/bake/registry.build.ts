@@ -26,7 +26,7 @@ export const buildRegistry: BuildAssetRegistry = [
     files: [],
     totalBytes: 0,
     backends: ['node'],
-    precisionChain: { node: ['int8'] },
+    precisionChain: [{ backend: 'node', precision: 'int8' }],
     license: {
       weights: 'Apache-2.0',
       code: null,
@@ -48,7 +48,7 @@ export const buildRegistry: BuildAssetRegistry = [
     files: [],
     totalBytes: 0,
     backends: ['node'],
-    precisionChain: { node: ['int8'] },
+    precisionChain: [{ backend: 'node', precision: 'int8' }],
     license: {
       weights: 'Apache-2.0',
       code: null,

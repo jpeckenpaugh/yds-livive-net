@@ -142,16 +142,18 @@
       "tests": ["domain/architecture.spec.ts"]
     },
     "AC-CONTENT-23": {
-      "milestone": "M3",
-      "tests": []
+      "milestone": "M2",
+      "tests": [],
+      "note": "satisfied by the authored-table content route"
     },
     "AC-CONTENT-24": {
       "milestone": "M1",
       "tests": ["bake/bake.spec.ts"]
     },
     "AC-CONTENT-25": {
-      "milestone": "M3",
-      "tests": []
+      "milestone": "M2",
+      "tests": [],
+      "note": "satisfied by the authored-table content route"
     },
     "AC-DOM-01": {
       "milestone": "M1",
@@ -336,6 +338,10 @@
     "AC-ENG-22": {
       "milestone": "M1",
       "tests": ["engines/conformance.spec.ts"]
+    },
+    "AC-ENG-23": {
+      "milestone": "M3",
+      "tests": []
     },
     "AC-I18N-01": {
       "milestone": "M6",

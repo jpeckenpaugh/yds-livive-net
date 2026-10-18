@@ -62,9 +62,9 @@ The canonical glossary is **D2 §2**. This doc uses its terms without redefining
 | `ui` never imports a bake-only module or a `*.source.json` | D5's `no-restricted-imports` over `tools/scan-excludes.json` (a single machine-readable copy; a Node ESM lint config cannot import a TS constant) |
 | `tools/**` is outside `src/` entirely, so no bake path needs an exception | D2 §13's scan root |
 | `src/engines/ports.ts` is **not** a domain file | it lives in `engines/`; D2's contract file must not import from it |
-| Only the **two registry modules** name a repo id, revision, packaging or precision: `src/engines/registry.browser.ts` (which `src/**` may import, and which is empty in M1) and `tools/bake/registry.build.ts` | D5's `check:bundle` string scan, with an **engine-derived** forbidden list |
+| Only the **three registry modules** name a repo id, revision, packaging or precision: `src/engines/registry.browser.ts` (which `src/**` may import, and which is empty in M1), `tools/bake/registry.build.ts`, and `tools/registry.candidates.ts` (tooling-only, holding the unselected candidates) | D5's `check:bundle` string scan, with an **engine-derived** forbidden list |
 
-The last row is why the layer map has a `registry` box: **D3's facts are data, not code.** A packaging decision, a precision chain, a licence, a byte total and a pinned revision are all one object, so the M2 decision is a data change and so is a licence correction. The **two-file split** (D3 §11.1, amendment C9) is what keeps the deferred packagings' repo ids out of the bundle while still letting AC-ENG-11 require them to exist somewhere: one file the browser imports, one file only bake imports.
+The last row is why the layer map has a `registry` box: **D3's facts are data, not code.** A packaging decision, a precision chain, a licence, a byte total and a pinned revision are all one object, so the M3 decision is a data change and so is a licence correction. The **three-file split** (D3 §11.1, amendments C9 and B4) is what keeps the unselected packagings' repo ids out of the bundle while still letting AC-ENG-11 require them to exist somewhere: one file the browser imports, one file only bake imports, and one tooling-only file for the candidates.
 
 `src/data/conversation.ts` is the sole importer of a conversation artifact in `src/**` (D6 §2.1, amendments F1/Y2): it exports `CONVERSATIONS: Conversation[]`, `src/data/catalog.ts` derives the catalog from it, and the M2 content swap is **one array entry added plus the fixture's deleted** — not the stale "one import path" claim.
 
@@ -109,7 +109,7 @@ The last row is why the layer map has a `registry` box: **D3's facts are data, n
    │                                                        │                     │
    │                             TtsEngine.synth(text from a VariantRecord)         │
    │                                        │                                      │
-   │                          speechSynthesis (M1) │ Supertonic in a Worker (M2)     │
+   │                          speechSynthesis (M1) │ Supertonic in a Worker (M3)     │
    └──────────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -129,7 +129,7 @@ src/ui/App ──▶ Store ──┬──▶ domain/session.reduce
                        ├──▶ domain/visibility.visibility
                        └──▶ Scheduler ──▶ engines/tts/index.createTtsEngine
                                                     ├── engines/tts/speech-synthesis   (M1)
-                                                    ├── engines/tts/supertonic         (M2)
+                                                    ├── engines/tts/supertonic         (M3)
                                                     └── engines/audio-cache.withAudioCache
                        └──▶ domain/segment.segmentL2 (+ gloss lookup)   ← hover, offline
 ```
@@ -142,14 +142,14 @@ src/ui/App ──▶ Store ──┬──▶ domain/session.reduce
 
 ## 5. Worker topology
 
-| | M1 | M2 |
+| | M1 | M3 |
 |---|---|---|
 | Workers | **zero** | one, for ONNX inference |
-| Why | `speechSynthesis` is not exposed on `WorkerGlobalScope` (D3 §4.2.4) | 138–248 MB of weights and the runtime must not be on the main thread |
+| Why | `speechSynthesis` is not exposed on `WorkerGlobalScope` (D3 §4.2.4) | the selected packaging's runtime and model (D3 §6.1, spike) must not be on the main thread |
 | The port | a **service** interface | unchanged, still a service interface |
 | Where the worker lives | — | inside `src/engines/tts/supertonic.*`, behind the port |
 
-**M1's diagram contains no worker box, and neither should any future revision of this diagram.** The port is deliberately a *service* interface rather than a *worker* interface, and that is the entire reason the M2 swap is small: the UI awaits a promise either way, and "is this beat's audio ready?" is answered by the same call whether or not a worker exists behind it.
+**M1's diagram contains no worker box, and neither should any future revision of this diagram.** The port is deliberately a *service* interface rather than a *worker* interface, and that is the entire reason the M3 swap is small: the UI awaits a promise either way, and "is this beat's audio ready?" is answered by the same call whether or not a worker exists behind it.
 
 Corollary worth stating: **`prefetch` and `duration` are capabilities, not assumptions.** M1 reports both as `false` and the UI must therefore contain no preparing state and no per-line progress (D4 §6.6, AC-UI-24).
 
@@ -157,20 +157,23 @@ Corollary worth stating: **`prefetch` and `duration` are capabilities, not assum
 
 ## 6. The Supertonic swap, stated accurately
 
-The locked claim is "the swap touches one file". The accurate claim, and the one an Engineer should be held to:
+The locked claim is "the swap touches one file". The accurate claim, and the one an Engineer should be held to (amendment Z16, B2/B3):
 
-> **The swap adds one adapter inside `src/engines/tts/` and changes three one-line registrations. No component, no domain module and no store changes.**
+> **The swap adds one adapter inside `src/engines/tts/`, wires the model seam at the engine construction site, and changes three one-line registrations. No component, no domain module and no store changes.**
 
 | # | Change | Kind |
 |---|---|---|
-| 1 | add `src/engines/tts/supertonic.ts` | **the only new code file** |
+| 1 | add `src/engines/tts/supertonic.ts` (plus its worker) | the new adapter code |
 | 2 | add one branch to `src/engines/tts/index.ts` (the factory) | code, a few lines |
-| 3 | flip one registry entry's `decision` from `'deferred'` and set its `revision` | **data** (D3 §11) |
-| 4 | add one dependency to `package.json` | config |
-| 5 | set `TTS_ENGINE=supertonic-*` for the build | config |
-| 6 | *(only if the adapter uses a worker)* set `worker.format`, already present in `vite.config.ts` | config |
+| 3 | move the selected packaging's entry into `src/engines/registry.browser.ts` and set its `decision: 'm3'` (B3 — `'deferred'` had no valid target before) | **data** (D3 §11.1) |
+| 4 | add the selected runtime to `package.json` — a **runtime** dependency (D5 §2) | config |
+| 5 | set `TTS_ENGINE=supertonic-sherpa` for the build | config |
+| 6 | set `worker.format`, already present in `vite.config.ts` | config |
+| 7 | **pass the `ModelSource` (and the Downloads progress callback) at the engine construction site, `src/main.tsx`** | code, a few lines (B2) |
 
-The honest caveat, from D3 §6: **packaging B (`int8-sherpa`) is not just a different file.** It is a second runtime with its own session and fetch path, so it also brings its own adapter internals and its own conformance pass. Packaging A (`fp32-transformers`) fits the port almost directly. That difference is why the packaging decision is deferred to the M2 gate rather than made now, and it is why the claim above is about *the port's stability* rather than about the size of the smallest possible diff.
+**The earlier claim that no file outside `src/engines/tts/` changes was wrong** (B2): the adapter needs the model storage + fetch seam (`ModelSource`, D3 §9), and the only place to construct it is where the engine is constructed — `src/main.tsx`. The accurate claim is still "no component, no domain module and no store changes", but it is **not** "no file outside `src/engines/tts/`".
+
+The honest caveat, from D3 §6: **the selected packaging C (`int8-sherpa`) is not just a different file from A.** It is a second runtime with its own session and fetch path, so it brings its own adapter internals and its own conformance pass. Packaging A (`fp32-transformers`) fits the port almost directly. That difference is why the packaging decision matters, and it is why the claim above is about *the port's stability* rather than about the size of the smallest possible diff. Packaging B is **rejected** — C dominates it (D3 §6.1).
 
 ---
 
@@ -179,11 +182,11 @@ The honest caveat, from D3 §6: **packaging B (`int8-sherpa`) is not just a diff
 | | Build machine (dev / CI) | Learner's browser |
 |---|---|---|
 | Runs | `tools/bake`, `vite build`, tests | the built bundle only |
-| Dependencies | `@huggingface/transformers`, `onnxruntime-node` (devDeps) | `preact` **only** |
+| Dependencies | `@huggingface/transformers`, `onnxruntime-node` (devDeps) | `preact` in M1; **+ the selected TTS runtime** (runtime dep) at M3 (D5 §2) |
 | Network | MT models, ~214 MB, on a dev machine's first bake | **none, in M1** |
 | Content | authored English → drafted Spanish | the committed artifact, bundled |
 | Verification | `bake --check --author-only`, offline, in CI | — |
-| Assets | none committed (D3 C10) | M2 only: ~0.5 MB of voice styles + 138–248 MB of weights, cached |
+| Assets | none committed (D3 C10) | real-TTS milestone only: the selected packaging's voice styles + runtime + model, cached (D3 §6.1, §9) |
 
 **Deployment is a static directory.** One HTML file, one JS bundle (the conversation JSON is `import`ed, so it is in the bundle rather than fetched), no server, no accounts, no keys. `base: './'` means it works from a project subpath, which is how the sibling project in this workspace is served.
 
@@ -220,10 +223,10 @@ What breaks, how it is detected, and what recovers. Nothing here may block readi
 |---|---|---|---|
 | No L2 OS voice (G1) | `resolveVoice(_, l2) === null` | non-modal notice, L2 audio unavailable, previews disabled with a reason | install a voice → `voiceschanged` re-evaluates (D4 §9); or the explicit `playAnyway` escape hatch |
 | No `speechSynthesis` at all | `typeof speechSynthesis === 'undefined'` | `engine-absent`; every beat manual | reading only; terminal in M1 |
-| M2 engine cannot init | the adapter's init | `engine-absent`, the failing registry entry named | the M1-style degraded path |
-| M2 storage full | `QuotaExceededError` | download stops, size shown | "delete cached audio"; retry |
-| M2 cache evicted | a missing model file | identical to "never downloaded", plus a one-time notice | re-download |
-| M2 WebGPU unavailable | the precision chain | silently falls back through the chain | or a loud failure naming the entry if the chain is exhausted |
+| M3 engine cannot init | the adapter's init | `engine-absent`, the failing registry entry named | the M1-style degraded path |
+| M3 storage full | `QuotaExceededError` | download stops, size shown | "delete cached audio"; retry |
+| M3 cache evicted | a missing model file | identical to "never downloaded", plus a one-time notice | re-download |
+| M3 WebGPU unavailable | the precision chain | silently falls back through the chain | or a loud failure naming the entry if the chain is exhausted |
 | A variant key is missing at runtime | `lines[key]` undefined | — | **unreachable by construction**; dev throw, and `E_VARIANT_MISSING` catches it at build time |
 | The artifact is stale | `bake --check` in CI | nothing (a build-machine failure) | re-bake; `E_SOURCE_STALE` decides what changed |
 | The conversation JSON is malformed | bundled at build time → Vite/TS error | nothing (the build fails) | fix the source and re-bake |
@@ -247,7 +250,7 @@ An index by task, because the brief cannot answer questions and this is the clos
 | If you are building… | Read, in order |
 |---|---|
 | the domain, session, or resolution | D2 §2 → §4–§6 → §10–§12, then `src/domain/types.ts` |
-| the TTS adapter or anything audio | D3 §3–§4 (M1) or §6 (M2), then D4 §6 |
+| the TTS adapter or anything audio | D3 §3–§4 (M1) or §6 (M3), then D4 §6 |
 | a component or an interaction state | D4 §3–§5, then §7 and §9; D2 §12 for the three channel carve-outs |
 | the bake pipeline | D6 §3–§8, then D2 §5 (the walk) and D3 §10 (the port) |
 | build, lint, tests, CI | D5 §2–§9 |
@@ -260,15 +263,15 @@ An index by task, because the brief cannot answer questions and this is the clos
 | ID | Criterion |
 |---|---|
 | **AC-ARCH-01** | The import graph matches §2: `domain` imports nothing from `engines`/`ui`; `ui` imports no bake-only module or `*.source.json`; **no `src/**` file imports `node:` or reads `process.env`** (which is what closes D5 §4's `types: ["node"]` loosening); a test asserts the graph. |
-| **AC-ARCH-02** | `src/engines/registry.browser.ts` and `tools/bake/registry.build.ts` are the only modules in the repo containing a repo id, a pinned revision, a packaging name or a precision name; `src/**` imports only the browser one, which is empty in M1. |
+| **AC-ARCH-02** | `src/engines/registry.browser.ts`, `tools/bake/registry.build.ts` and `tools/registry.candidates.ts` are the only modules in the repo containing a repo id, a pinned revision, a packaging name or a precision name; `src/**` imports only the browser one, which is empty in M1. |
 | **AC-ARCH-03** | The M1 build contains no worker and no `new Worker` call, and the emitted `index.html` references no absolute origin. |
 | **AC-ARCH-04** | `createTtsEngine` is the only engine constructor and the only reader of `__TTS_ENGINE__`. |
 | **AC-ARCH-05** | `segmentL2` is defined once and imported by both the runtime and `tools/bake`; a test asserts a single definition and byte-identical span boundaries across both. |
 | **AC-ARCH-06** | The Scheduler is the only module that calls `TtsEngine.synth`, and every `Step` carries `beatId` and `alternativeId`. |
-| **AC-ARCH-07** | The swap checklist in §6 is accurate: adding a second adapter changes no file outside `src/engines/tts/` except the three registrations, demonstrated by a test that builds with a stub engine id. |
+| **AC-ARCH-07** | The swap checklist in §6 is accurate: the swap adds one adapter, wires the `ModelSource` seam at the construction site, and changes three registrations — no component, domain module or store changes — demonstrated by a test that builds with a stub engine id. |
 | **AC-ARCH-08** | No `prebuild`/`postbuild` hook invokes bake, and `npm run build` succeeds with the bake program's dependencies uninstalled. |
 | **AC-ARCH-09** | Every invariant in §8 has a named owner and a named enforcement mechanism, and the enforcement exists (the AC it cites resolves through `tools/ac-map.json`). |
-| **AC-ARCH-10** | Every failure in §9 that is reachable in M1 is covered by a test or marked unreachable-by-construction with the diagnostic that proves it; the M2/M3 rows are covered by `AC-ENG-13`, `AC-ENG-15` and `AC-UI-14`. |
+| **AC-ARCH-10** | Every failure in §9 that is reachable in M1 is covered by a test or marked unreachable-by-construction with the diagnostic that proves it; the M3 rows are covered by `AC-ENG-13`, `AC-ENG-15` and `AC-UI-14`. |
 | **AC-ARCH-11** | The runtime bundle contains no translator path: no arrow from `src/**` to a `Translator`, asserted by the D5 bundle scan. |
 | **AC-ARCH-12** | D7 contains no rule that contradicts its owning doc — reviewed as a checklist against D2–D6, one row of §8 per invariant. |
 | **AC-ARCH-13** | `src/engines/ports.ts` exists as a frozen contract (it is not a plan), and both contract files compile clean under D5 §4's exact flags. |

@@ -28,7 +28,7 @@
 
 ## 2. Dependencies
 
-**Runtime dependencies: one.** `preact`. There is no second runtime dependency, and that is a design constraint rather than an aspiration (README §Decisions, PM Q10): state is a hand-rolled `useReducer` + context.
+**Runtime dependencies: one in M1, two at M3.** `preact` is the only M1 runtime dependency — state is a hand-rolled `useReducer` + context (README §Decisions, PM Q10). At the real-TTS milestone the **selected TTS runtime** becomes the second, because it genuinely runs in the browser. The rule is therefore not "one dependency forever" but "every runtime dependency is named, justified, and its transitive tree is checked when the packaging is selected" (AC-TOOL-04, amendment Z12).
 
 | | Package | Why |
 |---|---|---|
@@ -40,11 +40,11 @@
 | | `@playwright/test`, `@axe-core/playwright` | Browser-based a11y (contrast, zoom) + the M1 smoke path. See §9.4 — the one heavyweight dep. |
 | | `eslint`, `typescript-eslint`, `eslint-plugin-react-hooks`, `prettier` | Lint/format. |
 | **not in M1** | `@huggingface/transformers`, `onnxruntime-node` | **Build-only, and absent until the first full bake** (D3 §10.8, amendment F3). `bake --check --author-only` never evaluates their import, `tools/bake/translator.node.ts` typechecks against a local shim, and a Node-major incompatibility therefore cannot break M1's gate. Install with `npm i -D @huggingface/transformers` when the first real bake is run (documented in D6). |
-| *(M3)* | the selected TTS packaging | Per D3 §6's deferred decision. |
+| *(M3, runtime)* | the selected TTS packaging's runtime | transformers.js (A) or **sherpa-onnx (C, selected)**. The one deliberate runtime dependency added at M3, and it **ships in the bundle**. **sherpa-onnx has no hard dependencies** — a genuine point in C's favour — and the selected runtime's transitive tree is checked at selection (AC-TOOL-04). |
 
 Rules:
 
-1. **`@huggingface/transformers` and `onnxruntime-node`, if ever present, must be devDependencies** — never `dependencies`. Promoting either is the mechanical form of "the browser ships zero translation code" (locked decision 3). In M1 they are absent entirely. AC-TOOL-04.
+1. **The build-only translator stack** (`@huggingface/transformers`, `onnxruntime-node`) **must be devDependencies if ever present** — never `dependencies` — because translation never runs in a browser (locked decision 3); in M1 they are absent entirely. The **selected TTS runtime** is the one deliberate runtime dependency added at M3, and its transitive tree must be checked when the packaging is selected (sherpa-onnx has none). A test fails if a translator stack appears in `dependencies`. AC-TOOL-04.
 2. **No `postinstall` scripts.** Determinism in CI, and no third-party code executing at install time.
 3. `engines.node` is pinned (`>=22`) and a `.nvmrc` pins a major so local and a future CI agree. `onnxruntime-node` is sensitive to the Node major and a local/CI mismatch surfaces as a native-module error that looks like a code bug. ⚠ **Ratified at freeze with a caveat:** `.nvmrc` reads `22` while the development runtime is Node 26, so today `.nvmrc` is decorative — CI is out of M1's scope (PM ruling), and the floor `>=22` is the operative constraint. **When CI lands, `.nvmrc` and the CI Node version must be set to the same value**, and this note is the reminder that they currently are not. The F3 lazy-import decision (D3 §10.8) is what makes this benign rather than dangerous: nothing in M1 loads a native module.
 4. Any new runtime dependency is a design decision, not a tooling decision. This doc does not pre-authorise one.
@@ -82,7 +82,7 @@ Rules:
 - it is **ignored in `check` mode**, which reads the policy from the artifact it is validating;
 - the only routine caller is `bake:fixture` (D6 §2.4), which passes it for clarity even though it is the default.
 
-Consequences for the committed scripts: `npm run bake` may omit the flag and produces a fixture artifact; a shipping bake must pass `--review-policy shipping`; and `AC-CONTENT-25` is what catches a shipping bake that forgot, because the M3 criterion requires the shipping artifact to carry `'shipping'`.
+Consequences for the committed scripts: `npm run bake` may omit the flag and produces a fixture artifact; a shipping bake must pass `--review-policy shipping`; and `AC-CONTENT-25` is what catches a shipping bake that forgot, because that criterion requires the shipping artifact to carry `'shipping'` (it is satisfied at the content milestone — amendment Z3).
 
 ### 3.0 Three things that must be arguments or explicit acts (amendments E1, E2, X0b)
 
@@ -119,6 +119,7 @@ Bumping `currentMilestone` is the only edit needed to advance the gate, and it h
 | `tools/bake/translator.node.ts` | D3 §10 (port), D6 §4.2 (injection) | the Node `Translator` implementation, typed against a local interface and importing the runtime lazily (D3 §10.8) |
 | `tools/bake/runtime-shim.d.ts` | D3 §10.8 | `declare module` for the absent inference runtime, so `typecheck` passes without it installed |
 | `tools/bake/registry.build.ts` | D3 §11.1 | the build-only registry: the two OPUS-MT entries |
+| `tools/registry.candidates.ts` | D3 §11.1 (B4) | the **non-selected** TTS candidate entries (`'deferred'`/`'rejected'`), tooling-only — the home a deferred packaging lacked |
 | `tools/check-vocabulary.mjs` | D5 §6.1 | the code-scoped `int8`/`q8` check |
 | `tools/check-bundle.mjs` | D5 §6.3 | the bundle assertions, with an engine-derived forbidden list |
 | `tools/check-assets.mjs` | D5 §6.2 | the binary and size assertions |
@@ -132,6 +133,14 @@ Bumping `currentMilestone` is the only edit needed to advance the gate, and it h
 | `test/helpers/speech-synthesis-mock.ts` | D5 §7.1, assertions D3 §4.6 | the four R5 landmines plus "no `es` voice" |
 
 **This is the complete M1 `tools/` deliverable list** (amendment E6 adds `tools/test-runner/`, which the index and D1 §6 name as the evidence producer but nothing previously specified). Each `tools/*.mjs` script is *specified* by the AC it implements and *verified* by `check:ac-map` resolving its AC id to a real test.
+
+### 3.2 The sherpa runtime asset build (M3, amendment Z15)
+
+The selected packaging's runtime and model are **not separable**: sherpa bakes the model into a **145 MB `.data`** file, so producing the browser artifact is a real build step, not a file copy.
+
+1. **Produce the `.data`.** Either rebuild it per model (an emscripten/`--preload-file` step) or inject the model into the runtime's virtual FS at load. The spike verified the **FS-injection** route works in-browser; a rebuilt `.data` is the alternative. Whichever is chosen, the step is documented and reproducible, and the artifact is **fetched, never committed** (C10).
+2. **The Downloads byte total is the whole `.data` plus wasm.** "Runtime" and "model" are not separately reportable for this packaging (D3 §9), so the panel shows one total and one progress bar. Reporting two would be false.
+3. **`check:bundle` allows the runtime `.wasm`** as the selected packaging's `purpose: 'runtime'` asset (§6.3 check 3) and still forbids every model weight in `dist/`.
 
 ---
 
@@ -188,7 +197,7 @@ export default defineConfig({
   plugins: [preact()],
   base: './',                       // subpath hosting; see §5
   build: { target: 'es2022', sourcemap: true, reportCompressedSize: true },
-  worker: { format: 'es' },         // reserved for M2; unused in M1
+  worker: { format: 'es' },         // reserved for M3; unused in M1
   define: { __TTS_ENGINE__: JSON.stringify(process.env.TTS_ENGINE ?? 'speech-synthesis') },
 });
 ```
@@ -196,7 +205,7 @@ export default defineConfig({
 - `base: './'` so the built `index.html` works from a subpath (the sibling repo is served from a project path). ⚠ **Amended at freeze:** an earlier revision also claimed it works from `file://` "for smoke checks". That was wrong twice over — ES modules do not load from `file://` in Chromium regardless, and `crypto.subtle` is absent in that non-secure context (D3 §7.7). The smoke path serves `dist/` over HTTP (§9.4), and `base: './'` is kept for subpath hosting only.
 - `sourcemap: true` in the build: this is a learner-facing static app with no secrets, and a stack trace without a map is useless in a field report.
 - `worker.format: 'es'` is present from day one **though M1 has no worker** (D3 §4.2.4). It is one line, and adding a worker config later is exactly the kind of change that gets forgotten alongside an engine swap.
-- `__TTS_ENGINE__` is the build-time engine selector. The M2 swap is then `TTS_ENGINE=supertonic-transformers npm run build`, and **the port means no other file changes** (D3 §6, D7 §7).
+- `__TTS_ENGINE__` is the build-time engine selector. The M3 swap is then `TTS_ENGINE=supertonic-transformers npm run build`, and **the port means no other file changes** (D3 §6, D7 §7).
 - No `define` secrets, ever. Everything in this app is public.
 - **No service worker in M1** (§12).
 
@@ -262,8 +271,8 @@ Checks:
 
 1. The always-forbidden list, per the table above.
 2. No unselected registry `repoId` or revision in any emitted JS.
-3. **No `.onnx`, `.onnx_data`, `.bin`, `.wasm` asset** in `dist/`.
-4. `dist/assets/*.js` total gzip ≤ `MAX_BUNDLE_GZ_KB`. Initial value **90**, accounting for Preact plus the bundled conversation JSON plus glosses; it is an invented guard and one line to change. AC-TOOL-09.
+3. **No model-weight asset** — `.onnx`, `.onnx_data`, `.bin`, `.data` — in `dist/`. A **runtime** asset (`.wasm`) belonging to the selected packaging's `purpose: 'runtime'` registry entry **is allowed and expected**: every packaging ships one (13.4 MB for sherpa, 26.9 MB for ort), and it is app code, not a model. Model weights are fetched at runtime and never bundled (C10). Amendment Z11.
+4. `dist/assets/*.js` total gzip ≤ the **engine-derived** budget for the selected engine. The single `MAX_BUNDLE_GZ_KB = 90` was wrong: packaging A's JS alone measured **162.66 KB**, so 90 fails a valid build. The budget is a per-engine value the check reads from `TTS_ENGINE` (a measured initial value plus margin), not one constant. For the selected sherpa packaging the JS is smaller, and the 145 MB model `.data` is **fetched, not bundled** (check 3), so it is not in the gzip budget at all; its size is the registry entry's `totalBytes`, and the Downloads total is that plus the runtime wasm (D3 §9). AC-TOOL-09. Amendment Z11.
 5. `dist/index.html` exists and references no absolute origin (no `http://` or `https://` host in the emitted HTML/JS/CSS), the mechanical form of "no network after first load". Allow-listed: the licence URLs in the About surface, matched out explicitly rather than by loosening the rule.
 6. **The Licences surface in M1 names no model, repo or engine** (amendment E4). This is not a separate scan: it is check 1 applied to the one surface that is *required* to talk about licences, which is why D4 §13 names licences by purpose instead (D4 §13's table).
 7. **The one other allow-list entry is `www.w3.org`, and it must stay narrow** (ratified judgment call 5). The Preact JSX runtime emits the SVG/XML namespace identifier `http://www.w3.org/2000/svg`, which is a **name**, not a fetch origin — it appears in string form and would otherwise trip check 5 on a UI that renders a single `<svg>`. The allow-list matches the **namespace identifier exactly**, never the `www.w3.org` host generally, so it cannot hide a real outbound reference. If a future allow-list entry is ever proposed for a host rather than a full identifier, that is a design decision and not a tooling one.
@@ -368,7 +377,7 @@ Playwright in Chromium, on the built artifact, serving `dist/` locally. It earns
 2. It provides a real end-to-end smoke path over the whole loop.
 3. **Headless Chromium typically has no `es` voice**, so the browser job exercises the **G1 `no-l2-voice` state** for free. The degraded path — the one hardest to notice in manual testing — is the one CI sees on every run. That is worth the dependency on its own.
 
-If the owner would rather not carry Playwright in M1, the honest downgrade is to move the contrast/zoom half of `AC-UI-22` to M2 and record it, rather than to claim it passes. Flagged (§11).
+If the owner would rather not carry Playwright in M1, the honest downgrade is to move the contrast/zoom half of `AC-UI-22` to **M4** and record it, rather than to claim it passes. Flagged (§13). (Amendment Z14: this said "M2", which is shipping content with no UI work — stale.)
 
 ---
 
@@ -501,7 +510,7 @@ What is reserved now, and nothing more:
 
 **Open items for the owner:**
 
-1. §9.4 — Playwright in M1, or defer the browser-based half of `AC-UI-22` to M2? The G1-in-headless property is the argument for keeping it.
+1. §9.4 — Playwright in M1, or defer the browser-based half of `AC-UI-22` to **M4**? The G1-in-headless property is the argument for keeping it.
 2. §6.3 — `MAX_BUNDLE_GZ_KB = 90` is an invented guard; measure after the first build and set it just above.
 3. §7.4 — the AC→test map is my addition, and §3.0(b)'s milestone gate is what makes it usable in M1 rather than a wall of skips.
 4. §10 — `test-artifacts/` is generated and ignored, with only its format committed. If you want the last accepted run committed as evidence, that is a one-line change and a churn decision.

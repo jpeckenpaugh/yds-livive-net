@@ -178,7 +178,7 @@ Only the scheduler builds steps. A component that wants audio calls a store acti
 | `GAP_POST_BEAT_MS` | `300` | After a beat's last utterance finishes, before an auto-advance |
 | `GAP_AFTER_CHOICE_MS` | `300` | After a chosen response line finishes, before advancing |
 | `ANIMATE_IN_MS` | `180` | The chosen line's animate-in; `0` under `prefers-reduced-motion` |
-| `PREFETCH_AHEAD_BEATS` | `1` | M2 only; a **declared no-op** in M1 |
+| `PREFETCH_AHEAD_BEATS` | `1` | M3 only; a **declared no-op** in M1 |
 | `SPEED_MIN` / `SPEED_MAX` | `0.5` / `1.5` | D2 owns the range; D4 owns the steps |
 | `MIN_TARGET_PX` | `24` | WCAG 2.2 SC 2.5.8 |
 | `FOCUS_RESTORE_MS` | `0` | Focus restoration is synchronous; listed to say it is not animated |
@@ -225,7 +225,7 @@ This is recorded rather than worked around, because a mid-line resume would requ
 
 **Two further M1 truths, pre-registered by D3, restated as UI obligations:**
 
-1. **No "preparing audio", no spinner, no per-line progress bar in M1.** `prefetch: false` and `duration: false`. The transport shows *beat N of M*, never a time. A progress affordance may **not** be rendered unconditionally "because M2 will fill it in" — it must be capability-gated, so M1 does not ship a control that lies. AC-UI-24.
+1. **No "preparing audio", no spinner, no per-line progress bar in M1.** `prefetch: false` and `duration: false`. The transport shows *beat N of M*, never a time. A progress affordance may **not** be rendered unconditionally "because M3 will fill it in" — it must be capability-gated, so M1 does not ship a control that lies. AC-UI-24.
 2. **`stop()` has a one-macrotask lag**, so a beat boundary is not frame-exact. The scheduler therefore serialises transport actions through **one queue**: a slow cancel can delay the next utterance, but it can never interleave two. Double-tapping Next is safe.
 
 ---
@@ -248,7 +248,7 @@ A listen-first app that asks the learner to choose between two sentences they ca
 Rules:
 
 1. **Preview never changes session state.** It is a read of `ResolvedOption.line`; no `SessionOp` exists that a preview could call (D2 §11.2).
-2. **No auto-prefetch of options.** Prefetch budget stays one beat ahead (M2); prefetching 2–8 option audios would blow the step-to-step latency budget the README is proud of.
+2. **No auto-prefetch of options.** Prefetch budget stays one beat ahead (M3); prefetching 2–8 option audios would blow the step-to-step latency budget the README is proud of.
 3. Preview is **interrupting** (§6.5): it stops current audio, including a previous preview.
 4. Preview is available at `pending` **and** at `resolved` (a resolved beat's ghosts are the same mechanism).
 5. Preview is never required. A learner who reads the labels and picks is not penalised.
@@ -326,7 +326,7 @@ Reached after beat 10 resolves, or from the toolbar once the conversation is com
 (PM: "G1 is a state machine, not a message.") Modelled as one derived state, recomputed whenever engine capabilities change, `voiceschanged` fires, or `playAnyway` changes.
 
 ```
-                    ┌──────────────── engine-absent ◀── no speechSynthesis, M2 init failed
+                    ┌──────────────── engine-absent ◀── no speechSynthesis, M3 init failed
                     │                        │  (all audio unavailable; reading only)
                     ▼                        │
   voice-ok ◀──voiceschanged (L2 voice appears)│
@@ -342,7 +342,7 @@ Reached after beat 10 resolves, or from the toolbar once the conversation is com
 | `voice-ok` | a voice can serve the L2 language | nothing shown; audio normal |
 | `no-l2-voice` | `resolveVoice(_, l2) === null` and `playAnyway === false` (G1) | `AudioNotice`, **non-modal**, actionable: "No Spanish voice is installed on this device." L2 audio channel marked unavailable. Text and L1 audio unaffected. Preview controls disabled with a reason (§7.2). |
 | `play-anyway` | as above, `playAnyway === true` | the notice becomes informational: the L2 line is being spoken with a mismatched voice. `L2NotSpokenMarker` is **not** shown (it is speaking). |
-| `engine-absent` | no `speechSynthesis`, or M2 `init()` failed | all audio unavailable; every beat is `unavailable` (§6.4) and the learner drives with Next. Reading is unaffected. |
+| `engine-absent` | no `speechSynthesis`, or M3 `init()` failed | all audio unavailable; every beat is `unavailable` (§6.4) and the learner drives with Next. Reading is unaffected. |
 
 Transition rules:
 
@@ -360,7 +360,7 @@ Concretely:
 
 - The voice picker is labelled **per character and per language** and shows two independent rows. Its shape is the most honest possible statement of the deviation.
 - No copy says "the same voice", "one voice", or shows a language-switch badge implying continuity.
-- When the flag is `false`, the picker carries one line: "With the built-in voices, each language uses a different voice." When `true` (M2), that line is absent.
+- When the flag is `false`, the picker carries one line: "With the built-in voices, each language uses a different voice." When `true` (M3), that line is absent.
 - AC-UI-15 asserts both directions: the copy renders at `false` and does not render at `true`.
 
 ### 9.2 `voiceOverrides`
@@ -382,12 +382,12 @@ D2 §12 relocated the per-language voice map out of the conversation and into `P
 | No `speechSynthesis` at all | D3 §4.2.4 | §9 `engine-absent` |
 | No prefetch | D3 §4.1 | **nothing rendered** — no spinner, no "preparing" |
 | No duration | D3 §4.1 | beat N of M; never a time, never a per-line bar |
-| Storage full (`QuotaExceededError`) | D3 §9 | M2: non-fatal, download stops, size shown, "delete cached audio" offered |
-| Cached models evicted | D3 §9 | M2: identical to "never downloaded"; re-download; a one-time "cached audio was removed" notice |
-| M2 engine cannot init on this device | D3 §6.4 | `engine-absent` + the failing registry entry named, per D3's loud-failure rule |
+| Storage full (`QuotaExceededError`) | D3 §9 | M3: non-fatal, download stops, size shown, "delete cached audio" offered |
+| Cached models evicted | D3 §9 | M3: identical to "never downloaded"; re-download; a one-time "cached audio was removed" notice |
+| M3 engine cannot init on this device | D3 §6.4 | `engine-absent` + the failing registry entry named, per D3's loud-failure rule |
 | Cold start with no audio yet | — | the Play control is the gesture (see §11.3); no autoplay attempt before it |
 
-M2 rows are specified here so the states exist before the features do. They are **not M1 work** (Q14) — but the persistence call and the state names are reserved, because retrofitting a degraded state into a UI that assumed success is how "fully offline" quietly becomes "broken".
+M3 rows are specified here so the states exist before the features do. They are **not M1 work** (Q14) — but the persistence call and the state names are reserved, because retrofitting a degraded state into a UI that assumed success is how "fully offline" quietly becomes "broken".
 
 ---
 
@@ -479,8 +479,10 @@ The Playwright job additionally gives the real-browser smoke path and — becaus
 
 A `LicensesDialog` from the toolbar. D3 §6.7 owns the facts; this owns the surface, and it has **two jobs, not one**:
 
-1. **Include the licences.** Supertonic weights (OpenRAIL-M), Supertonic code (MIT), the OPUS-MT models (Apache-2.0), and the M2 runtimes' own licences. Apache-2.0's "include the license text" is satisfied by shipping the licence files **and** listing them here. **No OPUS-MT attribution line is required** — Apache-2.0 with no upstream NOTICE — so none is added (PM A4).
+1. **Include the licences.** The set is determined by **whichever packaging the gate selects** — Supertonic weights (OpenRAIL-M for A and B; **C's licence is unverified**, D3 §6.7), Supertonic code (MIT), the OPUS-MT models (Apache-2.0), and **the selected runtime's own licences** (transformers.js for A, sherpa-onnx for B/C). Apache-2.0's "include the license text" is satisfied by shipping the licence files **and** listing them here. **No OPUS-MT attribution line is required** — Apache-2.0 with no upstream NOTICE — so none is added (PM A4).
 2. **State OpenRAIL-M's use restrictions in plain language.** OpenRAIL-M is use-restricted, not merely attribution-required, so it must be surfaced as *restrictions*, in language a learner can read, not as a filename. This is the one licence in the set where "include the text" is insufficient.
+
+**The list is a function of the selected packaging, and an unverified licence blocks selection** (D3 §6.7, AC-ENG-21). The surface must render the licence of the packaging that is actually selected, not a fixed two-model set: A/B bring OpenRAIL-M, and C would bring whatever its **currently unverified** licence turns out to be. A registry entry whose `license.weights` is unverified **may not be selected at all**, so C cannot be chosen until its licence is checked; and if it is chosen, the surface must list that licence — and its restrictions, if it has any — alongside the rest. The M1 surface is unaffected: it names licences by *purpose* and ships no weights (amendment E4).
 
 **In M1 the surface names the licences, not the models or repos** (amendment E4). M1 ships no model weights at all, and naming Supertonic or the OPUS-MT repos would put exactly the strings `check:bundle` forbids into the emitted JS (D5 §6.3), making the gate permanently red with no permitted fix. So M1 renders three licence entries described by *purpose* rather than by product:
 

@@ -20,9 +20,9 @@
  *   2. Voices
  *   3. Synthesis
  *   4. Stable keys
- *   5. Audio cache
+ *   5. Caches: audio and models
  *   6. Playback
- *   7. Asset registry (browser vs build split)
+ *   7. Asset registry (three-file split)
  *   8. Translator (build-only)
  *   9. Constants owned by D3
  */
@@ -103,6 +103,17 @@ export type Utterance = {
   key: string;
   /** null when `capabilities.duration` is false. */
   durationMs: number | null;
+  /**
+   * The produced audio, present iff `kind === 'buffer'` (B1, D3 §7).
+   *
+   * `withAudioCache` is the only module holding both the engine and the
+   * `AudioCache`, and it can only populate the store if the bytes are reachable
+   * from the utterance. Without this field the cache could never be written,
+   * which would make AC-ENG-05's populated-store test and M3's whole cache
+   * deliverable impossible. A `native` utterance has no bytes: the engine
+   * played them itself.
+   */
+  blob?: Blob;
   /** Resolves when finished OR stopped; never rejects because of a stop. */
   play(): Promise<void>;
   /** Idempotent. Not instantaneous: see D3 §4.2.3. */
@@ -128,7 +139,15 @@ export type TtsEngine = {
   readonly revision: string;
   readonly capabilities: TtsCapabilities;
   init(): Promise<void>;
-  /** Voices available for a language in this environment. May legitimately be []. */
+  /**
+   * Voices available for a language in this environment. May legitimately be [].
+   *
+   * `lang` **narrows** the list; it does not define it. A language-agnostic
+   * voice style — Supertonic's `M1`–`F5`, one style per speaker used for every
+   * language it speaks — is reported for each language it can serve, so the
+   * same style appears under `en` and `es`. An engine whose voices are bound to
+   * one language (speechSynthesis) returns only that language's voices.
+   */
   voices(lang: Lang): Promise<VoiceInfo[]>;
   /**
    * Authored character + voice id + language → an engine-native handle, or null
@@ -144,6 +163,14 @@ export type CreateTtsEngineOptions = {
   engine: EngineId;
   /** `Preferences.voiceOverrides`, passed in rather than read from a global. */
   overrides: VoiceOverrides;
+  /**
+   * The model storage + fetch seam (D3 §9, B2). Required by an engine that
+   * downloads assets (Supertonic); omitted by M1's `speech-synthesis`, which
+   * needs none. Passing it here rather than reading IndexedDB inside the
+   * adapter is what keeps the adapter testable and the storage policy in one
+   * place. Wiring it touches the engine construction site (`src/main.tsx`).
+   */
+  models?: ModelSource;
 };
 
 /** The one-file swap point (D3 §5, D7 §6). */
@@ -209,6 +236,49 @@ export type AudioCache = {
 export type WithAudioCache = (engine: TtsEngine, cache: AudioCache) => TtsEngine;
 
 /* ============================================================================
+ * 5b. Model storage and fetch (D3 §9, B2)
+ *
+ * The `models` store and the Downloads surface had no seam at all. This is it.
+ * The adapter owns *what* to fetch (its registry entry's `files`); this owns
+ * *how* it is stored, resumed and reported. Implemented in
+ * `src/engines/models.ts`, passed at construction (see CreateTtsEngineOptions),
+ * and faked in tests exactly like the TtsEngine.
+ * ==========================================================================*/
+
+/** A file within a pinned repo revision. The `models` store key is the triple. */
+export type ModelFileRef = { repoId: string; revision: string; path: string };
+
+/** Progress for the Downloads surface (D4 §9). Byte counts are of the whole plan. */
+export type DownloadProgress = {
+  /** Total bytes expected, or null when the source reports no Content-Length. */
+  totalBytes: number | null;
+  /** Bytes already cached or received across the plan. */
+  receivedBytes: number;
+  /** The file being fetched, for a status line. */
+  current: string;
+};
+
+/**
+ * The model storage + fetch seam (D3 §9). Requests `navigator.storage.persist()`
+ * before the first byte, caches each file under its `ModelFileRef`, and reports
+ * progress so the Downloads panel can show a byte total. A failed or partial
+ * fetch leaves nothing half-written; a miss and an eviction are the same code
+ * path (re-fetch). One instance serves one selected packaging's plan.
+ */
+export type ModelSource = {
+  /** True when every file in the plan is already in the `models` store. */
+  isReady(plan: readonly ModelFileRef[]): Promise<boolean>;
+  /** Ensure every file is present, fetching what is missing. */
+  ensure(plan: readonly ModelFileRef[], onProgress?: (p: DownloadProgress) => void): Promise<void>;
+  /** Bytes for a file that `ensure` has completed. */
+  read(ref: ModelFileRef): Promise<ArrayBuffer>;
+  /** Delete every cached model file (the Downloads panel's "delete"). */
+  clear(): Promise<void>;
+  /** Bytes currently stored, for the storage readout (D3 §9). */
+  usage(): Promise<{ bytes: number; entries: number }>;
+};
+
+/* ============================================================================
  * 6. Playback
  * ==========================================================================*/
 
@@ -246,21 +316,30 @@ export type PlaybackController = {
 export type CreatePlaybackController = () => PlaybackController;
 
 /* ============================================================================
- * 7. Asset registry — TWO files, deliberately (D3 §11, amendment C9)
+ * 7. Asset registry — THREE files, deliberately (D3 §11.1, amendments C9, B4)
  *
- *   src/engines/registry.browser.ts   the browser registry: only what the
- *                                     SELECTED engine needs. Empty in M1.
+ *   src/engines/registry.browser.ts   the browser registry: the SELECTED
+ *                                     engine's entries only. Empty in M1.
  *   tools/bake/registry.build.ts      the build registry: the MT models.
+ *   tools/registry.candidates.ts      the non-selected TTS candidates
+ *                                     (deferred/rejected); tooling-only.
  *
- * The split exists because `check:bundle` forbids the deferred packagings'
+ * The split exists because `check:bundle` forbids the unselected packagings'
  * repo ids and revisions in emitted JS, and tree-shaking a single reachable
- * object literal is not guaranteed. Two files make it structural.
+ * object literal is not guaranteed. Three files make it structural, and give
+ * a deferred packaging a home that cannot reach the bundle.
  * ==========================================================================*/
 
 export type Packaging = 'fp32-transformers' | 'int8-sherpa' | 'n/a';
 export type Precision = 'fp32' | 'fp16' | 'int8' | 'int4';
 export type Backend = 'webgpu' | 'wasm' | 'node';
-export type RegistryDecision = 'm1' | 'deferred' | 'rejected';
+/**
+ * `'m1'` selects the M1 `speechSynthesis` engine; `'m3'` selects a Supertonic
+ * packaging at the real-TTS milestone (B3 — without this value, D7 §6's
+ * "flip the decision" step had no target). `'deferred'` is a candidate that is
+ * documented but not selected; `'rejected'` is one that lost.
+ */
+export type RegistryDecision = 'm1' | 'm3' | 'deferred' | 'rejected';
 export type AssetPurpose = 'tts' | 'translation' | 'voice-style' | 'runtime';
 export type AssetStorage = 'browser-cache' | 'build-only' | 'bundled';
 export type RegistryRuntime =
@@ -268,6 +347,9 @@ export type RegistryRuntime =
   | 'transformers.js'
   | 'sherpa-onnx-wasm'
   | 'transformers.js-node';
+
+/** One rung of the per-device fallback chain: a backend and a precision. */
+export type PrecisionStep = { backend: Backend; precision: Precision };
 
 export type AssetLicense = {
   weights: string | null;
@@ -292,8 +374,13 @@ export type AssetRegistryEntry = {
   files: AssetFile[];
   totalBytes: number;
   backends: Backend[];
-  /** Backend → ordered precisions, first that works wins (D3 §6.4). */
-  precisionChain: Partial<Record<Backend, Precision[]>>;
+  /**
+   * Ordered fallback chain, first rung that works wins. It **crosses backends**
+   * (A1): a device without `shader-f16` must fall to WASM, never to
+   * `webgpu + fp32` (measured 15–20× slower than WASM — D3 §6.4). The old
+   * `Backend → Precision[]` map could not express that fallback.
+   */
+  precisionChain: readonly PrecisionStep[];
   license: AssetLicense;
   requiredForM1: boolean;
   storage: AssetStorage;
@@ -303,6 +390,13 @@ export type AssetRegistryEntry = {
 export type BrowserAssetRegistry = readonly AssetRegistryEntry[];
 /** Imported by `tools/bake/**` only. Never reachable from `src/**`. */
 export type BuildAssetRegistry = readonly AssetRegistryEntry[];
+/**
+ * The non-selected TTS candidates — `'deferred'` and `'rejected'` (B4). Holds
+ * the entries the browser registry must **not** carry, so a deferred packaging
+ * has a home without its repo id reaching the bundle. Imported by
+ * `tools/registry.candidates.ts`'s consumers only: `check:bundle` and tests.
+ */
+export type CandidateAssetRegistry = readonly AssetRegistryEntry[];
 
 /* ============================================================================
  * 8. Translator (build-only)
