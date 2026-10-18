@@ -108,7 +108,8 @@ export function App({
     trigger: Element | null;
   } | null>(null);
   const [glossMode, setGlossMode] = useState(false);
-  const [status, setStatus] = useState(`Beat 1 of ${conversation.order.length}`);
+  // The counter already says "Beat 1 of 10"; the live region must not repeat it.
+  const [status, setStatus] = useState('Ready to play');
   const commandsRef = useRef<{ play: () => void; stop: () => void }>({
     play: () => undefined,
     stop: () => undefined,

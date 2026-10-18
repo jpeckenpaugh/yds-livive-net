@@ -24,7 +24,11 @@ import { audioState, type AudioState } from './audio-state.ts';
 import type { Scheduler } from './scheduler.ts';
 
 export const DEFAULT_PREFS: Preferences = {
-  read: 'l2',
+  // Both languages visible by default. The gloss (hover/tap translation) is a
+  // rendering of L2 spans, so with L2 hidden the app's headline affordance is
+  // invisible on first load — which is what `read: 'l1'` produced in practice.
+  // Hearing L2 while reading both is the posture that shows what the app is.
+  read: 'both',
   hear: 'l2',
   hint: true,
   speed: DEFAULT_SPEED,

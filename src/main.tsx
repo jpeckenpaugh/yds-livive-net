@@ -6,6 +6,7 @@
  */
 
 import { render } from 'preact';
+import './ui/styles.css';
 import { conversation } from './data/conversation.ts';
 import { createTtsEngine, selectedEngineId } from './engines/tts/index.ts';
 import { App } from './ui/App.tsx';

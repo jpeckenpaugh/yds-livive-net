@@ -483,7 +483,7 @@ export function BeatRow({
   const line = spokenLine(beat);
 
   return (
-    <li class="beat-row" data-status={beat.status}>
+    <li class="beat-row" data-status={beat.status} data-speaker={beat.speaker}>
       <SpeakerLabel name={name} />
       {visibility.showHint && beat.hint ? <HintLine hint={beat.hint} /> : null}
       {line && visibility.showL2 ? (
@@ -515,6 +515,11 @@ export function Transcript(): preact.JSX.Element {
   const revealedIndex = conversation.order.indexOf(state.session.revealed);
   const visible = beats.filter((beat) => conversation.order.indexOf(beat.beatId) <= revealedIndex);
   const unreachedCount = beats.filter((beat) => beat.status === 'unreached').length;
+  // The tail note describes beats invalidated by a re-pick (D4 §7.5), so it only
+  // appears once the learner has actually chosen something. Before the first
+  // choice the tail is just the unplayed remainder, and announcing that beats
+  // "were reset" on load — before anything has happened — is simply wrong.
+  const hasChosen = Object.keys(state.session.choices).length > 0;
 
   function preview(option: ResolvedOption): void {
     const beat = beats.find((candidate) =>
@@ -536,7 +541,7 @@ export function Transcript(): preact.JSX.Element {
           tailCount={0}
         />
       ))}
-      {unreachedCount > 0 ? (
+      {hasChosen && unreachedCount > 0 ? (
         <li class="tail-row">
           <UnreachableTailNote count={unreachedCount} />
         </li>
