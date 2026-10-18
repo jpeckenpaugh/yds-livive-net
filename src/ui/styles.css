@@ -752,6 +752,309 @@ main[data-gloss-mode='true'] .glossable {
   }
 }
 
+/* ------------------------------------------------------------- screens */
+
+.screen {
+  max-width: var(--measure);
+  margin-inline: auto;
+  padding: 2.5rem 1.25rem 4rem;
+}
+
+button.primary {
+  appearance: none;
+  background: var(--fg);
+  border: 1px solid var(--fg);
+  color: var(--bg);
+  font-weight: 600;
+  border-radius: var(--radius);
+  padding: 0.6rem 1.1rem;
+  cursor: pointer;
+}
+
+button.primary:hover:not(:disabled) {
+  background: var(--fg-muted);
+  border-color: var(--fg-muted);
+}
+
+button.primary:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+button.quiet {
+  appearance: none;
+  background: transparent;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  padding: 0.35rem 0.7rem;
+  font-size: 0.875rem;
+  color: var(--fg-muted);
+  cursor: pointer;
+}
+
+button.quiet:hover {
+  background: var(--surface-sunk);
+  color: var(--fg);
+}
+
+.back-link {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  font-size: 0.875rem;
+  color: var(--fg-muted);
+  cursor: pointer;
+  justify-self: start;
+}
+
+.back-link:hover {
+  color: var(--fg);
+  text-decoration: underline;
+}
+
+/* ------------------------------------------------------------- welcome */
+
+.screen-welcome {
+  display: grid;
+  place-items: center;
+  min-height: 80vh;
+  padding-block: 3rem;
+}
+
+.welcome-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 2rem;
+  max-width: 26rem;
+  width: 100%;
+  display: grid;
+  gap: 1.25rem;
+}
+
+.welcome-lede {
+  color: var(--fg-muted);
+  font-size: 0.9375rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.field-label {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg-faint);
+}
+
+.field select {
+  background: var(--surface-sunk);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  padding: 0.55rem 0.7rem;
+  font-size: 1rem;
+  cursor: pointer;
+  width: 100%;
+}
+
+.field select:hover {
+  border-color: var(--fg-faint);
+}
+
+.welcome-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.welcome-actions button:not(.primary) {
+  appearance: none;
+  background: transparent;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  padding: 0.6rem 1rem;
+  cursor: pointer;
+}
+
+/* --------------------------------------------------------------- list */
+
+.screen-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-block-end: 1.5rem;
+}
+
+.conversation-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.conversation-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.conversation-open {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  width: 100%;
+  text-align: start;
+  padding: 1rem 1.25rem;
+  cursor: pointer;
+  display: grid;
+  gap: 0.25rem;
+}
+
+.conversation-open:hover {
+  background: var(--surface-sunk);
+}
+
+.conversation-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.conversation-meta {
+  font-size: 0.875rem;
+  color: var(--fg-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.conversation-bar {
+  height: 3px;
+  background: var(--surface-sunk);
+}
+
+.conversation-bar > span {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+}
+
+.empty {
+  background: var(--surface);
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  color: var(--fg-muted);
+  text-align: center;
+}
+
+/* --------------------------------------------------------- completion */
+
+.completion {
+  max-width: calc(var(--measure) - 2.5rem);
+  margin-inline: auto;
+  margin-block: 0.75rem 1rem;
+  background: var(--accent-soft);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.completion h2 {
+  font-size: 1.125rem;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.completion-lede {
+  font-size: 0.875rem;
+  color: var(--fg-muted);
+}
+
+.decision-chain {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.decision-step {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.decision-speaker {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg-faint);
+  min-width: 3.5rem;
+}
+
+.decision-options {
+  display: flex;
+  gap: 0.375rem;
+  flex-wrap: wrap;
+}
+
+.decision-option {
+  appearance: none;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  padding: 0.25rem 0.7rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  color: var(--fg-muted);
+}
+
+.decision-option:hover {
+  border-color: var(--accent);
+  color: var(--fg);
+}
+
+.decision-option.chosen {
+  background: var(--fg);
+  border-color: var(--fg);
+  color: var(--bg);
+  font-weight: 600;
+  cursor: default;
+}
+
+.play-whole {
+  justify-self: start;
+}
+
+/* Highlight the beat being spoken during whole-conversation playback. */
+.beat-row[data-active='true'] {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+@media (max-width: 34rem) {
+  .welcome-card {
+    padding: 1.5rem;
+  }
+
+  .decision-speaker {
+    min-width: 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

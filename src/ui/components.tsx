@@ -12,23 +12,28 @@ import { resolveTimeline } from '../domain/resolve.ts';
 import type {
   Channel,
   ChoiceKey,
+  Conversation,
   Lang,
   ResolvedBeat,
   ResolvedLine,
   ResolvedOption,
 } from '../domain/types.ts';
 import { glossWords } from './gloss.ts';
+import { langName } from './language.ts';
 import { ANIMATE_IN_MS, MIN_TARGET_PX, SPEED_MAX, SPEED_MIN } from './constants.ts';
 import { M1_LICENCES, OFFLINE_STATEMENT } from './licenses.ts';
 import { spokenLine } from './scheduler.ts';
 import { useStore } from './store.ts';
 
-const CHANNELS: Array<{ value: Channel; label: string }> = [
-  { value: 'l1', label: 'English only' },
-  { value: 'l2', label: 'Spanish only' },
-  { value: 'both', label: 'Both' },
-  { value: 'none', label: 'None' },
-];
+/** Channel labels name the actual languages, so a reversed pair reads correctly. */
+function channelsFor(conversation: Conversation): Array<{ value: Channel; label: string }> {
+  return [
+    { value: 'l1', label: `${langName(conversation.l1)} only` },
+    { value: 'l2', label: `${langName(conversation.l2)} only` },
+    { value: 'both', label: 'Both' },
+    { value: 'none', label: 'None' },
+  ];
+}
 
 function prefersReducedMotion(): boolean {
   return (
@@ -106,10 +111,11 @@ function ChannelControl({
   value: Channel;
   onChange: (next: Channel) => void;
 }): preact.JSX.Element {
+  const { conversation } = useStore();
   return (
     <fieldset class="channel-control">
       <legend>{legend}</legend>
-      {CHANNELS.map((channel) => (
+      {channelsFor(conversation).map((channel) => (
         <label key={channel.value}>
           <input
             type="radio"
@@ -465,16 +471,77 @@ export function UnreachableTailNote({ count }: { count: number }): preact.JSX.El
   );
 }
 
+/**
+ * The completion state.
+ *
+ * The moment the conversation is fully determined is the only thing the learner
+ * actually authored, so it gets its own surface: the chain of decisions they
+ * made, each one editable in place, and a way to hear the whole thing. Tapping
+ * the other option on a step is the same `choose` the transcript uses, so
+ * downstream beats are re-derived by the domain rather than by this component.
+ */
+export function CompletionPanel({
+  decisions,
+  onPlay,
+  onChoose,
+}: {
+  decisions: ResolvedBeat[];
+  onPlay: () => void;
+  onChoose: (beatId: string, key: ChoiceKey) => void;
+}): preact.JSX.Element {
+  const { conversation } = useStore();
+  return (
+    <section class="completion" aria-labelledby="completion-title">
+      <h2 id="completion-title">Your conversation is ready</h2>
+      <p class="completion-lede">
+        {decisions.length} decisions made. Tap the other option on any step to change it.
+      </p>
+      <ol class="decision-chain">
+        {decisions.map((beat) => (
+          <li key={beat.beatId} class="decision-step">
+            <span class="decision-speaker">
+              {conversation.characters[beat.speaker]?.name ?? beat.speaker}
+            </span>
+            <span class="decision-options">
+              {(beat.options ?? []).map((option) => (
+                <button
+                  key={option.key}
+                  type="button"
+                  class={option.chosen ? 'decision-option chosen' : 'decision-option'}
+                  aria-pressed={option.chosen}
+                  onClick={() => {
+                    if (!option.chosen) onChoose(beat.beatId, option.key);
+                  }}
+                >
+                  {option.label.l1}
+                </button>
+              ))}
+            </span>
+          </li>
+        ))}
+      </ol>
+      <button type="button" class="primary play-whole" onClick={onPlay}>
+        Play the whole conversation
+      </button>
+    </section>
+  );
+}
+
 export function BeatRow({
   beat,
   onChoose,
   onPreview,
   tailCount,
+  playback = false,
+  active = false,
 }: {
   beat: ResolvedBeat;
   onChoose: (key: ChoiceKey) => void;
   onPreview: (option: ResolvedOption) => void;
   tailCount: number;
+  /** Playback hides the ghosts so the composed conversation reads cleanly. */
+  playback?: boolean;
+  active?: boolean;
 }): preact.JSX.Element {
   const { conversation, state, visibility } = useStore();
   const { audio } = state;
@@ -483,7 +550,12 @@ export function BeatRow({
   const line = spokenLine(beat);
 
   return (
-    <li class="beat-row" data-status={beat.status} data-speaker={beat.speaker}>
+    <li
+      class="beat-row"
+      data-status={beat.status}
+      data-speaker={beat.speaker}
+      data-active={active ? 'true' : 'false'}
+    >
       <SpeakerLabel name={name} />
       {visibility.showHint && beat.hint ? <HintLine hint={beat.hint} /> : null}
       {line && visibility.showL2 ? (
@@ -501,7 +573,7 @@ export function BeatRow({
           canPreview={audio.canPreview}
         />
       ) : null}
-      {beat.kind === 'choice' && beat.status === 'resolved' ? (
+      {beat.kind === 'choice' && beat.status === 'resolved' && !playback ? (
         <GhostOptions beat={beat} onPreview={onPreview} canPreview={audio.canPreview} />
       ) : null}
       {beat.status === 'unreached' ? <UnreachableTailNote count={tailCount} /> : null}
@@ -509,7 +581,13 @@ export function BeatRow({
   );
 }
 
-export function Transcript(): preact.JSX.Element {
+export function Transcript({
+  playback = false,
+  activeBeatId = null,
+}: {
+  playback?: boolean;
+  activeBeatId?: string | null;
+} = {}): preact.JSX.Element {
   const { conversation, state, scheduler, visibility, choose } = useStore();
   const beats = resolveTimeline(conversation, state.session);
   const revealedIndex = conversation.order.indexOf(state.session.revealed);
@@ -539,6 +617,8 @@ export function Transcript(): preact.JSX.Element {
           onChoose={choose}
           onPreview={preview}
           tailCount={0}
+          playback={playback}
+          active={activeBeatId === beat.beatId}
         />
       ))}
       {hasChosen && unreachedCount > 0 ? (

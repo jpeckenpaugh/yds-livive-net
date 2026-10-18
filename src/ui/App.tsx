@@ -9,12 +9,13 @@
 import { useEffect, useMemo, useReducer, useRef, useState } from 'preact/hooks';
 import { resolveTimeline } from '../domain/resolve.ts';
 import { visibility } from '../domain/visibility.ts';
-import type { ChoiceKey, Conversation, Preferences, SessionOp } from '../domain/types.ts';
+import type { ChoiceKey, Conversation, Preferences, Session, SessionOp } from '../domain/types.ts';
 import type { TtsEngine } from '../engines/ports.ts';
 import { audioState, type AudioState } from './audio-state.ts';
 import { GAP_AFTER_CHOICE_MS } from './constants.ts';
 import {
   AudioNotice,
+  CompletionPanel,
   KeyboardHelpDialog,
   LicensesDialog,
   SkipToContent,
@@ -60,6 +61,12 @@ export type AppProps = {
   createEngine: (overrides: Preferences['voiceOverrides']) => TtsEngine;
   delay?: (ms: number) => Promise<void>;
   initialPrefs?: Partial<Preferences>;
+  /** Resume a composed session. Absent for a fresh conversation. */
+  initialSession?: Session;
+  /** Called whenever the session or preferences change, for persistence. */
+  onPersist?: (snapshot: { session: Session; prefs: Preferences }) => void;
+  /** When present, the header shows a way back to the conversation list. */
+  onBack?: () => void;
 };
 
 export function App({
@@ -67,6 +74,9 @@ export function App({
   createEngine,
   delay,
   initialPrefs,
+  initialSession,
+  onPersist,
+  onBack,
 }: AppProps): preact.JSX.Element {
   const [state, dispatch] = useReducer(
     (current: ReturnType<typeof createInitialState>, action: Parameters<typeof reduceStore>[2]) =>
@@ -79,7 +89,11 @@ export function App({
         l1Available: true,
         canPreview: true,
       });
-      return initialPrefs ? { ...base, prefs: { ...base.prefs, ...initialPrefs } } : base;
+      return {
+        ...base,
+        session: initialSession ?? base.session,
+        prefs: initialPrefs ? { ...base.prefs, ...initialPrefs } : base.prefs,
+      };
     },
   );
 
@@ -133,9 +147,60 @@ export function App({
   const pending = resolved.find((beat) => beat.status === 'pending');
   const cursorIndex = conversation.order.indexOf(state.session.cursor);
 
+  const allResolved = resolved.length > 0 && resolved.every((beat) => beat.status === 'resolved');
+  const decisions = resolved.filter((beat) => beat.kind === 'choice' && beat.chosenKey);
+  const [mode, setMode] = useState<'compose' | 'play'>('compose');
+  const [activeBeatId, setActiveBeatId] = useState<string | null>(null);
+
+  // Persistence: the shell owns storage; this only reports snapshots, and only
+  // when the session or preferences actually changed. `onPersist` is a fresh
+  // closure on every shell render, so without this reference check the effect
+  // would fire on every render, write, re-render the shell, and never settle.
+  const persistedRef = useRef<{ session: Session; prefs: Preferences } | null>(null);
+  useEffect(() => {
+    const last = persistedRef.current;
+    if (last && last.session === state.session && last.prefs === state.prefs) return;
+    persistedRef.current = { session: state.session, prefs: state.prefs };
+    onPersist?.({ session: state.session, prefs: state.prefs });
+  }, [onPersist, state.session, state.prefs]);
+
   function stopPlayback(): void {
     scheduler.stop();
+    setMode('compose');
+    setActiveBeatId(null);
     setStatus('Paused');
+  }
+
+  /**
+   * Play the composed conversation from the first beat to the last, with no
+   * choice UI. Reuses `playBeat` per beat rather than adding a scheduler mode:
+   * the conversation is fully resolved, so the only difference from composing is
+   * that nothing pauses for input.
+   */
+  async function playWhole(): Promise<void> {
+    const beats = resolveTimeline(conversation, stateRef.current.session);
+    if (beats.length === 0 || beats.some((beat) => beat.status !== 'resolved')) return;
+    scheduler.stop();
+    setMode('play');
+
+    // Iterate the resolved list rather than re-reading the cursor each step: the
+    // session state is a render behind the `seek`, so reading it here would play
+    // whichever beat the cursor happened to be on before playback started. The
+    // conversation is fully resolved, so this list is valid for the whole pass.
+    for (const beat of beats) {
+      dispatch({ type: 'seek', beatId: beat.beatId });
+      setActiveBeatId(beat.beatId);
+      setStatus(
+        `Playing beat ${conversation.order.indexOf(beat.beatId) + 1} of ${conversation.order.length}`,
+      );
+      await delayFn(0);
+      const outcome = await scheduler.playBeat(beat, visibility(stateRef.current.prefs));
+      if (outcome !== 'finished') break;
+      await delayFn(GAP_AFTER_CHOICE_MS);
+    }
+    setActiveBeatId(null);
+    setMode('compose');
+    setStatus('Finished');
   }
 
   async function playCurrent(): Promise<void> {
@@ -283,13 +348,25 @@ export function App({
     <StoreContext.Provider value={context}>
       <SkipToContent />
       <header>
+        {onBack ? (
+          <button type="button" class="back-link" onClick={onBack}>
+            &larr; Conversations
+          </button>
+        ) : null}
         <h1>{conversation.title}</h1>
         <Transport />
         <Toolbar onOpen={(name, event) => openDialog(name, event)} />
       </header>
       <AudioNotice onPlayAnyway={() => dispatch({ type: 'prefs', patch: { playAnyway: true } })} />
+      {allResolved && mode === 'compose' ? (
+        <CompletionPanel
+          decisions={decisions}
+          onPlay={() => void playWhole()}
+          onChoose={(beatId, key) => sessionOp({ type: 'choose', beatId, key })}
+        />
+      ) : null}
       <main data-gloss-mode={glossMode ? 'true' : 'false'}>
-        <Transcript />
+        <Transcript playback={mode === 'play'} activeBeatId={activeBeatId} />
       </main>
       {dialog?.name === 'whatif' ? <WhatIfPanel /> : null}
       {dialog?.name === 'licenses' ? <LicensesDialog onClose={closeDialog} /> : null}

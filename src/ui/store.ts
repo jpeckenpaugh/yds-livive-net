@@ -47,6 +47,7 @@ export type StoreState = {
 
 export type StoreAction =
   | { type: 'session'; op: SessionOp }
+  | { type: 'seek'; beatId: string }
   | { type: 'prefs'; patch: Partial<Preferences> }
   | { type: 'playback'; state: PlaybackState }
   | { type: 'audio'; audio: AudioState }
@@ -71,6 +72,26 @@ export function reduceStore(
   switch (action.type) {
     case 'session':
       return { ...state, session: reduce(conversation, state.session, action.op) };
+    case 'seek': {
+      // Move the cursor to `beatId` without touching the recorded choices, by
+      // replaying rewind/advance through the domain reducer. Playback needs to
+      // start from the first beat of an already-composed conversation, and the
+      // frozen session ops have no seek — so this derives one from them rather
+      // than reaching into the session directly.
+      const target = conversation.order.indexOf(action.beatId);
+      if (target < 0) return state;
+      let session = state.session;
+      let guard = conversation.order.length + 2;
+      while (guard-- > 0) {
+        const at = conversation.order.indexOf(session.cursor);
+        if (at < 0 || at === target) break;
+        const op: SessionOp = at > target ? { type: 'rewind' } : { type: 'advance' };
+        const next = reduce(conversation, session, op);
+        if (next.cursor === session.cursor) break;
+        session = next;
+      }
+      return { ...state, session };
+    }
     case 'prefs':
       return { ...state, prefs: { ...state.prefs, ...action.patch } };
     case 'playback':
