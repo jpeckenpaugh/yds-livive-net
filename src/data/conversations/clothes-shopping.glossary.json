@@ -114,21 +114,21 @@
     "reviewedBy": "agent"
   },
   "lo tienes": {
-    "l1": "You have it",
+    "l1": "do you have it?",
     "origin": "mt",
-    "mt": "You have it",
+    "mt": "do you have it?",
     "reviewedBy": "agent"
   },
   "el azul te queda genial": {
-    "l1": "The blue one looks great.",
+    "l1": "The blue one suits you.",
     "origin": "mt",
-    "mt": "The blue one looks great.",
+    "mt": "The blue one suits you.",
     "reviewedBy": "agent"
   },
   "el negro te queda genial": {
-    "l1": "The black one looks great.",
+    "l1": "The black one suits you.",
     "origin": "mt",
-    "mt": "The black one looks great.",
+    "mt": "The black one suits you.",
     "reviewedBy": "agent"
   },
   "lo tienes en talla pequeña": {

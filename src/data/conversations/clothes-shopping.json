@@ -381,10 +381,10 @@
       "beatId": "b5",
       "alternativeId": "b5-l1",
       "variantKey": "b5|b5-l1|color=blue",
-      "l1": "The blue one looks great.",
+      "l1": "The blue one suits you.",
       "l2": "El azul te queda genial.",
       "mt": "El azul te queda genial.",
-      "sourceHash": "sha256:v1:ece309a56269d1ec3fd80deb233ab3065ab1d3dc73d49f29b3b080fdc5cc226a",
+      "sourceHash": "sha256:v1:1c8a557f9e48947f0fc0b53fa48b1db231f3c5283f580ad3b2d736e77bbd057c",
       "reviewedBy": "agent",
       "translationRev": "authored-1"
     },
@@ -392,10 +392,10 @@
       "beatId": "b5",
       "alternativeId": "b5-l1",
       "variantKey": "b5|b5-l1|color=black",
-      "l1": "The black one looks great.",
+      "l1": "The black one suits you.",
       "l2": "El negro te queda genial.",
       "mt": "El negro te queda genial.",
-      "sourceHash": "sha256:v1:db2e64385c4700da0bb2060e3d1de23ce5931a400a43bd9312e13b16e2407b8f",
+      "sourceHash": "sha256:v1:d7f7d33faa7fe5b1605ee2713e7419f782757bcd6c84b590d84e03d9db0643f9",
       "reviewedBy": "agent",
       "translationRev": "authored-1"
     },
@@ -685,21 +685,21 @@
       "reviewedBy": "agent"
     },
     "lo tienes": {
-      "l1": "You have it",
+      "l1": "do you have it?",
       "origin": "mt",
-      "mt": "You have it",
+      "mt": "do you have it?",
       "reviewedBy": "agent"
     },
     "el azul te queda genial": {
-      "l1": "The blue one looks great.",
+      "l1": "The blue one suits you.",
       "origin": "mt",
-      "mt": "The blue one looks great.",
+      "mt": "The blue one suits you.",
       "reviewedBy": "agent"
     },
     "el negro te queda genial": {
-      "l1": "The black one looks great.",
+      "l1": "The black one suits you.",
       "origin": "mt",
-      "mt": "The black one looks great.",
+      "mt": "The black one suits you.",
       "reviewedBy": "agent"
     },
     "lo tienes en talla pequeña": {
@@ -893,7 +893,7 @@
     "schemaVersion": 1,
     "segmentationVersion": 1,
     "generatedFrom": "clothes-shopping.source.json",
-    "sourceDigest": "sha256:v1:76af6301395813b6c5423ba35b9b94357c2856609096638b11a710704456337b",
+    "sourceDigest": "sha256:v1:7a6731c29f0a3e58d45f45bde86d5b56e2251124cdd445acbc41ed2fc23a9723",
     "reviewPolicy": "shipping",
     "translator": {
       "en2romance": "authored-1",

@@ -769,9 +769,9 @@
       "reviewedBy": "agent"
     },
     "me lo pones solo": {
-      "l1": "Could you make it black",
+      "l1": "Could you make it without milk",
       "origin": "mt",
-      "mt": "Could you make it black",
+      "mt": "Could you make it without milk",
       "reviewedBy": "agent"
     },
     "prefiero tomarlo con limón, por favor": {
@@ -961,9 +961,9 @@
       "reviewedBy": "agent"
     },
     "perfecto: un café solo": {
-      "l1": "Perfect: a black coffee",
+      "l1": "Perfect: a coffee without milk",
       "origin": "mt",
-      "mt": "Perfect: a black coffee",
+      "mt": "Perfect: a coffee without milk",
       "reviewedBy": "agent"
     },
     "perfecto: un café solo, para llevar": {

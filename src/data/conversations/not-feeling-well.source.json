@@ -100,7 +100,7 @@
             },
             {
               "key": "lie-down",
-              "label": { "l1": "A lie-down", "l2": "Echarte un rato" },
+              "label": { "l1": "A lie-down", "l2": "Echarme un rato" },
               "icon": "🛏️",
               "template": "Maybe {remedy}?",
               "sets": { "remedy": "lie-down" }

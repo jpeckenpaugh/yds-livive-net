@@ -108,7 +108,7 @@
       "id": "b5",
       "speaker": "sofia",
       "hint": "Sofía likes the colour.",
-      "line": [{ "id": "b5-l1", "template": "The {color} one looks great." }]
+      "line": [{ "id": "b5-l1", "template": "The {color} one suits you." }]
     },
     {
       "id": "b6",

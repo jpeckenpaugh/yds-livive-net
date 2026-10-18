@@ -135,7 +135,7 @@
               "key": "lie-down",
               "label": {
                 "l1": "A lie-down",
-                "l2": "Echarte un rato"
+                "l2": "Echarme un rato"
               },
               "icon": "🛏️",
               "sets": {
@@ -415,8 +415,8 @@
       "optionKey": "lie-down",
       "variantKey": "b4|lie-down|remedy=lie-down",
       "l1": "Maybe a lie-down?",
-      "l2": "¿Quizá echarte un rato?",
-      "mt": "¿Quizá echarte un rato?",
+      "l2": "¿Quizá echarme un rato?",
+      "mt": "¿Quizá echarme un rato?",
       "sourceHash": "sha256:v1:d4344010e47e2d8e9cbc63e04e6966bdf5681c9c41034a8b8322c14556d4acfe",
       "reviewedBy": "agent",
       "translationRev": "authored-1"
@@ -673,9 +673,9 @@
       "reviewedBy": "agent"
     },
     "estás bien": {
-      "l1": "you're all right",
+      "l1": "are you all right?",
       "origin": "mt",
-      "mt": "you're all right",
+      "mt": "are you all right?",
       "reviewedBy": "agent"
     },
     "diego": {
@@ -739,9 +739,9 @@
       "reviewedBy": "agent"
     },
     "te duele la cabeza": {
-      "l1": "your head hurts",
+      "l1": "does your head hurt?",
       "origin": "mt",
-      "mt": "your head hurts",
+      "mt": "does your head hurt?",
       "reviewedBy": "agent"
     },
     "ay, ¿te duele el estómago": {
@@ -751,9 +751,9 @@
       "reviewedBy": "agent"
     },
     "te duele el estómago": {
-      "l1": "your stomach hurts",
+      "l1": "does your stomach hurt?",
       "origin": "mt",
-      "mt": "your stomach hurts",
+      "mt": "does your stomach hurt?",
       "reviewedBy": "agent"
     },
     "quizá una aspirina": {
@@ -762,7 +762,7 @@
       "mt": "Maybe an aspirin?",
       "reviewedBy": "agent"
     },
-    "quizá echarte un rato": {
+    "quizá echarme un rato": {
       "l1": "Maybe a lie-down?",
       "origin": "mt",
       "mt": "Maybe a lie-down?",
@@ -781,9 +781,9 @@
       "reviewedBy": "agent"
     },
     "quizá una bolsa": {
-      "l1": "maybe a bag",
+      "l1": "maybe a hot water bottle",
       "origin": "mt",
-      "mt": "maybe a bag",
+      "mt": "maybe a hot water bottle",
       "reviewedBy": "agent"
     },
     "quieres una aspirina": {
@@ -811,9 +811,9 @@
       "reviewedBy": "agent"
     },
     "quieres una bolsa": {
-      "l1": "you want a bag",
+      "l1": "do you want a hot water bottle?",
       "origin": "mt",
-      "mt": "you want a bag",
+      "mt": "do you want a hot water bottle?",
       "reviewedBy": "agent"
     },
     "creo que me voy a tumbar": {
@@ -895,9 +895,9 @@
       "reviewedBy": "agent"
     },
     "con dolor de cabeza": {
-      "l1": "with a headache,",
+      "l1": "with a headache",
       "origin": "mt",
-      "mt": "with a headache,",
+      "mt": "with a headache",
       "reviewedBy": "agent"
     },
     "con dolor": {
@@ -907,9 +907,9 @@
       "reviewedBy": "agent"
     },
     "deberías tumbarte": {
-      "l1": "you should lie down,",
+      "l1": "you should lie down",
       "origin": "mt",
-      "mt": "you should lie down,",
+      "mt": "you should lie down",
       "reviewedBy": "agent"
     },
     "y luego ir a la farmacia": {
@@ -961,9 +961,9 @@
       "reviewedBy": "agent"
     },
     "deberías irte a casa": {
-      "l1": "you should go home,",
+      "l1": "you should go home",
       "origin": "mt",
-      "mt": "you should go home,",
+      "mt": "you should go home",
       "reviewedBy": "agent"
     },
     "vale. con dolor de cabeza, deberías irte a casa, y luego ir al médico": {
@@ -991,9 +991,9 @@
       "reviewedBy": "agent"
     },
     "con dolor de estómago": {
-      "l1": "with a stomachache,",
+      "l1": "with a stomachache",
       "origin": "mt",
-      "mt": "with a stomachache,",
+      "mt": "with a stomachache",
       "reviewedBy": "agent"
     },
     "vale. con dolor de estómago, deberías tumbarte, y luego ir al médico": {
@@ -1039,9 +1039,9 @@
       "reviewedBy": "agent"
     },
     "gracias": {
-      "l1": "Thanks,",
+      "l1": "Thanks",
       "origin": "mt",
-      "mt": "Thanks,",
+      "mt": "Thanks",
       "reviewedBy": "agent"
     },
     "elena": {
@@ -1055,7 +1055,7 @@
     "schemaVersion": 1,
     "segmentationVersion": 1,
     "generatedFrom": "not-feeling-well.source.json",
-    "sourceDigest": "sha256:v1:7781a4e42d417f7064662581c78b4ec24c6521ae5a491b76e4c40c40509807ca",
+    "sourceDigest": "sha256:v1:081e3c7f8d02581d01b8216cbe2c032311fc6f29ea24e77bb78b9e6abbceeb05",
     "reviewPolicy": "shipping",
     "translator": {
       "en2romance": "authored-1",

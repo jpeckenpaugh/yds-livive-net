@@ -61,7 +61,7 @@ None.
 | quieres echarte un rato | 4 |
 | quieres una aspirina | 4 |
 | quieres una infusión | 4 |
-| quizá echarte un rato | 4 |
+| quizá echarme un rato | 4 |
 | quizá una aspirina | 4 |
 | quizá una infusión | 4 |
 | voy a ir a la farmacia | 4 |
