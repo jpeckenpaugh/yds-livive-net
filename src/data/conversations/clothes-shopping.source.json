@@ -1,0 +1,186 @@
+{
+  "id": "clothes-shopping",
+  "title": "Clothes Shopping",
+  "l1": "en",
+  "l2": "es",
+  "characters": {
+    "sofia": { "name": "Sofía", "voice": "F5" },
+    "javier": { "name": "Javier", "voice": "M5" }
+  },
+  "variables": [
+    {
+      "name": "item",
+      "values": [
+        { "key": "shirt", "l1": "shirt" },
+        { "key": "coat", "l1": "coat" }
+      ]
+    },
+    {
+      "name": "color",
+      "values": [
+        { "key": "blue", "l1": "blue" },
+        { "key": "black", "l1": "black" }
+      ]
+    },
+    {
+      "name": "size",
+      "values": [
+        { "key": "small", "l1": "small" },
+        { "key": "medium", "l1": "medium" }
+      ]
+    },
+    {
+      "name": "decision",
+      "values": [
+        { "key": "take", "l1": "I'll take it" },
+        { "key": "think", "l1": "I'll think about it" }
+      ]
+    }
+  ],
+  "beats": [
+    {
+      "id": "b1",
+      "speaker": "sofia",
+      "hint": "Sofía greets Javier in the shop.",
+      "line": [
+        { "id": "b1-l1", "template": "Hi Javier! Are you looking for something?" }
+      ]
+    },
+    {
+      "id": "b2",
+      "speaker": "javier",
+      "hint": "Javier says what he needs.",
+      "choiceSets": [
+        {
+          "id": "b2-s1",
+          "options": [
+            {
+              "key": "shirt",
+              "label": { "l1": "A shirt", "l2": "Una camisa" },
+              "icon": "👕",
+              "template": "Yes, I'm looking for a {item}.",
+              "sets": { "item": "shirt" }
+            },
+            {
+              "key": "coat",
+              "label": { "l1": "A coat", "l2": "Un abrigo" },
+              "icon": "🧥",
+              "template": "Actually, I need a {item}.",
+              "sets": { "item": "coat" }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b3",
+      "speaker": "sofia",
+      "hint": "Sofía approves of the choice.",
+      "line": [{ "id": "b3-l1", "template": "A {item}? Good choice." }]
+    },
+    {
+      "id": "b4",
+      "speaker": "javier",
+      "hint": "Javier chooses a colour.",
+      "choiceSets": [
+        {
+          "id": "b4-s1",
+          "options": [
+            {
+              "key": "blue",
+              "label": { "l1": "Blue", "l2": "Azul" },
+              "icon": "🔵",
+              "template": "I like it in {color}.",
+              "sets": { "color": "blue" }
+            },
+            {
+              "key": "black",
+              "label": { "l1": "Black", "l2": "Negro" },
+              "icon": "⚫",
+              "template": "Do you have it in {color}?",
+              "sets": { "color": "black" }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "speaker": "sofia",
+      "hint": "Sofía likes the colour.",
+      "line": [{ "id": "b5-l1", "template": "The {color} one looks great." }]
+    },
+    {
+      "id": "b6",
+      "speaker": "javier",
+      "hint": "Javier asks about the size.",
+      "choiceSets": [
+        {
+          "id": "b6-s1",
+          "options": [
+            {
+              "key": "small",
+              "label": { "l1": "Small", "l2": "Pequeña" },
+              "icon": "🔽",
+              "template": "Do you have it in a {size}?",
+              "sets": { "size": "small" }
+            },
+            {
+              "key": "medium",
+              "label": { "l1": "Medium", "l2": "Mediana" },
+              "icon": "🔼",
+              "template": "Can I try it in a {size}?",
+              "sets": { "size": "medium" }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b7",
+      "speaker": "sofia",
+      "hint": "Sofía goes to look for it.",
+      "line": [{ "id": "b7-l1", "template": "A {size}? Let's see." }]
+    },
+    {
+      "id": "b8",
+      "speaker": "javier",
+      "hint": "Javier decides whether to buy it.",
+      "choiceSets": [
+        {
+          "id": "b8-s1",
+          "options": [
+            {
+              "key": "take",
+              "label": { "l1": "I'll take it", "l2": "Me lo llevo" },
+              "icon": "✅",
+              "template": "Perfect, {decision}.",
+              "sets": { "decision": "take" }
+            },
+            {
+              "key": "think",
+              "label": { "l1": "I'll think", "l2": "Me lo pienso" },
+              "icon": "🤔",
+              "template": "Hmm, {decision}.",
+              "sets": { "decision": "think" }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b9",
+      "speaker": "sofia",
+      "hint": "Sofía repeats the choice.",
+      "line": [
+        { "id": "b9-l1", "template": "Great: a {item} in {color}, size {size}." }
+      ]
+    },
+    {
+      "id": "b10",
+      "speaker": "javier",
+      "hint": "Javier thanks Sofía.",
+      "line": [{ "id": "b10-l1", "template": "Thanks for your help, Sofía!" }]
+    }
+  ]
+}

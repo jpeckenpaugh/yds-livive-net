@@ -1,0 +1,211 @@
+{
+  "id": "cafe-order",
+  "title": "At the Café",
+  "l1": "en",
+  "l2": "es",
+  "characters": {
+    "ana": { "name": "Ana", "voice": "F1" },
+    "lucia": { "name": "Lucía", "voice": "F3" }
+  },
+  "variables": [
+    {
+      "name": "drink",
+      "values": [{ "key": "coffee" }, { "key": "tea" }]
+    },
+    {
+      "name": "drinkPhrase",
+      "values": [
+        { "key": "coffee", "l1": "a coffee" },
+        { "key": "tea", "l1": "a tea" }
+      ]
+    },
+    {
+      "name": "extra",
+      "values": [
+        { "key": "with-milk", "l1": "with milk" },
+        { "key": "no-milk", "l1": "without milk" },
+        { "key": "with-lemon", "l1": "with lemon" },
+        { "key": "no-sugar", "l1": "without sugar" }
+      ]
+    },
+    {
+      "name": "food",
+      "values": [
+        { "key": "croissant", "l1": "a croissant" },
+        { "key": "tomato-toast", "l1": "a tomato toast" }
+      ]
+    },
+    {
+      "name": "place",
+      "values": [
+        { "key": "here", "l1": "here" },
+        { "key": "takeaway", "l1": "to take away" }
+      ]
+    }
+  ],
+  "beats": [
+    {
+      "id": "b1",
+      "speaker": "ana",
+      "hint": "Ana and Lucía meet at the café.",
+      "line": [{ "id": "b1-l1", "template": "Morning, Lucía! Shall we order something?" }]
+    },
+    {
+      "id": "b2",
+      "speaker": "lucia",
+      "hint": "Lucía orders a drink first.",
+      "choiceSets": [
+        {
+          "id": "b2-s1",
+          "options": [
+            {
+              "key": "coffee",
+              "label": { "l1": "Coffee", "l2": "Café" },
+              "icon": "☕",
+              "template": "Sounds good! I'll have {drinkPhrase}.",
+              "sets": { "drink": "coffee", "drinkPhrase": "coffee" }
+            },
+            {
+              "key": "tea",
+              "label": { "l1": "Tea", "l2": "Té" },
+              "icon": "🍵",
+              "template": "OK, I'll take {drinkPhrase}.",
+              "sets": { "drink": "tea", "drinkPhrase": "tea" }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b3",
+      "speaker": "ana",
+      "hint": "Ana asks for the same.",
+      "line": [{ "id": "b3-l1", "template": "Same for me: {drinkPhrase}." }]
+    },
+    {
+      "id": "b4",
+      "speaker": "lucia",
+      "hint": "Lucía says how she takes it.",
+      "choiceSets": [
+        {
+          "id": "b4-coffee",
+          "when": { "drink": "coffee" },
+          "options": [
+            {
+              "key": "with-milk",
+              "label": { "l1": "With milk", "l2": "Con leche" },
+              "icon": "🥛",
+              "template": "Could I have it {extra}, please?",
+              "sets": { "extra": "with-milk" }
+            },
+            {
+              "key": "no-milk",
+              "label": { "l1": "Without milk", "l2": "Solo" },
+              "icon": "⬛",
+              "template": "Could I have it {extra}, please?",
+              "sets": { "extra": "no-milk" }
+            }
+          ]
+        },
+        {
+          "id": "b4-tea",
+          "when": { "drink": "tea" },
+          "options": [
+            {
+              "key": "with-lemon",
+              "label": { "l1": "With lemon", "l2": "Con limón" },
+              "icon": "🍋",
+              "template": "I'd rather have it {extra}, please.",
+              "sets": { "extra": "with-lemon" }
+            },
+            {
+              "key": "no-sugar",
+              "label": { "l1": "Without sugar", "l2": "Sin azúcar" },
+              "icon": "🚫",
+              "template": "I'd rather have it {extra}, please.",
+              "sets": { "extra": "no-sugar" }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "speaker": "ana",
+      "hint": "Ana copies her friend.",
+      "line": [{ "id": "b5-l1", "template": "Make mine {extra} too." }]
+    },
+    {
+      "id": "b6",
+      "speaker": "lucia",
+      "hint": "Lucía orders something to eat.",
+      "choiceSets": [
+        {
+          "id": "b6-s1",
+          "options": [
+            {
+              "key": "croissant",
+              "label": { "l1": "A croissant", "l2": "Un croissant" },
+              "icon": "🥐",
+              "template": "And {food}, please.",
+              "sets": { "food": "croissant" }
+            },
+            {
+              "key": "tomato-toast",
+              "label": { "l1": "Tomato toast", "l2": "Tostada con tomate" },
+              "icon": "🍞",
+              "template": "I'd also like {food}.",
+              "sets": { "food": "tomato-toast" }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b7",
+      "speaker": "ana",
+      "hint": "Ana wants the same food.",
+      "line": [{ "id": "b7-l1", "template": "Perfect, {food} for me." }]
+    },
+    {
+      "id": "b8",
+      "speaker": "lucia",
+      "hint": "Lucía decides where to have it.",
+      "choiceSets": [
+        {
+          "id": "b8-s1",
+          "options": [
+            {
+              "key": "here",
+              "label": { "l1": "Here", "l2": "Aquí" },
+              "icon": "🪑",
+              "template": "Can we have it {place}?",
+              "sets": { "place": "here" }
+            },
+            {
+              "key": "takeaway",
+              "label": { "l1": "To take away", "l2": "Para llevar" },
+              "icon": "🥡",
+              "template": "Can we have it {place}?",
+              "sets": { "place": "takeaway" }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b9",
+      "speaker": "ana",
+      "hint": "Ana repeats the whole order.",
+      "line": [
+        { "id": "b9-l1", "template": "Perfect: {drinkPhrase} {extra}, {place}." }
+      ]
+    },
+    {
+      "id": "b10",
+      "speaker": "lucia",
+      "hint": "Lucía says goodbye.",
+      "line": [{ "id": "b10-l1", "template": "Thanks, Ana!" }]
+    }
+  ]
+}

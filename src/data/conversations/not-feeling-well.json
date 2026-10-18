@@ -1,0 +1,1065 @@
+{
+  "id": "not-feeling-well",
+  "title": "Not Feeling Well",
+  "l1": "en",
+  "l2": "es",
+  "characters": {
+    "elena": {
+      "name": "Elena",
+      "voice": "F4"
+    },
+    "diego": {
+      "name": "Diego",
+      "voice": "M3"
+    }
+  },
+  "order": [
+    "b1",
+    "b2",
+    "b3",
+    "b4",
+    "b5",
+    "b6",
+    "b7",
+    "b8",
+    "b9",
+    "b10"
+  ],
+  "beats": {
+    "b1": {
+      "id": "b1",
+      "index": 0,
+      "speaker": "elena",
+      "kind": "line",
+      "hint": "Elena notices Diego is unwell.",
+      "alternatives": [
+        {
+          "id": "b1-l1",
+          "slotNames": []
+        }
+      ]
+    },
+    "b2": {
+      "id": "b2",
+      "index": 1,
+      "speaker": "diego",
+      "kind": "choice",
+      "hint": "Diego says what is wrong.",
+      "alternatives": [
+        {
+          "id": "b2-s1",
+          "slotNames": [
+            "symptom"
+          ],
+          "options": [
+            {
+              "key": "head",
+              "label": {
+                "l1": "Head",
+                "l2": "La cabeza"
+              },
+              "icon": "🤕",
+              "sets": {
+                "ache": "head",
+                "symptom": "headache"
+              },
+              "slotNames": [
+                "symptom"
+              ]
+            },
+            {
+              "key": "stomach",
+              "label": {
+                "l1": "Stomach",
+                "l2": "El estómago"
+              },
+              "icon": "🤢",
+              "sets": {
+                "ache": "stomach",
+                "symptom": "stomachache"
+              },
+              "slotNames": [
+                "symptom"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "b3": {
+      "id": "b3",
+      "index": 2,
+      "speaker": "elena",
+      "kind": "line",
+      "hint": "Elena is worried.",
+      "alternatives": [
+        {
+          "id": "b3-l1",
+          "slotNames": [
+            "symptom"
+          ]
+        }
+      ]
+    },
+    "b4": {
+      "id": "b4",
+      "index": 3,
+      "speaker": "diego",
+      "kind": "choice",
+      "hint": "Diego asks for something.",
+      "alternatives": [
+        {
+          "id": "b4-head",
+          "when": {
+            "ache": "head"
+          },
+          "slotNames": [
+            "remedy"
+          ],
+          "options": [
+            {
+              "key": "aspirin",
+              "label": {
+                "l1": "An aspirin",
+                "l2": "Una aspirina"
+              },
+              "icon": "💊",
+              "sets": {
+                "remedy": "aspirin"
+              },
+              "slotNames": [
+                "remedy"
+              ]
+            },
+            {
+              "key": "lie-down",
+              "label": {
+                "l1": "A lie-down",
+                "l2": "Echarte un rato"
+              },
+              "icon": "🛏️",
+              "sets": {
+                "remedy": "lie-down"
+              },
+              "slotNames": [
+                "remedy"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "b4-stomach",
+          "when": {
+            "ache": "stomach"
+          },
+          "slotNames": [
+            "remedy"
+          ],
+          "options": [
+            {
+              "key": "herbal-tea",
+              "label": {
+                "l1": "Herbal tea",
+                "l2": "Una infusión"
+              },
+              "icon": "🍵",
+              "sets": {
+                "remedy": "herbal-tea"
+              },
+              "slotNames": [
+                "remedy"
+              ]
+            },
+            {
+              "key": "hot-water",
+              "label": {
+                "l1": "Hot water bottle",
+                "l2": "Bolsa de agua caliente"
+              },
+              "icon": "♨️",
+              "sets": {
+                "remedy": "hot-water"
+              },
+              "slotNames": [
+                "remedy"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "b5": {
+      "id": "b5",
+      "index": 4,
+      "speaker": "elena",
+      "kind": "line",
+      "hint": "Elena offers to help.",
+      "alternatives": [
+        {
+          "id": "b5-l1",
+          "slotNames": [
+            "remedy"
+          ]
+        }
+      ]
+    },
+    "b6": {
+      "id": "b6",
+      "index": 5,
+      "speaker": "diego",
+      "kind": "choice",
+      "hint": "Diego decides what to do.",
+      "alternatives": [
+        {
+          "id": "b6-s1",
+          "slotNames": [
+            "plan"
+          ],
+          "options": [
+            {
+              "key": "lie-down",
+              "label": {
+                "l1": "Lie down",
+                "l2": "Tumbarme"
+              },
+              "icon": "😴",
+              "sets": {
+                "plan": "lie-down"
+              },
+              "slotNames": [
+                "plan"
+              ]
+            },
+            {
+              "key": "go-home",
+              "label": {
+                "l1": "Go home",
+                "l2": "Irme a casa"
+              },
+              "icon": "🏠",
+              "sets": {
+                "plan": "go-home"
+              },
+              "slotNames": [
+                "plan"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "b7": {
+      "id": "b7",
+      "index": 6,
+      "speaker": "elena",
+      "kind": "line",
+      "hint": "Elena gives him advice.",
+      "alternatives": [
+        {
+          "id": "b7-l1",
+          "slotNames": [
+            "plan"
+          ]
+        }
+      ]
+    },
+    "b8": {
+      "id": "b8",
+      "index": 7,
+      "speaker": "diego",
+      "kind": "choice",
+      "hint": "Diego says where he'll go.",
+      "alternatives": [
+        {
+          "id": "b8-s1",
+          "slotNames": [
+            "where"
+          ],
+          "options": [
+            {
+              "key": "pharmacy",
+              "label": {
+                "l1": "The pharmacy",
+                "l2": "La farmacia"
+              },
+              "icon": "💊",
+              "sets": {
+                "where": "pharmacy"
+              },
+              "slotNames": [
+                "where"
+              ]
+            },
+            {
+              "key": "doctor",
+              "label": {
+                "l1": "The doctor",
+                "l2": "El médico"
+              },
+              "icon": "🩺",
+              "sets": {
+                "where": "doctor"
+              },
+              "slotNames": [
+                "where"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "b9": {
+      "id": "b9",
+      "index": 8,
+      "speaker": "elena",
+      "kind": "line",
+      "hint": "Elena repeats the advice.",
+      "alternatives": [
+        {
+          "id": "b9-l1",
+          "slotNames": [
+            "symptom",
+            "plan",
+            "where"
+          ]
+        }
+      ]
+    },
+    "b10": {
+      "id": "b10",
+      "index": 9,
+      "speaker": "diego",
+      "kind": "line",
+      "hint": "Diego thanks her.",
+      "alternatives": [
+        {
+          "id": "b10-l1",
+          "slotNames": []
+        }
+      ]
+    }
+  },
+  "lines": {
+    "b1|b1-l1": {
+      "beatId": "b1",
+      "alternativeId": "b1-l1",
+      "variantKey": "b1|b1-l1",
+      "l1": "Are you all right, Diego? You look pale.",
+      "l2": "¿Estás bien, Diego? Tienes mala cara.",
+      "mt": "¿Estás bien, Diego? Tienes mala cara.",
+      "sourceHash": "sha256:v1:82f633edef2a58258fd23705bc33a0c5e7223d7e80bb5212f22bb732ebc1beb9",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b2|head|symptom=headache": {
+      "beatId": "b2",
+      "alternativeId": "b2-s1",
+      "optionKey": "head",
+      "variantKey": "b2|head|symptom=headache",
+      "l1": "I've had a headache all morning.",
+      "l2": "Llevo toda la mañana con dolor de cabeza.",
+      "mt": "Llevo toda la mañana con dolor de cabeza.",
+      "sourceHash": "sha256:v1:e98c38527e0e79ea9148cbfe2b96bf91db8d1eb79c8ee781b7af7c4a53a45799",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b2|stomach|symptom=stomachache": {
+      "beatId": "b2",
+      "alternativeId": "b2-s1",
+      "optionKey": "stomach",
+      "variantKey": "b2|stomach|symptom=stomachache",
+      "l1": "I think I've got a stomachache.",
+      "l2": "Creo que me duele el estómago.",
+      "mt": "Creo que me duele el estómago.",
+      "sourceHash": "sha256:v1:8ec562790629139fedf5d22501c25e5d8b225c733cb0972e7a2a1c7d65a11225",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b3|b3-l1|symptom=headache": {
+      "beatId": "b3",
+      "alternativeId": "b3-l1",
+      "variantKey": "b3|b3-l1|symptom=headache",
+      "l1": "Oh no, a headache?",
+      "l2": "Ay, ¿te duele la cabeza?",
+      "mt": "Ay, ¿te duele la cabeza?",
+      "sourceHash": "sha256:v1:7d194bc2d5a2326a9e7e1b13d55cf439782b8ee0ecb23581be57fe2f38946649",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b3|b3-l1|symptom=stomachache": {
+      "beatId": "b3",
+      "alternativeId": "b3-l1",
+      "variantKey": "b3|b3-l1|symptom=stomachache",
+      "l1": "Oh no, a stomachache?",
+      "l2": "Ay, ¿te duele el estómago?",
+      "mt": "Ay, ¿te duele el estómago?",
+      "sourceHash": "sha256:v1:3edfa9b4601937d6b2a8f4cf94c3d77af4b26d2b91dbfe9071fa7203ae0c4efe",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b4|aspirin|remedy=aspirin": {
+      "beatId": "b4",
+      "alternativeId": "b4-head",
+      "optionKey": "aspirin",
+      "variantKey": "b4|aspirin|remedy=aspirin",
+      "l1": "Maybe an aspirin?",
+      "l2": "¿Quizá una aspirina?",
+      "mt": "¿Quizá una aspirina?",
+      "sourceHash": "sha256:v1:0dd9d95d68a562ae311d1cd45d0230b4fed1691d9108bb29446a9508f1294c18",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b4|lie-down|remedy=lie-down": {
+      "beatId": "b4",
+      "alternativeId": "b4-head",
+      "optionKey": "lie-down",
+      "variantKey": "b4|lie-down|remedy=lie-down",
+      "l1": "Maybe a lie-down?",
+      "l2": "¿Quizá echarte un rato?",
+      "mt": "¿Quizá echarte un rato?",
+      "sourceHash": "sha256:v1:d4344010e47e2d8e9cbc63e04e6966bdf5681c9c41034a8b8322c14556d4acfe",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b4|herbal-tea|remedy=herbal-tea": {
+      "beatId": "b4",
+      "alternativeId": "b4-stomach",
+      "optionKey": "herbal-tea",
+      "variantKey": "b4|herbal-tea|remedy=herbal-tea",
+      "l1": "Maybe some herbal tea?",
+      "l2": "¿Quizá una infusión?",
+      "mt": "¿Quizá una infusión?",
+      "sourceHash": "sha256:v1:c67876a80b898ee4d524fe6a3188b7d2750b7e34615d31ea172642f911d3c80b",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b4|hot-water|remedy=hot-water": {
+      "beatId": "b4",
+      "alternativeId": "b4-stomach",
+      "optionKey": "hot-water",
+      "variantKey": "b4|hot-water|remedy=hot-water",
+      "l1": "Maybe a hot water bottle?",
+      "l2": "¿Quizá una bolsa de agua caliente?",
+      "mt": "¿Quizá una bolsa de agua caliente?",
+      "sourceHash": "sha256:v1:49ea4c642a02a247279393b5031446ff1d8a8d349283aa866efb112b223031b4",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b5|b5-l1|remedy=aspirin": {
+      "beatId": "b5",
+      "alternativeId": "b5-l1",
+      "variantKey": "b5|b5-l1|remedy=aspirin",
+      "l1": "Do you want an aspirin?",
+      "l2": "¿Quieres una aspirina?",
+      "mt": "¿Quieres una aspirina?",
+      "sourceHash": "sha256:v1:bf018157dcb3f8bb798bca0a015c22aac44725638fefecb8978e7b664a775083",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b5|b5-l1|remedy=lie-down": {
+      "beatId": "b5",
+      "alternativeId": "b5-l1",
+      "variantKey": "b5|b5-l1|remedy=lie-down",
+      "l1": "Do you want a lie-down?",
+      "l2": "¿Quieres echarte un rato?",
+      "mt": "¿Quieres echarte un rato?",
+      "sourceHash": "sha256:v1:d2239ea85b3c53a094ac309cb8a4d345c002c8e1d2b537369e745e1bfddecc8a",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b5|b5-l1|remedy=herbal-tea": {
+      "beatId": "b5",
+      "alternativeId": "b5-l1",
+      "variantKey": "b5|b5-l1|remedy=herbal-tea",
+      "l1": "Do you want some herbal tea?",
+      "l2": "¿Quieres una infusión?",
+      "mt": "¿Quieres una infusión?",
+      "sourceHash": "sha256:v1:c363e786273086662b2a8c01d00e4fe188ca30422b467af97cb1b426a5ed7801",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b5|b5-l1|remedy=hot-water": {
+      "beatId": "b5",
+      "alternativeId": "b5-l1",
+      "variantKey": "b5|b5-l1|remedy=hot-water",
+      "l1": "Do you want a hot water bottle?",
+      "l2": "¿Quieres una bolsa de agua caliente?",
+      "mt": "¿Quieres una bolsa de agua caliente?",
+      "sourceHash": "sha256:v1:0acf105f37afbba246cf0a4fba4065b0f6a1d43b56e5a662d195e2f99a5c2ae3",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b6|lie-down|plan=lie-down": {
+      "beatId": "b6",
+      "alternativeId": "b6-s1",
+      "optionKey": "lie-down",
+      "variantKey": "b6|lie-down|plan=lie-down",
+      "l1": "I think I'll lie down.",
+      "l2": "Creo que me voy a tumbar.",
+      "mt": "Creo que me voy a tumbar.",
+      "sourceHash": "sha256:v1:7f93b4d0e9ded19d8e4c557821572037a05994cb5f61fc23f0e14506cdf2f994",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b6|go-home|plan=go-home": {
+      "beatId": "b6",
+      "alternativeId": "b6-s1",
+      "optionKey": "go-home",
+      "variantKey": "b6|go-home|plan=go-home",
+      "l1": "I think I'll go home.",
+      "l2": "Creo que me voy a ir a casa.",
+      "mt": "Creo que me voy a ir a casa.",
+      "sourceHash": "sha256:v1:ba49e80476c83f28f4573dd4e464f8a91115559eb979e6e02f5bef436ba1a2f0",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b7|b7-l1|plan=lie-down": {
+      "beatId": "b7",
+      "alternativeId": "b7-l1",
+      "variantKey": "b7|b7-l1|plan=lie-down",
+      "l1": "You should lie down, then.",
+      "l2": "Entonces deberías tumbarte.",
+      "mt": "Entonces deberías tumbarte.",
+      "sourceHash": "sha256:v1:66b277187643286fbf2423b43b4d9aa9eba776e0feed60d7195a72e3911678fd",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b7|b7-l1|plan=go-home": {
+      "beatId": "b7",
+      "alternativeId": "b7-l1",
+      "variantKey": "b7|b7-l1|plan=go-home",
+      "l1": "You should go home, then.",
+      "l2": "Entonces deberías irte a casa.",
+      "mt": "Entonces deberías irte a casa.",
+      "sourceHash": "sha256:v1:d58f6071d8cbb8a9fa61e2ac7b48f5e604939581bdcbe198a1fbee58683c716e",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b8|pharmacy|where=pharmacy": {
+      "beatId": "b8",
+      "alternativeId": "b8-s1",
+      "optionKey": "pharmacy",
+      "variantKey": "b8|pharmacy|where=pharmacy",
+      "l1": "I'll go to the pharmacy.",
+      "l2": "Voy a ir a la farmacia.",
+      "mt": "Voy a ir a la farmacia.",
+      "sourceHash": "sha256:v1:8b59ee5fe432a6691fbc505fd12c5bd87f6401af2c69ffa31a8560dc9b390c53",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b8|doctor|where=doctor": {
+      "beatId": "b8",
+      "alternativeId": "b8-s1",
+      "optionKey": "doctor",
+      "variantKey": "b8|doctor|where=doctor",
+      "l1": "I'll see the doctor.",
+      "l2": "Voy a ir al médico.",
+      "mt": "Voy a ir al médico.",
+      "sourceHash": "sha256:v1:cd746b17bcc35ffe2ff2275cca9eb6e0cadd2ab5114a1c185bf321189509c3ba",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b9|b9-l1|plan=lie-down|symptom=headache|where=pharmacy": {
+      "beatId": "b9",
+      "alternativeId": "b9-l1",
+      "variantKey": "b9|b9-l1|plan=lie-down|symptom=headache|where=pharmacy",
+      "l1": "Right. With a headache, you should lie down, and then go to the pharmacy.",
+      "l2": "Vale. Con dolor de cabeza, deberías tumbarte, y luego ir a la farmacia.",
+      "mt": "Vale. Con dolor de cabeza, deberías tumbarte, y luego ir a la farmacia.",
+      "sourceHash": "sha256:v1:42f265c1581c84f9168e9402ae2d1738f1f8bb0621e6164e2531724b9c96403e",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b9|b9-l1|plan=lie-down|symptom=headache|where=doctor": {
+      "beatId": "b9",
+      "alternativeId": "b9-l1",
+      "variantKey": "b9|b9-l1|plan=lie-down|symptom=headache|where=doctor",
+      "l1": "Right. With a headache, you should lie down, and then see the doctor.",
+      "l2": "Vale. Con dolor de cabeza, deberías tumbarte, y luego ir al médico.",
+      "mt": "Vale. Con dolor de cabeza, deberías tumbarte, y luego ir al médico.",
+      "sourceHash": "sha256:v1:d9b926088927a9e075c84d8bf081e901f9722e04377cf2d5642483920249f345",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b9|b9-l1|plan=go-home|symptom=headache|where=pharmacy": {
+      "beatId": "b9",
+      "alternativeId": "b9-l1",
+      "variantKey": "b9|b9-l1|plan=go-home|symptom=headache|where=pharmacy",
+      "l1": "Right. With a headache, you should go home, and then go to the pharmacy.",
+      "l2": "Vale. Con dolor de cabeza, deberías irte a casa, y luego ir a la farmacia.",
+      "mt": "Vale. Con dolor de cabeza, deberías irte a casa, y luego ir a la farmacia.",
+      "sourceHash": "sha256:v1:effa45f47f6c3df4ad0bc94170f558b5de633c72372739c3a3498d071c63a662",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b9|b9-l1|plan=go-home|symptom=headache|where=doctor": {
+      "beatId": "b9",
+      "alternativeId": "b9-l1",
+      "variantKey": "b9|b9-l1|plan=go-home|symptom=headache|where=doctor",
+      "l1": "Right. With a headache, you should go home, and then see the doctor.",
+      "l2": "Vale. Con dolor de cabeza, deberías irte a casa, y luego ir al médico.",
+      "mt": "Vale. Con dolor de cabeza, deberías irte a casa, y luego ir al médico.",
+      "sourceHash": "sha256:v1:cbf6ea1234ad1d38566a1d70979a4e887f421b6b4dbde2e396b782679b8df087",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b9|b9-l1|plan=lie-down|symptom=stomachache|where=pharmacy": {
+      "beatId": "b9",
+      "alternativeId": "b9-l1",
+      "variantKey": "b9|b9-l1|plan=lie-down|symptom=stomachache|where=pharmacy",
+      "l1": "Right. With a stomachache, you should lie down, and then go to the pharmacy.",
+      "l2": "Vale. Con dolor de estómago, deberías tumbarte, y luego ir a la farmacia.",
+      "mt": "Vale. Con dolor de estómago, deberías tumbarte, y luego ir a la farmacia.",
+      "sourceHash": "sha256:v1:6df4097d654ab6fbed43f5576f3962d0039e138eeaf1de465b99a071875ea958",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b9|b9-l1|plan=lie-down|symptom=stomachache|where=doctor": {
+      "beatId": "b9",
+      "alternativeId": "b9-l1",
+      "variantKey": "b9|b9-l1|plan=lie-down|symptom=stomachache|where=doctor",
+      "l1": "Right. With a stomachache, you should lie down, and then see the doctor.",
+      "l2": "Vale. Con dolor de estómago, deberías tumbarte, y luego ir al médico.",
+      "mt": "Vale. Con dolor de estómago, deberías tumbarte, y luego ir al médico.",
+      "sourceHash": "sha256:v1:5b5c27a0765a5701722a5c113a5556682f8fc36d6aea207c507933238bf1cef7",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b9|b9-l1|plan=go-home|symptom=stomachache|where=pharmacy": {
+      "beatId": "b9",
+      "alternativeId": "b9-l1",
+      "variantKey": "b9|b9-l1|plan=go-home|symptom=stomachache|where=pharmacy",
+      "l1": "Right. With a stomachache, you should go home, and then go to the pharmacy.",
+      "l2": "Vale. Con dolor de estómago, deberías irte a casa, y luego ir a la farmacia.",
+      "mt": "Vale. Con dolor de estómago, deberías irte a casa, y luego ir a la farmacia.",
+      "sourceHash": "sha256:v1:3943e2f18fdabd63d33abd62331eefb7d4d5ac70b9883f981b0e16bb0b31c08a",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b9|b9-l1|plan=go-home|symptom=stomachache|where=doctor": {
+      "beatId": "b9",
+      "alternativeId": "b9-l1",
+      "variantKey": "b9|b9-l1|plan=go-home|symptom=stomachache|where=doctor",
+      "l1": "Right. With a stomachache, you should go home, and then see the doctor.",
+      "l2": "Vale. Con dolor de estómago, deberías irte a casa, y luego ir al médico.",
+      "mt": "Vale. Con dolor de estómago, deberías irte a casa, y luego ir al médico.",
+      "sourceHash": "sha256:v1:2eaa796af6dec0ddba023a56a1b34fa65a661d9142ed5e7b148de5a99401e690",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b10|b10-l1": {
+      "beatId": "b10",
+      "alternativeId": "b10-l1",
+      "variantKey": "b10|b10-l1",
+      "l1": "Thanks, Elena.",
+      "l2": "Gracias, Elena.",
+      "mt": "Gracias, Elena.",
+      "sourceHash": "sha256:v1:2c1fec1ac74b44521c7e56590b7d9c2c2ce8c0d6bb8e93bdfc8615223a1e7d44",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    }
+  },
+  "gloss": {
+    "estás bien, diego? tienes mala cara": {
+      "l1": "Are you all right, Diego? You look pale.",
+      "origin": "mt",
+      "mt": "Are you all right, Diego? You look pale.",
+      "reviewedBy": "agent"
+    },
+    "estás bien, diego": {
+      "l1": "Are you all right, Diego?",
+      "origin": "mt",
+      "mt": "Are you all right, Diego?",
+      "reviewedBy": "agent"
+    },
+    "estás bien": {
+      "l1": "you're all right",
+      "origin": "mt",
+      "mt": "you're all right",
+      "reviewedBy": "agent"
+    },
+    "diego": {
+      "l1": "Diego",
+      "origin": "mt",
+      "mt": "Diego",
+      "reviewedBy": "agent"
+    },
+    "tienes mala cara": {
+      "l1": "You look pale",
+      "origin": "mt",
+      "mt": "You look pale",
+      "reviewedBy": "agent"
+    },
+    "llevo toda la mañana con dolor de cabeza": {
+      "l1": "I've had a headache all morning.",
+      "origin": "mt",
+      "mt": "I've had a headache all morning.",
+      "reviewedBy": "agent"
+    },
+    "llevo toda la": {
+      "l1": "I've had all",
+      "origin": "mt",
+      "mt": "I've had all",
+      "reviewedBy": "agent"
+    },
+    "creo que me duele el estómago": {
+      "l1": "I think I've got a stomachache.",
+      "origin": "mt",
+      "mt": "I think I've got a stomachache.",
+      "reviewedBy": "agent"
+    },
+    "creo": {
+      "l1": "I think",
+      "origin": "mt",
+      "mt": "I think",
+      "reviewedBy": "agent"
+    },
+    "que me duele el estómago": {
+      "l1": "that my stomach hurts",
+      "origin": "mt",
+      "mt": "that my stomach hurts",
+      "reviewedBy": "agent"
+    },
+    "me duele el estómago": {
+      "l1": "my stomach hurts",
+      "origin": "mt",
+      "mt": "my stomach hurts",
+      "reviewedBy": "agent"
+    },
+    "ay, ¿te duele la cabeza": {
+      "l1": "Oh no, a headache?",
+      "origin": "mt",
+      "mt": "Oh no, a headache?",
+      "reviewedBy": "agent"
+    },
+    "ay": {
+      "l1": "oh",
+      "origin": "mt",
+      "mt": "oh",
+      "reviewedBy": "agent"
+    },
+    "te duele la cabeza": {
+      "l1": "your head hurts",
+      "origin": "mt",
+      "mt": "your head hurts",
+      "reviewedBy": "agent"
+    },
+    "ay, ¿te duele el estómago": {
+      "l1": "Oh no, a stomachache?",
+      "origin": "mt",
+      "mt": "Oh no, a stomachache?",
+      "reviewedBy": "agent"
+    },
+    "te duele el estómago": {
+      "l1": "your stomach hurts",
+      "origin": "mt",
+      "mt": "your stomach hurts",
+      "reviewedBy": "agent"
+    },
+    "quizá una aspirina": {
+      "l1": "Maybe an aspirin?",
+      "origin": "mt",
+      "mt": "Maybe an aspirin?",
+      "reviewedBy": "agent"
+    },
+    "quizá echarte un rato": {
+      "l1": "Maybe a lie-down?",
+      "origin": "mt",
+      "mt": "Maybe a lie-down?",
+      "reviewedBy": "agent"
+    },
+    "quizá una infusión": {
+      "l1": "Maybe some herbal tea?",
+      "origin": "mt",
+      "mt": "Maybe some herbal tea?",
+      "reviewedBy": "agent"
+    },
+    "quizá una bolsa de agua caliente": {
+      "l1": "Maybe a hot water bottle?",
+      "origin": "mt",
+      "mt": "Maybe a hot water bottle?",
+      "reviewedBy": "agent"
+    },
+    "quizá una bolsa": {
+      "l1": "maybe a bag",
+      "origin": "mt",
+      "mt": "maybe a bag",
+      "reviewedBy": "agent"
+    },
+    "quieres una aspirina": {
+      "l1": "Do you want an aspirin?",
+      "origin": "mt",
+      "mt": "Do you want an aspirin?",
+      "reviewedBy": "agent"
+    },
+    "quieres echarte un rato": {
+      "l1": "Do you want a lie-down?",
+      "origin": "mt",
+      "mt": "Do you want a lie-down?",
+      "reviewedBy": "agent"
+    },
+    "quieres una infusión": {
+      "l1": "Do you want some herbal tea?",
+      "origin": "mt",
+      "mt": "Do you want some herbal tea?",
+      "reviewedBy": "agent"
+    },
+    "quieres una bolsa de agua caliente": {
+      "l1": "Do you want a hot water bottle?",
+      "origin": "mt",
+      "mt": "Do you want a hot water bottle?",
+      "reviewedBy": "agent"
+    },
+    "quieres una bolsa": {
+      "l1": "you want a bag",
+      "origin": "mt",
+      "mt": "you want a bag",
+      "reviewedBy": "agent"
+    },
+    "creo que me voy a tumbar": {
+      "l1": "I think I'll lie down.",
+      "origin": "mt",
+      "mt": "I think I'll lie down.",
+      "reviewedBy": "agent"
+    },
+    "que me voy a tumbar": {
+      "l1": "that I'm going to lie down",
+      "origin": "mt",
+      "mt": "that I'm going to lie down",
+      "reviewedBy": "agent"
+    },
+    "me voy a tumbar": {
+      "l1": "I'm going to lie down",
+      "origin": "mt",
+      "mt": "I'm going to lie down",
+      "reviewedBy": "agent"
+    },
+    "creo que me voy a ir a casa": {
+      "l1": "I think I'll go home.",
+      "origin": "mt",
+      "mt": "I think I'll go home.",
+      "reviewedBy": "agent"
+    },
+    "que me voy a ir a casa": {
+      "l1": "that I'm going to go home",
+      "origin": "mt",
+      "mt": "that I'm going to go home",
+      "reviewedBy": "agent"
+    },
+    "me voy a ir a casa": {
+      "l1": "I'm going to go home",
+      "origin": "mt",
+      "mt": "I'm going to go home",
+      "reviewedBy": "agent"
+    },
+    "entonces deberías tumbarte": {
+      "l1": "You should lie down, then.",
+      "origin": "mt",
+      "mt": "You should lie down, then.",
+      "reviewedBy": "agent"
+    },
+    "entonces deberías irte a casa": {
+      "l1": "You should go home, then.",
+      "origin": "mt",
+      "mt": "You should go home, then.",
+      "reviewedBy": "agent"
+    },
+    "voy a ir a la farmacia": {
+      "l1": "I'll go to the pharmacy.",
+      "origin": "mt",
+      "mt": "I'll go to the pharmacy.",
+      "reviewedBy": "agent"
+    },
+    "voy a ir al médico": {
+      "l1": "I'll see the doctor.",
+      "origin": "mt",
+      "mt": "I'll see the doctor.",
+      "reviewedBy": "agent"
+    },
+    "vale. con dolor de cabeza, deberías tumbarte, y luego ir a la farmacia": {
+      "l1": "Right. With a headache, you should lie down, and then go to the pharmacy.",
+      "origin": "mt",
+      "mt": "Right. With a headache, you should lie down, and then go to the pharmacy.",
+      "reviewedBy": "agent"
+    },
+    "vale": {
+      "l1": "Right",
+      "origin": "mt",
+      "mt": "Right",
+      "reviewedBy": "agent"
+    },
+    "con dolor de cabeza, deberías tumbarte, y luego ir a la farmacia": {
+      "l1": "With a headache, you should lie down, and then go to the pharmacy",
+      "origin": "mt",
+      "mt": "With a headache, you should lie down, and then go to the pharmacy",
+      "reviewedBy": "agent"
+    },
+    "con dolor de cabeza": {
+      "l1": "with a headache,",
+      "origin": "mt",
+      "mt": "with a headache,",
+      "reviewedBy": "agent"
+    },
+    "con dolor": {
+      "l1": "with pain",
+      "origin": "mt",
+      "mt": "with pain",
+      "reviewedBy": "agent"
+    },
+    "deberías tumbarte": {
+      "l1": "you should lie down,",
+      "origin": "mt",
+      "mt": "you should lie down,",
+      "reviewedBy": "agent"
+    },
+    "y luego ir a la farmacia": {
+      "l1": "and then go to the pharmacy",
+      "origin": "mt",
+      "mt": "and then go to the pharmacy",
+      "reviewedBy": "agent"
+    },
+    "luego ir a la farmacia": {
+      "l1": "then go to the pharmacy",
+      "origin": "mt",
+      "mt": "then go to the pharmacy",
+      "reviewedBy": "agent"
+    },
+    "vale. con dolor de cabeza, deberías tumbarte, y luego ir al médico": {
+      "l1": "Right. With a headache, you should lie down, and then see the doctor.",
+      "origin": "mt",
+      "mt": "Right. With a headache, you should lie down, and then see the doctor.",
+      "reviewedBy": "agent"
+    },
+    "con dolor de cabeza, deberías tumbarte, y luego ir al médico": {
+      "l1": "With a headache, you should lie down, and then see the doctor",
+      "origin": "mt",
+      "mt": "With a headache, you should lie down, and then see the doctor",
+      "reviewedBy": "agent"
+    },
+    "y luego ir al médico": {
+      "l1": "and then see the doctor",
+      "origin": "mt",
+      "mt": "and then see the doctor",
+      "reviewedBy": "agent"
+    },
+    "luego ir al médico": {
+      "l1": "then see the doctor",
+      "origin": "mt",
+      "mt": "then see the doctor",
+      "reviewedBy": "agent"
+    },
+    "vale. con dolor de cabeza, deberías irte a casa, y luego ir a la farmacia": {
+      "l1": "Right. With a headache, you should go home, and then go to the pharmacy.",
+      "origin": "mt",
+      "mt": "Right. With a headache, you should go home, and then go to the pharmacy.",
+      "reviewedBy": "agent"
+    },
+    "con dolor de cabeza, deberías irte a casa, y luego ir a la farmacia": {
+      "l1": "With a headache, you should go home, and then go to the pharmacy",
+      "origin": "mt",
+      "mt": "With a headache, you should go home, and then go to the pharmacy",
+      "reviewedBy": "agent"
+    },
+    "deberías irte a casa": {
+      "l1": "you should go home,",
+      "origin": "mt",
+      "mt": "you should go home,",
+      "reviewedBy": "agent"
+    },
+    "vale. con dolor de cabeza, deberías irte a casa, y luego ir al médico": {
+      "l1": "Right. With a headache, you should go home, and then see the doctor.",
+      "origin": "mt",
+      "mt": "Right. With a headache, you should go home, and then see the doctor.",
+      "reviewedBy": "agent"
+    },
+    "con dolor de cabeza, deberías irte a casa, y luego ir al médico": {
+      "l1": "With a headache, you should go home, and then see the doctor",
+      "origin": "mt",
+      "mt": "With a headache, you should go home, and then see the doctor",
+      "reviewedBy": "agent"
+    },
+    "vale. con dolor de estómago, deberías tumbarte, y luego ir a la farmacia": {
+      "l1": "Right. With a stomachache, you should lie down, and then go to the pharmacy.",
+      "origin": "mt",
+      "mt": "Right. With a stomachache, you should lie down, and then go to the pharmacy.",
+      "reviewedBy": "agent"
+    },
+    "con dolor de estómago, deberías tumbarte, y luego ir a la farmacia": {
+      "l1": "With a stomachache, you should lie down, and then go to the pharmacy",
+      "origin": "mt",
+      "mt": "With a stomachache, you should lie down, and then go to the pharmacy",
+      "reviewedBy": "agent"
+    },
+    "con dolor de estómago": {
+      "l1": "with a stomachache,",
+      "origin": "mt",
+      "mt": "with a stomachache,",
+      "reviewedBy": "agent"
+    },
+    "vale. con dolor de estómago, deberías tumbarte, y luego ir al médico": {
+      "l1": "Right. With a stomachache, you should lie down, and then see the doctor.",
+      "origin": "mt",
+      "mt": "Right. With a stomachache, you should lie down, and then see the doctor.",
+      "reviewedBy": "agent"
+    },
+    "con dolor de estómago, deberías tumbarte, y luego ir al médico": {
+      "l1": "With a stomachache, you should lie down, and then see the doctor",
+      "origin": "mt",
+      "mt": "With a stomachache, you should lie down, and then see the doctor",
+      "reviewedBy": "agent"
+    },
+    "vale. con dolor de estómago, deberías irte a casa, y luego ir a la farmacia": {
+      "l1": "Right. With a stomachache, you should go home, and then go to the pharmacy.",
+      "origin": "mt",
+      "mt": "Right. With a stomachache, you should go home, and then go to the pharmacy.",
+      "reviewedBy": "agent"
+    },
+    "con dolor de estómago, deberías irte a casa, y luego ir a la farmacia": {
+      "l1": "With a stomachache, you should go home, and then go to the pharmacy",
+      "origin": "mt",
+      "mt": "With a stomachache, you should go home, and then go to the pharmacy",
+      "reviewedBy": "agent"
+    },
+    "vale. con dolor de estómago, deberías irte a casa, y luego ir al médico": {
+      "l1": "Right. With a stomachache, you should go home, and then see the doctor.",
+      "origin": "mt",
+      "mt": "Right. With a stomachache, you should go home, and then see the doctor.",
+      "reviewedBy": "agent"
+    },
+    "con dolor de estómago, deberías irte a casa, y luego ir al médico": {
+      "l1": "With a stomachache, you should go home, and then see the doctor",
+      "origin": "mt",
+      "mt": "With a stomachache, you should go home, and then see the doctor",
+      "reviewedBy": "agent"
+    },
+    "gracias, elena": {
+      "l1": "Thanks, Elena.",
+      "origin": "mt",
+      "mt": "Thanks, Elena.",
+      "reviewedBy": "agent"
+    },
+    "gracias": {
+      "l1": "Thanks,",
+      "origin": "mt",
+      "mt": "Thanks,",
+      "reviewedBy": "agent"
+    },
+    "elena": {
+      "l1": "Elena",
+      "origin": "mt",
+      "mt": "Elena",
+      "reviewedBy": "agent"
+    }
+  },
+  "meta": {
+    "schemaVersion": 1,
+    "segmentationVersion": 1,
+    "generatedFrom": "not-feeling-well.source.json",
+    "sourceDigest": "sha256:v1:7781a4e42d417f7064662581c78b4ec24c6521ae5a491b76e4c40c40509807ca",
+    "reviewPolicy": "shipping",
+    "translator": {
+      "en2romance": "authored-1",
+      "romance2en": "authored-1"
+    }
+  }
+}

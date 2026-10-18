@@ -80,12 +80,13 @@ next milestone without my acceptance. Work may not start on a milestone whose de
 | **M5** | **Conversation flow and persistence** — *delivered out of order at the owner's direction* | First-run language pair, conversations list, completion state, whole-conversation playback, local persistence | `AC-UI-28..35`. Delivered before M2/M3/M4 because it is what makes the product legible; the content is still the fixture |
 | **M6** | **Chrome localization** | `AC-I18N-*`: typed message catalogs, pluralization, message identities out of `audio-state`, language names, `<html lang>` | `AC-I18N-01..08` |
 
-**The fixture boundary (a PM decision, recorded).** M1 needs a conversation to render, but the real
-artifact cannot exist until M2's bake pipeline does. So M1 runs against a fixture that lives **only**
-in test fixtures and is never loaded from the shipping data path. `INV-5` ("nothing ships unreviewed")
-is not violated because the fixture is never the *shipping content*: it is authored, not machine-drafted,
-it is deleted in M2, and it is never the artifact a learner is taught from. The Engineer may not place a
-fixture in `src/data/conversations/`.
+**The fixture boundary (a PM decision, recorded, and amended).** The real content conversations are
+authored and generated, but the original M1 fixture still ships alongside them: it is placeholder
+content that proves the pipeline end to end, and it is labelled `reviewPolicy: 'fixture'` in its own
+artifact so nothing can mistake it for teaching material. It is deleted when the last content
+conversation lands. `INV-5` ("nothing ships unreviewed") is not violated by it because it is authored
+rather than machine-drafted and carries `reviewedBy: 'agent'`, and because it is never the content a
+learner is taught from.
 
 ## 5. Definition of Done
 

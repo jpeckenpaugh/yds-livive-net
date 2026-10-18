@@ -1,0 +1,470 @@
+{
+  "todo bien, tomás? pareces perdido": {
+    "l1": "Everything all right, Tomás? You look lost.",
+    "origin": "mt",
+    "mt": "Everything all right, Tomás? You look lost.",
+    "reviewedBy": "agent"
+  },
+  "todo bien, tomás": {
+    "l1": "Everything all right, Tomás?",
+    "origin": "mt",
+    "mt": "Everything all right, Tomás?",
+    "reviewedBy": "agent"
+  },
+  "todo bien": {
+    "l1": "everything all right",
+    "origin": "mt",
+    "mt": "everything all right",
+    "reviewedBy": "agent"
+  },
+  "tomás": {
+    "l1": "Tomás",
+    "origin": "mt",
+    "mt": "Tomás",
+    "reviewedBy": "agent"
+  },
+  "pareces perdido": {
+    "l1": "You look lost",
+    "origin": "mt",
+    "mt": "You look lost",
+    "reviewedBy": "agent"
+  },
+  "sí, un poco. voy en metro": {
+    "l1": "Yes, a bit. I'll go by metro.",
+    "origin": "mt",
+    "mt": "Yes, a bit. I'll go by metro.",
+    "reviewedBy": "agent"
+  },
+  "sí, un poco": {
+    "l1": "Yes, a bit",
+    "origin": "mt",
+    "mt": "Yes, a bit",
+    "reviewedBy": "agent"
+  },
+  "sí": {
+    "l1": "yes",
+    "origin": "mt",
+    "mt": "yes",
+    "reviewedBy": "agent"
+  },
+  "un poco": {
+    "l1": "a bit",
+    "origin": "mt",
+    "mt": "a bit",
+    "reviewedBy": "agent"
+  },
+  "voy en metro": {
+    "l1": "I'm going by metro",
+    "origin": "mt",
+    "mt": "I'm going by metro",
+    "reviewedBy": "agent"
+  },
+  "voy": {
+    "l1": "I'll go",
+    "origin": "mt",
+    "mt": "I'll go",
+    "reviewedBy": "agent"
+  },
+  "quizá vaya andando": {
+    "l1": "Maybe I'll just go on foot.",
+    "origin": "mt",
+    "mt": "Maybe I'll just go on foot.",
+    "reviewedBy": "agent"
+  },
+  "estoy de acuerdo, en metro va bien": {
+    "l1": "I agree, by metro works well.",
+    "origin": "mt",
+    "mt": "I agree, by metro works well.",
+    "reviewedBy": "agent"
+  },
+  "estoy de acuerdo": {
+    "l1": "I agree,",
+    "origin": "mt",
+    "mt": "I agree,",
+    "reviewedBy": "agent"
+  },
+  "estoy": {
+    "l1": "I am",
+    "origin": "mt",
+    "mt": "I am",
+    "reviewedBy": "agent"
+  },
+  "en metro va bien": {
+    "l1": "the metro is fine",
+    "origin": "mt",
+    "mt": "the metro is fine",
+    "reviewedBy": "agent"
+  },
+  "estoy de acuerdo, andando va bien": {
+    "l1": "I agree, on foot works well.",
+    "origin": "mt",
+    "mt": "I agree, on foot works well.",
+    "reviewedBy": "agent"
+  },
+  "andando va bien": {
+    "l1": "walking is fine",
+    "origin": "mt",
+    "mt": "walking is fine",
+    "reviewedBy": "agent"
+  },
+  "entonces cojo la línea roja hasta la tercera parada": {
+    "l1": "So I take the red line to the third stop?",
+    "origin": "mt",
+    "mt": "So I take the red line to the third stop?",
+    "reviewedBy": "agent"
+  },
+  "cojo la línea azul hasta la última parada": {
+    "l1": "Should I take the blue line to the last stop?",
+    "origin": "mt",
+    "mt": "Should I take the blue line to the last stop?",
+    "reviewedBy": "agent"
+  },
+  "entonces sigo todo recto y luego a la derecha": {
+    "l1": "So I go straight on and then right?",
+    "origin": "mt",
+    "mt": "So I go straight on and then right?",
+    "reviewedBy": "agent"
+  },
+  "entonces sigo todo recto": {
+    "l1": "then I keep going straight",
+    "origin": "mt",
+    "mt": "then I keep going straight",
+    "reviewedBy": "agent"
+  },
+  "y luego a la derecha": {
+    "l1": "and then right",
+    "origin": "mt",
+    "mt": "and then right",
+    "reviewedBy": "agent"
+  },
+  "luego a la derecha": {
+    "l1": "then right",
+    "origin": "mt",
+    "mt": "then right",
+    "reviewedBy": "agent"
+  },
+  "voy por el parque": {
+    "l1": "Should I go through the park?",
+    "origin": "mt",
+    "mt": "Should I go through the park?",
+    "reviewedBy": "agent"
+  },
+  "eso es: la línea roja hasta la tercera parada": {
+    "l1": "That's it — the red line to the third stop.",
+    "origin": "mt",
+    "mt": "That's it — the red line to the third stop.",
+    "reviewedBy": "agent"
+  },
+  "eso es: la línea azul hasta la última parada": {
+    "l1": "That's it — the blue line to the last stop.",
+    "origin": "mt",
+    "mt": "That's it — the blue line to the last stop.",
+    "reviewedBy": "agent"
+  },
+  "eso es: todo recto y luego a la derecha": {
+    "l1": "That's it — straight on and then right.",
+    "origin": "mt",
+    "mt": "That's it — straight on and then right.",
+    "reviewedBy": "agent"
+  },
+  "eso es: todo recto": {
+    "l1": "That's it: straight on",
+    "origin": "mt",
+    "mt": "That's it: straight on",
+    "reviewedBy": "agent"
+  },
+  "eso es: por el parque": {
+    "l1": "That's it — through the park.",
+    "origin": "mt",
+    "mt": "That's it — through the park.",
+    "reviewedBy": "agent"
+  },
+  "eso es": {
+    "l1": "That's it:",
+    "origin": "mt",
+    "mt": "That's it:",
+    "reviewedBy": "agent"
+  },
+  "y eso está cerca de la estación de tren": {
+    "l1": "And that's near the train station?",
+    "origin": "mt",
+    "mt": "And that's near the train station?",
+    "reviewedBy": "agent"
+  },
+  "eso está cerca": {
+    "l1": "that is close",
+    "origin": "mt",
+    "mt": "that is close",
+    "reviewedBy": "agent"
+  },
+  "está cerca del museo": {
+    "l1": "Is it close to the museum?",
+    "origin": "mt",
+    "mt": "Is it close to the museum?",
+    "reviewedBy": "agent"
+  },
+  "eso es la estación de tren, sí": {
+    "l1": "That's the train station, yes.",
+    "origin": "mt",
+    "mt": "That's the train station, yes.",
+    "reviewedBy": "agent"
+  },
+  "eso es la estación de tren": {
+    "l1": "That's the train station,",
+    "origin": "mt",
+    "mt": "That's the train station,",
+    "reviewedBy": "agent"
+  },
+  "eso es la estación": {
+    "l1": "That's the station",
+    "origin": "mt",
+    "mt": "That's the station",
+    "reviewedBy": "agent"
+  },
+  "eso es el museo, sí": {
+    "l1": "That's the museum, yes.",
+    "origin": "mt",
+    "mt": "That's the museum, yes.",
+    "reviewedBy": "agent"
+  },
+  "eso es el museo": {
+    "l1": "That's the museum,",
+    "origin": "mt",
+    "mt": "That's the museum,",
+    "reviewedBy": "agent"
+  },
+  "saco un billete sencillo": {
+    "l1": "Should I get a single ticket?",
+    "origin": "mt",
+    "mt": "Should I get a single ticket?",
+    "reviewedBy": "agent"
+  },
+  "o mejor un billete de día": {
+    "l1": "Or maybe a day pass?",
+    "origin": "mt",
+    "mt": "Or maybe a day pass?",
+    "reviewedBy": "agent"
+  },
+  "mejor un billete": {
+    "l1": "rather a ticket",
+    "origin": "mt",
+    "mt": "rather a ticket",
+    "reviewedBy": "agent"
+  },
+  "sin problema! entonces: en metro, la línea roja hasta la tercera parada, a la estación de tren": {
+    "l1": "No problem! So: by metro, the red line to the third stop, to the train station.",
+    "origin": "mt",
+    "mt": "No problem! So: by metro, the red line to the third stop, to the train station.",
+    "reviewedBy": "agent"
+  },
+  "sin problema": {
+    "l1": "no problem",
+    "origin": "mt",
+    "mt": "no problem",
+    "reviewedBy": "agent"
+  },
+  "entonces: en metro, la línea roja hasta la tercera parada, a la estación de tren": {
+    "l1": "So: by metro, the red line to the third stop, to the train station",
+    "origin": "mt",
+    "mt": "So: by metro, the red line to the third stop, to the train station",
+    "reviewedBy": "agent"
+  },
+  "entonces: en metro": {
+    "l1": "So: by metro,",
+    "origin": "mt",
+    "mt": "So: by metro,",
+    "reviewedBy": "agent"
+  },
+  "entonces": {
+    "l1": "so",
+    "origin": "mt",
+    "mt": "so",
+    "reviewedBy": "agent"
+  },
+  "la línea roja hasta la tercera parada": {
+    "l1": "the red line to the third stop,",
+    "origin": "mt",
+    "mt": "the red line to the third stop,",
+    "reviewedBy": "agent"
+  },
+  "a la estación de tren": {
+    "l1": "to the train station",
+    "origin": "mt",
+    "mt": "to the train station",
+    "reviewedBy": "agent"
+  },
+  "a la estación": {
+    "l1": "to the station",
+    "origin": "mt",
+    "mt": "to the station",
+    "reviewedBy": "agent"
+  },
+  "sin problema! entonces: en metro, la línea roja hasta la tercera parada, al museo": {
+    "l1": "No problem! So: by metro, the red line to the third stop, to the museum.",
+    "origin": "mt",
+    "mt": "No problem! So: by metro, the red line to the third stop, to the museum.",
+    "reviewedBy": "agent"
+  },
+  "entonces: en metro, la línea roja hasta la tercera parada, al museo": {
+    "l1": "So: by metro, the red line to the third stop, to the museum",
+    "origin": "mt",
+    "mt": "So: by metro, the red line to the third stop, to the museum",
+    "reviewedBy": "agent"
+  },
+  "al museo": {
+    "l1": "to the museum",
+    "origin": "mt",
+    "mt": "to the museum",
+    "reviewedBy": "agent"
+  },
+  "sin problema! entonces: en metro, la línea azul hasta la última parada, a la estación de tren": {
+    "l1": "No problem! So: by metro, the blue line to the last stop, to the train station.",
+    "origin": "mt",
+    "mt": "No problem! So: by metro, the blue line to the last stop, to the train station.",
+    "reviewedBy": "agent"
+  },
+  "entonces: en metro, la línea azul hasta la última parada, a la estación de tren": {
+    "l1": "So: by metro, the blue line to the last stop, to the train station",
+    "origin": "mt",
+    "mt": "So: by metro, the blue line to the last stop, to the train station",
+    "reviewedBy": "agent"
+  },
+  "la línea azul hasta la última parada": {
+    "l1": "the blue line to the last stop,",
+    "origin": "mt",
+    "mt": "the blue line to the last stop,",
+    "reviewedBy": "agent"
+  },
+  "sin problema! entonces: en metro, la línea azul hasta la última parada, al museo": {
+    "l1": "No problem! So: by metro, the blue line to the last stop, to the museum.",
+    "origin": "mt",
+    "mt": "No problem! So: by metro, the blue line to the last stop, to the museum.",
+    "reviewedBy": "agent"
+  },
+  "entonces: en metro, la línea azul hasta la última parada, al museo": {
+    "l1": "So: by metro, the blue line to the last stop, to the museum",
+    "origin": "mt",
+    "mt": "So: by metro, the blue line to the last stop, to the museum",
+    "reviewedBy": "agent"
+  },
+  "sin problema! entonces: andando, todo recto y luego a la derecha, a la estación de tren": {
+    "l1": "No problem! So: on foot, straight on and then right, to the train station.",
+    "origin": "mt",
+    "mt": "No problem! So: on foot, straight on and then right, to the train station.",
+    "reviewedBy": "agent"
+  },
+  "entonces: andando, todo recto y luego a la derecha, a la estación de tren": {
+    "l1": "So: on foot, straight on and then right, to the train station",
+    "origin": "mt",
+    "mt": "So: on foot, straight on and then right, to the train station",
+    "reviewedBy": "agent"
+  },
+  "entonces: andando": {
+    "l1": "So: on foot,",
+    "origin": "mt",
+    "mt": "So: on foot,",
+    "reviewedBy": "agent"
+  },
+  "todo recto": {
+    "l1": "straight on",
+    "origin": "mt",
+    "mt": "straight on",
+    "reviewedBy": "agent"
+  },
+  "sin problema! entonces: andando, todo recto y luego a la derecha, al museo": {
+    "l1": "No problem! So: on foot, straight on and then right, to the museum.",
+    "origin": "mt",
+    "mt": "No problem! So: on foot, straight on and then right, to the museum.",
+    "reviewedBy": "agent"
+  },
+  "entonces: andando, todo recto y luego a la derecha, al museo": {
+    "l1": "So: on foot, straight on and then right, to the museum",
+    "origin": "mt",
+    "mt": "So: on foot, straight on and then right, to the museum",
+    "reviewedBy": "agent"
+  },
+  "sin problema! entonces: andando, por el parque, a la estación de tren": {
+    "l1": "No problem! So: on foot, through the park, to the train station.",
+    "origin": "mt",
+    "mt": "No problem! So: on foot, through the park, to the train station.",
+    "reviewedBy": "agent"
+  },
+  "entonces: andando, por el parque, a la estación de tren": {
+    "l1": "So: on foot, through the park, to the train station",
+    "origin": "mt",
+    "mt": "So: on foot, through the park, to the train station",
+    "reviewedBy": "agent"
+  },
+  "por el parque": {
+    "l1": "through the park,",
+    "origin": "mt",
+    "mt": "through the park,",
+    "reviewedBy": "agent"
+  },
+  "sin problema! entonces: andando, por el parque, al museo": {
+    "l1": "No problem! So: on foot, through the park, to the museum.",
+    "origin": "mt",
+    "mt": "No problem! So: on foot, through the park, to the museum.",
+    "reviewedBy": "agent"
+  },
+  "entonces: andando, por el parque, al museo": {
+    "l1": "So: on foot, through the park, to the museum",
+    "origin": "mt",
+    "mt": "So: on foot, through the park, to the museum",
+    "reviewedBy": "agent"
+  },
+  "saco un billete sencillo, entonces. ¡gracias, marta": {
+    "l1": "I'll get a single ticket, then. Thanks, Marta!",
+    "origin": "mt",
+    "mt": "I'll get a single ticket, then. Thanks, Marta!",
+    "reviewedBy": "agent"
+  },
+  "saco un billete sencillo, entonces": {
+    "l1": "I'll get a single ticket, then",
+    "origin": "mt",
+    "mt": "I'll get a single ticket, then",
+    "reviewedBy": "agent"
+  },
+  "gracias, marta": {
+    "l1": "Thanks, Marta!",
+    "origin": "mt",
+    "mt": "Thanks, Marta!",
+    "reviewedBy": "agent"
+  },
+  "gracias": {
+    "l1": "thanks",
+    "origin": "mt",
+    "mt": "thanks",
+    "reviewedBy": "agent"
+  },
+  "marta": {
+    "l1": "Marta",
+    "origin": "mt",
+    "mt": "Marta",
+    "reviewedBy": "agent"
+  },
+  "saco un billete de día, entonces. ¡gracias, marta": {
+    "l1": "I'll get a day pass, then. Thanks, Marta!",
+    "origin": "mt",
+    "mt": "I'll get a day pass, then. Thanks, Marta!",
+    "reviewedBy": "agent"
+  },
+  "saco un billete de día, entonces": {
+    "l1": "I'll get a day pass, then",
+    "origin": "mt",
+    "mt": "I'll get a day pass, then",
+    "reviewedBy": "agent"
+  },
+  "saco un billete de día": {
+    "l1": "I'll get a day pass,",
+    "origin": "mt",
+    "mt": "I'll get a day pass,",
+    "reviewedBy": "agent"
+  },
+  "saco un billete": {
+    "l1": "I'll get a ticket",
+    "origin": "mt",
+    "mt": "I'll get a ticket",
+    "reviewedBy": "agent"
+  }
+}

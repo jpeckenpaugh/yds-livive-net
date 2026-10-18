@@ -66,7 +66,7 @@ The canonical glossary is **D2 §2**. This doc uses its terms without redefining
 
 The last row is why the layer map has a `registry` box: **D3's facts are data, not code.** A packaging decision, a precision chain, a licence, a byte total and a pinned revision are all one object, so the M2 decision is a data change and so is a licence correction. The **two-file split** (D3 §11.1, amendment C9) is what keeps the deferred packagings' repo ids out of the bundle while still letting AC-ENG-11 require them to exist somewhere: one file the browser imports, one file only bake imports.
 
-`src/data/conversation.ts` is the single import of a conversation artifact in `src/**` (D6 §2.1), which is what makes the M2 content swap one import path plus one deletion.
+`src/data/conversation.ts` is the sole importer of a conversation artifact in `src/**` (D6 §2.1, amendments F1/Y2): it exports `CONVERSATIONS: Conversation[]`, `src/data/catalog.ts` derives the catalog from it, and the M2 content swap is **one array entry added plus the fixture's deleted** — not the stale "one import path" claim.
 
 ---
 

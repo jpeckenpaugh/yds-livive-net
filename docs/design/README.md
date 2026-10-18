@@ -9,11 +9,11 @@ Lean, design-time resources for the "You Don't Say" SPA. Tables and lists over p
 | Artifact | Doc | Contains | Owner | Status |
 |----------|-----|----------|-------|--------|
 | **D1** | `D1-poc-contract.md` | Contract: north star, loop, MVP IN/OUT, Definition of Done, milestone map, **AC registry** (indexes the `AC-*` ids owned by D2–D6) | Project Manager | ✅ Frozen |
-| **D2** | [`D2-domain-model.md`](./D2-domain-model.md) | Authored source schema, generated artifact, `when` discipline, variable discipline + bound pairs, the timeline walk and its three projections, variant keys, provenance record and review policy, gloss index, `segmentL2`, session ops, `resolveTimeline`, `visibility`, **canonical semantic constants**, **diagnostic registry (49 codes)**, `AC-DOM-01..23` | Designer | ✅ **Frozen** |
+| **D2** | [`D2-domain-model.md`](./D2-domain-model.md) | Authored source schema, generated artifact, `when` discipline, variable discipline + bound pairs, the timeline walk and its three projections, variant keys, provenance record and review policy, gloss index, `segmentL2`, session ops, `resolveTimeline`, `visibility`, **canonical semantic constants**, **diagnostic registry (49 codes)**, `AC-DOM-01..24` | Designer | ✅ **Frozen** |
 | **D3** | [`D3-engines.md`](./D3-engines.md) | TTS port + M1 `speechSynthesis` adapter + M2 Supertonic adapter, capability flags and recorded M1 deviations, cache + cache keys + stable-key fallback, Web Worker seam, `Translator` port, model/revision/precision facts, the two-file asset registry, Downloads seam, `AC-ENG-01..22` | Designer | ✅ **Frozen** |
 | **D4** | [`D4-ui.md`](./D4-ui.md) | Component tree, store shape, the presentation matrix (8 rows, proven equivalent to all 32 preference states), **all playback sequencing and timing**, choice cards (pick / preview / replay-ghost), option icons, the `revealed` clamp decision, "What if", the G1/G2 state machine, keyboard, WCAG 2.2 AA, About/Licences, the shell / pair / list / completion / playback surfaces, chrome localization, `AC-UI-01..35` and `AC-I18N-01..08` | Designer | ✅ **Frozen** |
 | **D5** | [`D5-tooling.md`](./D5-tooling.md) | Exact compiler flags, npm scripts and exit codes, dependency split, the INV-1 lint boundary, the scoped vocabulary check, engine-derived bundle assertions, four Vitest projects, the CI job (never generates), the milestone-aware AC→test map, the M4 service-worker reserve, `AC-TOOL-01..23` | Designer | ✅ **Frozen** |
-| **D6** | [`D6-content-and-bake.md`](./D6-content-and-bake.md) | Authoring guide, the four files + the conversation entry module, the **entire bake pipeline** (phases 0–8, enumeration, injected `Translator`, staleness, human-edit preservation, review policy, pruning, `--conversation`, `--check`), triage/adjudication and flag-list format, coverage report, and the **10-beat English/Spanish spec**, `AC-CONTENT-01..22` | Designer | ✅ **Frozen** |
+| **D6** | [`D6-content-and-bake.md`](./D6-content-and-bake.md) | Authoring guide, the four files + the conversation entry module, the **entire bake pipeline** (phases 0–8, enumeration, injected `Translator`, staleness, human-edit preservation, review policy, pruning, `--conversation`, `--check`), triage/adjudication and flag-list format, coverage report, and the **10-beat English/Spanish spec**, `AC-CONTENT-01..25` | Designer | ✅ **Frozen** |
 | **D7** | [`D7-architecture.md`](./D7-architecture.md) | Layer map and dependency rules, end-to-end data flow, runtime module graph, worker topology (no worker box in M1), the accurate swap checklist, build vs runtime topology, the cross-cutting invariant index, the failure topology, an Engineer reading order, `AC-ARCH-01..13` | Designer | ✅ **Frozen** |
 | — | `src/domain/types.ts` | Frozen domain contracts (D2 owns) | Designer | ✅ **Frozen** |
 | — | `src/engines/ports.ts` | Frozen engine ports (D3 owns) | Designer | ✅ **Frozen** |
@@ -26,7 +26,7 @@ Lean, design-time resources for the "You Don't Say" SPA. Tables and lists over p
 - **M2 TTS:** Supertonic 3, `onnx-community/Supertonic-TTS-ONNX`, default device WebGPU with automatic WASM fallback, voices `M1`–`M5` / `F1`–`F5`. One voice identity per character across languages.
 - **Translation:** build-time only, in Node, via `bake`. The browser ships **zero translation code and zero translation models**.
 - **Stack:** Vite + Preact + TypeScript. Hand-rolled `useReducer` + context for state; no additional runtime dependency.
-- **MT is a draft tool.** MT drafts every line and every gloss span; a separate review agent triages suspected errors; **the owner adjudicates the flag list**. `reviewedBy` is recorded per line and per gloss and CI fails on `null`.
+- **A translator is a draft tool, and the only drafter.** It drafts every line and every gloss span — a pinned MT model **or** an authored bilingual table, recorded in the artifact as `meta.translator`/`translationRev` (D2 §7.2); a separate review agent triages suspected errors; **the owner adjudicates the flag list**. `reviewedBy` is recorded per line and per gloss and CI fails on `null`.
 
 ## Recorded deviations and amendments
 
@@ -66,6 +66,33 @@ The Engineer's M1a recon produced eight escalations and one incident. Every fix 
 
 **New ids this round:** `AC-TOOL-24`, `AC-DOM-24`, `AC-CONTENT-23`, `AC-CONTENT-24`, `AC-CONTENT-25`. Diagnostics unchanged at **49**.
 
+## Freeze amendments, round 3 (2026-10-18) — shipping provenance, and four doc/code reconciliations
+
+The Editorial agent's M2-recon found that the docs assumed MT was the only possible source of `l2`, and that four specs described behaviour the code does not implement. Every fix is an annotation to a frozen doc; **statuses stay ✅ Frozen** and no AC id is renumbered.
+
+| # | Item | Resolution |
+|---|---|---|
+| **Y1** | A shipping artifact had only one honest provenance | **Amended: two.** A shipping artifact's `translationRev`/`meta.translator` must be a **pinned, recorded, internally consistent** revision id — a **model SHA** (D3 §10.2) **or** an **authored-table revision** named `authored-<n>`, visibly distinct from a model. The `Translator` is an **injected port**; the M1 fixture translator is already an authored lookup table; recording a model SHA for text a model never produced is exactly the false provenance `reviewedBy` exists to prevent. D2 §7.2, D3 §10.2, D6 §2.4; AC-CONTENT-23, AC-ENG-19, AC-CONTENT-25. |
+| **Y2** | D6 §2.1 / amendment F1 are stale | `src/data/conversation.ts` now imports every generated artifact and exports `CONVERSATIONS: Conversation[]`; `src/data/catalog.ts` derives the entries from it. It remains the **sole** importer of `conversations/*.json` (which is what AC-CONTENT-22 requires). The M2 swap is **one array entry added plus the fixture's deleted**, not "one import path plus one deletion". D6 §2, §2.1, §14; D7 §2; AC-CONTENT-22. |
+| **Y3** | The hint check is weaker than D6 §11.5 rule 4 | **Stated, not fixed.** `checkHints` tokenizes the **raw authored template** (the literal `{slotName}` is a token), not the rendered line, so a hint that echoes a substituted surface form can pass. Rule 4's intent — the rendered comparison — is recorded with the limitation, the worked example, and the additive fix. D6 §11.5 rule 4, §12; AC-CONTENT-16. |
+| **Y4** | D6 §9 specified report rows that cannot exist | `renderReport(conversation)` is a pure function of the artifact and takes **no flag list**, so "flags by category and severity" and "flag rate vs the ~20% target" **cannot** appear in it, nor can a session count or a coverage percentage. §9 now lists what the report emits and explicitly excludes those four; the flag figures belong to the flag list. D6 §9; AC-CONTENT-11. |
+| **Y5** | `E_MULTIPLE_FALLBACK`/`E_FALLBACK_NOT_LAST` are `line`-only | **Doc narrowed to the code.** `validateConversationSource` inspects only `beat.line`; for `choiceSets` two `when`-less sets are caught by `E_AMBIGUOUS_MATCH` and a misplaced fallback set is not flagged (recorded gap; matching does not depend on order). D2 §5.2, §14; AC-DOM-04. |
+| **Y6** | `GLOSS-IDENTITY` fires on `origin: 'mt'` only | **Stated.** The only authored-gloss route is the **global** `glossary.es.json`, so the exemption is not a per-conversation escape hatch; in practice every shipping gloss is `origin: 'mt'` and must be genuinely non-identity. D6 §2.4, §12. |
+| **Y7** | What `reviewedBy: 'agent'` may claim | **Stated.** The approximation available is a **fresh context that reads only the output** — the *same underlying model*, so it is **not** independent in the strong sense. No shipping flag list unless a triage actually ran; a fabricated flag list is worse than none. `FLAG-REVIEWER-IS-DRAFTER` enforces the naming discipline, not true independence. D6 §8.1, §8.3. |
+
+**AC totals unchanged at 151; diagnostics unchanged at 49.** No id added, renumbered or retired.
+
+## Freeze amendments, round 4 (2026-10-18) — translator framing, and one signed-off contract comment
+
+Round 3 fixed the *provenance* rules for two translation sources, but the framing that "MT drafts every line" survived in four places and under-described an authored shipping run. Documentation only, plus one PM-signed-off contract comment.
+
+| # | Item | Resolution |
+|---|---|---|
+| **Y8** | "MT drafts every line" framing survived round 3 | **Generalised to the translator** — a pinned model **or** an authored bilingual table — in the four places that asserted MT as the only mechanism: the README locked-decision bullet, D2 §9.4, D3 §10 (README divergence), and D6 §8.1/§11. The properties that matter are kept and unchanged: every line and every gloss span is drafted by whatever translator ran; the drafting source is recorded in the artifact; the reviewer must not be the drafting system; the owner adjudicates. **D6 §8.1 now states plainly that reviewer ≠ drafter is automatic for a model but *not* for an authored table drafted by an agent** — which is exactly why the fresh context is required. D6 §11 no longer implies it is the only authored Spanish in the repo. |
+| **Y9** | `types.ts`'s `translationRev` comment was narrower than D2 §7.2 | **PM-signed-off contract edit, comment only.** The field now documents both kinds (a model revision, or an authored-table revision named `authored-<n>`). `src/domain/types.ts` is hash-pinned by `tools/contracts.sha256`, so **`check:contracts` fails until the PM runs `contracts:update`** — the manifest is regenerated by the owner, never by this amendment. |
+
+**AC totals unchanged at 151; diagnostics unchanged at 49.** No id added, renumbered or retired.
+
 ## Freeze amendments (2026-10-18, gate defects found by the Engineer's M1 recon)
 
 Applied after the first freeze attempt. These are corrections, not redesigns; no AC id was renumbered.
@@ -98,7 +125,7 @@ Applied after the first freeze attempt. These are corrections, not redesigns; no
 | **E5** | No home for `AC-TOOL-*` | The `bake` project hosts `test/tools/**`. D5 §7. |
 | **E6** | `tools/test-runner/` unowned | Added as an M1 deliverable. D5 §3.1. |
 | **E7** | `tests/` vs `test/` | D7 §2 corrected to `test/`. |
-| **F1** | The fixture ships | `src/data/conversation.ts` is the single entry module; the fixture is bundled and is never the *shipping* content. D6 §2.1. |
+| **F1** | The fixture ships | `src/data/conversation.ts` is the single entry module; the fixture is bundled and is never the *shipping* content. D6 §2.1. **Restated by Y2** (§2.1 is now a `CONVERSATIONS` array; the swap is one array entry, not one import path). |
 | **F2** | Fixture provenance | `meta.reviewPolicy: 'fixture'` + `reviewedBy: 'agent'` + `l2 === mt`; `'owner'` is an error in a fixture. D2 §7.2, D6 §2.2. |
 | **F3** | `onnxruntime-node` on Node 26 | The runtime is imported lazily inside the injected port, typed against a local shim, and **not installed in M1**. D3 §10.8, D5 §2. |
 

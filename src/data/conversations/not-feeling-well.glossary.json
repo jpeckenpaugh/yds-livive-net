@@ -1,0 +1,392 @@
+{
+  "estás bien, diego? tienes mala cara": {
+    "l1": "Are you all right, Diego? You look pale.",
+    "origin": "mt",
+    "mt": "Are you all right, Diego? You look pale.",
+    "reviewedBy": "agent"
+  },
+  "estás bien, diego": {
+    "l1": "Are you all right, Diego?",
+    "origin": "mt",
+    "mt": "Are you all right, Diego?",
+    "reviewedBy": "agent"
+  },
+  "estás bien": {
+    "l1": "you're all right",
+    "origin": "mt",
+    "mt": "you're all right",
+    "reviewedBy": "agent"
+  },
+  "diego": {
+    "l1": "Diego",
+    "origin": "mt",
+    "mt": "Diego",
+    "reviewedBy": "agent"
+  },
+  "tienes mala cara": {
+    "l1": "You look pale",
+    "origin": "mt",
+    "mt": "You look pale",
+    "reviewedBy": "agent"
+  },
+  "llevo toda la mañana con dolor de cabeza": {
+    "l1": "I've had a headache all morning.",
+    "origin": "mt",
+    "mt": "I've had a headache all morning.",
+    "reviewedBy": "agent"
+  },
+  "llevo toda la": {
+    "l1": "I've had all",
+    "origin": "mt",
+    "mt": "I've had all",
+    "reviewedBy": "agent"
+  },
+  "creo que me duele el estómago": {
+    "l1": "I think I've got a stomachache.",
+    "origin": "mt",
+    "mt": "I think I've got a stomachache.",
+    "reviewedBy": "agent"
+  },
+  "creo": {
+    "l1": "I think",
+    "origin": "mt",
+    "mt": "I think",
+    "reviewedBy": "agent"
+  },
+  "que me duele el estómago": {
+    "l1": "that my stomach hurts",
+    "origin": "mt",
+    "mt": "that my stomach hurts",
+    "reviewedBy": "agent"
+  },
+  "me duele el estómago": {
+    "l1": "my stomach hurts",
+    "origin": "mt",
+    "mt": "my stomach hurts",
+    "reviewedBy": "agent"
+  },
+  "ay, ¿te duele la cabeza": {
+    "l1": "Oh no, a headache?",
+    "origin": "mt",
+    "mt": "Oh no, a headache?",
+    "reviewedBy": "agent"
+  },
+  "ay": {
+    "l1": "oh",
+    "origin": "mt",
+    "mt": "oh",
+    "reviewedBy": "agent"
+  },
+  "te duele la cabeza": {
+    "l1": "your head hurts",
+    "origin": "mt",
+    "mt": "your head hurts",
+    "reviewedBy": "agent"
+  },
+  "ay, ¿te duele el estómago": {
+    "l1": "Oh no, a stomachache?",
+    "origin": "mt",
+    "mt": "Oh no, a stomachache?",
+    "reviewedBy": "agent"
+  },
+  "te duele el estómago": {
+    "l1": "your stomach hurts",
+    "origin": "mt",
+    "mt": "your stomach hurts",
+    "reviewedBy": "agent"
+  },
+  "quizá una aspirina": {
+    "l1": "Maybe an aspirin?",
+    "origin": "mt",
+    "mt": "Maybe an aspirin?",
+    "reviewedBy": "agent"
+  },
+  "quizá echarte un rato": {
+    "l1": "Maybe a lie-down?",
+    "origin": "mt",
+    "mt": "Maybe a lie-down?",
+    "reviewedBy": "agent"
+  },
+  "quizá una infusión": {
+    "l1": "Maybe some herbal tea?",
+    "origin": "mt",
+    "mt": "Maybe some herbal tea?",
+    "reviewedBy": "agent"
+  },
+  "quizá una bolsa de agua caliente": {
+    "l1": "Maybe a hot water bottle?",
+    "origin": "mt",
+    "mt": "Maybe a hot water bottle?",
+    "reviewedBy": "agent"
+  },
+  "quizá una bolsa": {
+    "l1": "maybe a bag",
+    "origin": "mt",
+    "mt": "maybe a bag",
+    "reviewedBy": "agent"
+  },
+  "quieres una aspirina": {
+    "l1": "Do you want an aspirin?",
+    "origin": "mt",
+    "mt": "Do you want an aspirin?",
+    "reviewedBy": "agent"
+  },
+  "quieres echarte un rato": {
+    "l1": "Do you want a lie-down?",
+    "origin": "mt",
+    "mt": "Do you want a lie-down?",
+    "reviewedBy": "agent"
+  },
+  "quieres una infusión": {
+    "l1": "Do you want some herbal tea?",
+    "origin": "mt",
+    "mt": "Do you want some herbal tea?",
+    "reviewedBy": "agent"
+  },
+  "quieres una bolsa de agua caliente": {
+    "l1": "Do you want a hot water bottle?",
+    "origin": "mt",
+    "mt": "Do you want a hot water bottle?",
+    "reviewedBy": "agent"
+  },
+  "quieres una bolsa": {
+    "l1": "you want a bag",
+    "origin": "mt",
+    "mt": "you want a bag",
+    "reviewedBy": "agent"
+  },
+  "creo que me voy a tumbar": {
+    "l1": "I think I'll lie down.",
+    "origin": "mt",
+    "mt": "I think I'll lie down.",
+    "reviewedBy": "agent"
+  },
+  "que me voy a tumbar": {
+    "l1": "that I'm going to lie down",
+    "origin": "mt",
+    "mt": "that I'm going to lie down",
+    "reviewedBy": "agent"
+  },
+  "me voy a tumbar": {
+    "l1": "I'm going to lie down",
+    "origin": "mt",
+    "mt": "I'm going to lie down",
+    "reviewedBy": "agent"
+  },
+  "creo que me voy a ir a casa": {
+    "l1": "I think I'll go home.",
+    "origin": "mt",
+    "mt": "I think I'll go home.",
+    "reviewedBy": "agent"
+  },
+  "que me voy a ir a casa": {
+    "l1": "that I'm going to go home",
+    "origin": "mt",
+    "mt": "that I'm going to go home",
+    "reviewedBy": "agent"
+  },
+  "me voy a ir a casa": {
+    "l1": "I'm going to go home",
+    "origin": "mt",
+    "mt": "I'm going to go home",
+    "reviewedBy": "agent"
+  },
+  "entonces deberías tumbarte": {
+    "l1": "You should lie down, then.",
+    "origin": "mt",
+    "mt": "You should lie down, then.",
+    "reviewedBy": "agent"
+  },
+  "entonces deberías irte a casa": {
+    "l1": "You should go home, then.",
+    "origin": "mt",
+    "mt": "You should go home, then.",
+    "reviewedBy": "agent"
+  },
+  "voy a ir a la farmacia": {
+    "l1": "I'll go to the pharmacy.",
+    "origin": "mt",
+    "mt": "I'll go to the pharmacy.",
+    "reviewedBy": "agent"
+  },
+  "voy a ir al médico": {
+    "l1": "I'll see the doctor.",
+    "origin": "mt",
+    "mt": "I'll see the doctor.",
+    "reviewedBy": "agent"
+  },
+  "vale. con dolor de cabeza, deberías tumbarte, y luego ir a la farmacia": {
+    "l1": "Right. With a headache, you should lie down, and then go to the pharmacy.",
+    "origin": "mt",
+    "mt": "Right. With a headache, you should lie down, and then go to the pharmacy.",
+    "reviewedBy": "agent"
+  },
+  "vale": {
+    "l1": "Right",
+    "origin": "mt",
+    "mt": "Right",
+    "reviewedBy": "agent"
+  },
+  "con dolor de cabeza, deberías tumbarte, y luego ir a la farmacia": {
+    "l1": "With a headache, you should lie down, and then go to the pharmacy",
+    "origin": "mt",
+    "mt": "With a headache, you should lie down, and then go to the pharmacy",
+    "reviewedBy": "agent"
+  },
+  "con dolor de cabeza": {
+    "l1": "with a headache,",
+    "origin": "mt",
+    "mt": "with a headache,",
+    "reviewedBy": "agent"
+  },
+  "con dolor": {
+    "l1": "with pain",
+    "origin": "mt",
+    "mt": "with pain",
+    "reviewedBy": "agent"
+  },
+  "deberías tumbarte": {
+    "l1": "you should lie down,",
+    "origin": "mt",
+    "mt": "you should lie down,",
+    "reviewedBy": "agent"
+  },
+  "y luego ir a la farmacia": {
+    "l1": "and then go to the pharmacy",
+    "origin": "mt",
+    "mt": "and then go to the pharmacy",
+    "reviewedBy": "agent"
+  },
+  "luego ir a la farmacia": {
+    "l1": "then go to the pharmacy",
+    "origin": "mt",
+    "mt": "then go to the pharmacy",
+    "reviewedBy": "agent"
+  },
+  "vale. con dolor de cabeza, deberías tumbarte, y luego ir al médico": {
+    "l1": "Right. With a headache, you should lie down, and then see the doctor.",
+    "origin": "mt",
+    "mt": "Right. With a headache, you should lie down, and then see the doctor.",
+    "reviewedBy": "agent"
+  },
+  "con dolor de cabeza, deberías tumbarte, y luego ir al médico": {
+    "l1": "With a headache, you should lie down, and then see the doctor",
+    "origin": "mt",
+    "mt": "With a headache, you should lie down, and then see the doctor",
+    "reviewedBy": "agent"
+  },
+  "y luego ir al médico": {
+    "l1": "and then see the doctor",
+    "origin": "mt",
+    "mt": "and then see the doctor",
+    "reviewedBy": "agent"
+  },
+  "luego ir al médico": {
+    "l1": "then see the doctor",
+    "origin": "mt",
+    "mt": "then see the doctor",
+    "reviewedBy": "agent"
+  },
+  "vale. con dolor de cabeza, deberías irte a casa, y luego ir a la farmacia": {
+    "l1": "Right. With a headache, you should go home, and then go to the pharmacy.",
+    "origin": "mt",
+    "mt": "Right. With a headache, you should go home, and then go to the pharmacy.",
+    "reviewedBy": "agent"
+  },
+  "con dolor de cabeza, deberías irte a casa, y luego ir a la farmacia": {
+    "l1": "With a headache, you should go home, and then go to the pharmacy",
+    "origin": "mt",
+    "mt": "With a headache, you should go home, and then go to the pharmacy",
+    "reviewedBy": "agent"
+  },
+  "deberías irte a casa": {
+    "l1": "you should go home,",
+    "origin": "mt",
+    "mt": "you should go home,",
+    "reviewedBy": "agent"
+  },
+  "vale. con dolor de cabeza, deberías irte a casa, y luego ir al médico": {
+    "l1": "Right. With a headache, you should go home, and then see the doctor.",
+    "origin": "mt",
+    "mt": "Right. With a headache, you should go home, and then see the doctor.",
+    "reviewedBy": "agent"
+  },
+  "con dolor de cabeza, deberías irte a casa, y luego ir al médico": {
+    "l1": "With a headache, you should go home, and then see the doctor",
+    "origin": "mt",
+    "mt": "With a headache, you should go home, and then see the doctor",
+    "reviewedBy": "agent"
+  },
+  "vale. con dolor de estómago, deberías tumbarte, y luego ir a la farmacia": {
+    "l1": "Right. With a stomachache, you should lie down, and then go to the pharmacy.",
+    "origin": "mt",
+    "mt": "Right. With a stomachache, you should lie down, and then go to the pharmacy.",
+    "reviewedBy": "agent"
+  },
+  "con dolor de estómago, deberías tumbarte, y luego ir a la farmacia": {
+    "l1": "With a stomachache, you should lie down, and then go to the pharmacy",
+    "origin": "mt",
+    "mt": "With a stomachache, you should lie down, and then go to the pharmacy",
+    "reviewedBy": "agent"
+  },
+  "con dolor de estómago": {
+    "l1": "with a stomachache,",
+    "origin": "mt",
+    "mt": "with a stomachache,",
+    "reviewedBy": "agent"
+  },
+  "vale. con dolor de estómago, deberías tumbarte, y luego ir al médico": {
+    "l1": "Right. With a stomachache, you should lie down, and then see the doctor.",
+    "origin": "mt",
+    "mt": "Right. With a stomachache, you should lie down, and then see the doctor.",
+    "reviewedBy": "agent"
+  },
+  "con dolor de estómago, deberías tumbarte, y luego ir al médico": {
+    "l1": "With a stomachache, you should lie down, and then see the doctor",
+    "origin": "mt",
+    "mt": "With a stomachache, you should lie down, and then see the doctor",
+    "reviewedBy": "agent"
+  },
+  "vale. con dolor de estómago, deberías irte a casa, y luego ir a la farmacia": {
+    "l1": "Right. With a stomachache, you should go home, and then go to the pharmacy.",
+    "origin": "mt",
+    "mt": "Right. With a stomachache, you should go home, and then go to the pharmacy.",
+    "reviewedBy": "agent"
+  },
+  "con dolor de estómago, deberías irte a casa, y luego ir a la farmacia": {
+    "l1": "With a stomachache, you should go home, and then go to the pharmacy",
+    "origin": "mt",
+    "mt": "With a stomachache, you should go home, and then go to the pharmacy",
+    "reviewedBy": "agent"
+  },
+  "vale. con dolor de estómago, deberías irte a casa, y luego ir al médico": {
+    "l1": "Right. With a stomachache, you should go home, and then see the doctor.",
+    "origin": "mt",
+    "mt": "Right. With a stomachache, you should go home, and then see the doctor.",
+    "reviewedBy": "agent"
+  },
+  "con dolor de estómago, deberías irte a casa, y luego ir al médico": {
+    "l1": "With a stomachache, you should go home, and then see the doctor",
+    "origin": "mt",
+    "mt": "With a stomachache, you should go home, and then see the doctor",
+    "reviewedBy": "agent"
+  },
+  "gracias, elena": {
+    "l1": "Thanks, Elena.",
+    "origin": "mt",
+    "mt": "Thanks, Elena.",
+    "reviewedBy": "agent"
+  },
+  "gracias": {
+    "l1": "Thanks,",
+    "origin": "mt",
+    "mt": "Thanks,",
+    "reviewedBy": "agent"
+  },
+  "elena": {
+    "l1": "Elena",
+    "origin": "mt",
+    "mt": "Elena",
+    "reviewedBy": "agent"
+  }
+}

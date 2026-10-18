@@ -1,0 +1,1156 @@
+{
+  "id": "getting-there",
+  "title": "Getting There",
+  "l1": "en",
+  "l2": "es",
+  "characters": {
+    "marta": {
+      "name": "Marta",
+      "voice": "F2"
+    },
+    "tomas": {
+      "name": "Tomás",
+      "voice": "M1"
+    }
+  },
+  "order": [
+    "b1",
+    "b2",
+    "b3",
+    "b4",
+    "b5",
+    "b6",
+    "b7",
+    "b8",
+    "b9",
+    "b10"
+  ],
+  "beats": {
+    "b1": {
+      "id": "b1",
+      "index": 0,
+      "speaker": "marta",
+      "kind": "line",
+      "hint": "Marta notices Tomás is lost.",
+      "alternatives": [
+        {
+          "id": "b1-l1",
+          "slotNames": []
+        }
+      ]
+    },
+    "b2": {
+      "id": "b2",
+      "index": 1,
+      "speaker": "tomas",
+      "kind": "choice",
+      "hint": "Tomás decides how to travel.",
+      "alternatives": [
+        {
+          "id": "b2-s1",
+          "slotNames": [
+            "route"
+          ],
+          "options": [
+            {
+              "key": "metro",
+              "label": {
+                "l1": "By metro",
+                "l2": "En metro"
+              },
+              "icon": "🚇",
+              "sets": {
+                "mode": "metro",
+                "route": "metro"
+              },
+              "slotNames": [
+                "route"
+              ]
+            },
+            {
+              "key": "walk",
+              "label": {
+                "l1": "On foot",
+                "l2": "Andando"
+              },
+              "icon": "🚶",
+              "sets": {
+                "mode": "walk",
+                "route": "walk"
+              },
+              "slotNames": [
+                "route"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "b3": {
+      "id": "b3",
+      "index": 2,
+      "speaker": "marta",
+      "kind": "line",
+      "hint": "Marta agrees with the choice.",
+      "alternatives": [
+        {
+          "id": "b3-l1",
+          "slotNames": [
+            "route"
+          ]
+        }
+      ]
+    },
+    "b4": {
+      "id": "b4",
+      "index": 3,
+      "speaker": "tomas",
+      "kind": "choice",
+      "hint": "Tomás checks the route.",
+      "alternatives": [
+        {
+          "id": "b4-metro",
+          "when": {
+            "mode": "metro"
+          },
+          "slotNames": [
+            "leg"
+          ],
+          "options": [
+            {
+              "key": "red-line",
+              "label": {
+                "l1": "Red line",
+                "l2": "Línea roja"
+              },
+              "icon": "🔴",
+              "sets": {
+                "leg": "red-line"
+              },
+              "slotNames": [
+                "leg"
+              ]
+            },
+            {
+              "key": "blue-line",
+              "label": {
+                "l1": "Blue line",
+                "l2": "Línea azul"
+              },
+              "icon": "🔵",
+              "sets": {
+                "leg": "blue-line"
+              },
+              "slotNames": [
+                "leg"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "b4-walk",
+          "when": {
+            "mode": "walk"
+          },
+          "slotNames": [
+            "leg"
+          ],
+          "options": [
+            {
+              "key": "straight",
+              "label": {
+                "l1": "Straight on",
+                "l2": "Todo recto"
+              },
+              "icon": "⬆️",
+              "sets": {
+                "leg": "straight"
+              },
+              "slotNames": [
+                "leg"
+              ]
+            },
+            {
+              "key": "park",
+              "label": {
+                "l1": "Through the park",
+                "l2": "Por el parque"
+              },
+              "icon": "🌳",
+              "sets": {
+                "leg": "park"
+              },
+              "slotNames": [
+                "leg"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "b5": {
+      "id": "b5",
+      "index": 4,
+      "speaker": "marta",
+      "kind": "line",
+      "hint": "Marta confirms the route.",
+      "alternatives": [
+        {
+          "id": "b5-l1",
+          "slotNames": [
+            "leg"
+          ]
+        }
+      ]
+    },
+    "b6": {
+      "id": "b6",
+      "index": 5,
+      "speaker": "tomas",
+      "kind": "choice",
+      "hint": "Tomás mentions where he is going.",
+      "alternatives": [
+        {
+          "id": "b6-s1",
+          "slotNames": [
+            "dest"
+          ],
+          "options": [
+            {
+              "key": "station",
+              "label": {
+                "l1": "The station",
+                "l2": "La estación"
+              },
+              "icon": "🚉",
+              "sets": {
+                "dest": "station"
+              },
+              "slotNames": [
+                "dest"
+              ]
+            },
+            {
+              "key": "museum",
+              "label": {
+                "l1": "The museum",
+                "l2": "El museo"
+              },
+              "icon": "🏛️",
+              "sets": {
+                "dest": "museum"
+              },
+              "slotNames": [
+                "dest"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "b7": {
+      "id": "b7",
+      "index": 6,
+      "speaker": "marta",
+      "kind": "line",
+      "hint": "Marta points to the place.",
+      "alternatives": [
+        {
+          "id": "b7-l1",
+          "slotNames": [
+            "dest"
+          ]
+        }
+      ]
+    },
+    "b8": {
+      "id": "b8",
+      "index": 7,
+      "speaker": "tomas",
+      "kind": "choice",
+      "hint": "Tomás asks about the ticket.",
+      "alternatives": [
+        {
+          "id": "b8-s1",
+          "slotNames": [
+            "ticket"
+          ],
+          "options": [
+            {
+              "key": "single",
+              "label": {
+                "l1": "A single ticket",
+                "l2": "Un billete sencillo"
+              },
+              "icon": "🎫",
+              "sets": {
+                "ticket": "single"
+              },
+              "slotNames": [
+                "ticket"
+              ]
+            },
+            {
+              "key": "daypass",
+              "label": {
+                "l1": "A day pass",
+                "l2": "Un billete de día"
+              },
+              "icon": "📅",
+              "sets": {
+                "ticket": "daypass"
+              },
+              "slotNames": [
+                "ticket"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "b9": {
+      "id": "b9",
+      "index": 8,
+      "speaker": "marta",
+      "kind": "line",
+      "hint": "Marta repeats the directions.",
+      "alternatives": [
+        {
+          "id": "b9-l1",
+          "slotNames": [
+            "route",
+            "leg",
+            "dest"
+          ]
+        }
+      ]
+    },
+    "b10": {
+      "id": "b10",
+      "index": 9,
+      "speaker": "tomas",
+      "kind": "line",
+      "hint": "Tomás thanks Marta.",
+      "alternatives": [
+        {
+          "id": "b10-l1",
+          "slotNames": [
+            "ticket"
+          ]
+        }
+      ]
+    }
+  },
+  "lines": {
+    "b1|b1-l1": {
+      "beatId": "b1",
+      "alternativeId": "b1-l1",
+      "variantKey": "b1|b1-l1",
+      "l1": "Everything all right, Tomás? You look lost.",
+      "l2": "¿Todo bien, Tomás? Pareces perdido.",
+      "mt": "¿Todo bien, Tomás? Pareces perdido.",
+      "sourceHash": "sha256:v1:32b12c6a770db862926c963b6ec37350c94bdd4008e54f85206919386b7bef2b",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b2|metro|route=metro": {
+      "beatId": "b2",
+      "alternativeId": "b2-s1",
+      "optionKey": "metro",
+      "variantKey": "b2|metro|route=metro",
+      "l1": "Yes, a bit. I'll go by metro.",
+      "l2": "Sí, un poco. Voy en metro.",
+      "mt": "Sí, un poco. Voy en metro.",
+      "sourceHash": "sha256:v1:11505b3b2702325b4ba3a1b995532dbbceae2113582985470a81e9052eace0d5",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b2|walk|route=walk": {
+      "beatId": "b2",
+      "alternativeId": "b2-s1",
+      "optionKey": "walk",
+      "variantKey": "b2|walk|route=walk",
+      "l1": "Maybe I'll just go on foot.",
+      "l2": "Quizá vaya andando.",
+      "mt": "Quizá vaya andando.",
+      "sourceHash": "sha256:v1:de8b3fe99b1895f2ff888181a78466a9289de00560208ed81863c5d2aea2a6b1",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b3|b3-l1|route=metro": {
+      "beatId": "b3",
+      "alternativeId": "b3-l1",
+      "variantKey": "b3|b3-l1|route=metro",
+      "l1": "I agree, by metro works well.",
+      "l2": "Estoy de acuerdo, en metro va bien.",
+      "mt": "Estoy de acuerdo, en metro va bien.",
+      "sourceHash": "sha256:v1:67b71ab6a5f70d138a0c112360618db9e633c7bc5f5dc95da3ae15c6e711be99",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b3|b3-l1|route=walk": {
+      "beatId": "b3",
+      "alternativeId": "b3-l1",
+      "variantKey": "b3|b3-l1|route=walk",
+      "l1": "I agree, on foot works well.",
+      "l2": "Estoy de acuerdo, andando va bien.",
+      "mt": "Estoy de acuerdo, andando va bien.",
+      "sourceHash": "sha256:v1:ca18ba2d2ceacc56a7ee17fc09a971337b0654ac13fc4b92251765d0c36f78ff",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b4|red-line|leg=red-line": {
+      "beatId": "b4",
+      "alternativeId": "b4-metro",
+      "optionKey": "red-line",
+      "variantKey": "b4|red-line|leg=red-line",
+      "l1": "So I take the red line to the third stop?",
+      "l2": "¿Entonces cojo la línea roja hasta la tercera parada?",
+      "mt": "¿Entonces cojo la línea roja hasta la tercera parada?",
+      "sourceHash": "sha256:v1:429c0a55a88e5f2095f443b25f22679260d06d090ba7e6b2e31fcbc6f77631a6",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b4|blue-line|leg=blue-line": {
+      "beatId": "b4",
+      "alternativeId": "b4-metro",
+      "optionKey": "blue-line",
+      "variantKey": "b4|blue-line|leg=blue-line",
+      "l1": "Should I take the blue line to the last stop?",
+      "l2": "¿Cojo la línea azul hasta la última parada?",
+      "mt": "¿Cojo la línea azul hasta la última parada?",
+      "sourceHash": "sha256:v1:9969c99f1bb0f35168ff2d0a24195f8f071533b888ea200147d273d8bcf81cf9",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b4|straight|leg=straight": {
+      "beatId": "b4",
+      "alternativeId": "b4-walk",
+      "optionKey": "straight",
+      "variantKey": "b4|straight|leg=straight",
+      "l1": "So I go straight on and then right?",
+      "l2": "¿Entonces sigo todo recto y luego a la derecha?",
+      "mt": "¿Entonces sigo todo recto y luego a la derecha?",
+      "sourceHash": "sha256:v1:dd9029b5c312d17274d2e18613a0f089513b6484b4f1a00ab4e2f3569bedc313",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b4|park|leg=park": {
+      "beatId": "b4",
+      "alternativeId": "b4-walk",
+      "optionKey": "park",
+      "variantKey": "b4|park|leg=park",
+      "l1": "Should I go through the park?",
+      "l2": "¿Voy por el parque?",
+      "mt": "¿Voy por el parque?",
+      "sourceHash": "sha256:v1:4d6cd8ac686bcaec8842a4ebb231053c82f7975e0e17225178064fc0e3bd7004",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b5|b5-l1|leg=red-line": {
+      "beatId": "b5",
+      "alternativeId": "b5-l1",
+      "variantKey": "b5|b5-l1|leg=red-line",
+      "l1": "That's it — the red line to the third stop.",
+      "l2": "Eso es: la línea roja hasta la tercera parada.",
+      "mt": "Eso es: la línea roja hasta la tercera parada.",
+      "sourceHash": "sha256:v1:74ff58ebf6b0d72fe9d0700293f4c1ade9629b55cfa638603eb7f15b31c74fe4",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b5|b5-l1|leg=blue-line": {
+      "beatId": "b5",
+      "alternativeId": "b5-l1",
+      "variantKey": "b5|b5-l1|leg=blue-line",
+      "l1": "That's it — the blue line to the last stop.",
+      "l2": "Eso es: la línea azul hasta la última parada.",
+      "mt": "Eso es: la línea azul hasta la última parada.",
+      "sourceHash": "sha256:v1:cefe13079032d3d845d9a0bb4b4e71d9686c9da00ee5960a303bbf3541cd547a",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b5|b5-l1|leg=straight": {
+      "beatId": "b5",
+      "alternativeId": "b5-l1",
+      "variantKey": "b5|b5-l1|leg=straight",
+      "l1": "That's it — straight on and then right.",
+      "l2": "Eso es: todo recto y luego a la derecha.",
+      "mt": "Eso es: todo recto y luego a la derecha.",
+      "sourceHash": "sha256:v1:2767170bb1be5f3065f8ca29d4ce8cb595d383db21114edc4bfbfe2395dacdb9",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b5|b5-l1|leg=park": {
+      "beatId": "b5",
+      "alternativeId": "b5-l1",
+      "variantKey": "b5|b5-l1|leg=park",
+      "l1": "That's it — through the park.",
+      "l2": "Eso es: por el parque.",
+      "mt": "Eso es: por el parque.",
+      "sourceHash": "sha256:v1:f81f4c489c69d20c1b043a83676bf584d86ce7ef1fb05572f0660893961a18db",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b6|station|dest=station": {
+      "beatId": "b6",
+      "alternativeId": "b6-s1",
+      "optionKey": "station",
+      "variantKey": "b6|station|dest=station",
+      "l1": "And that's near the train station?",
+      "l2": "¿Y eso está cerca de la estación de tren?",
+      "mt": "¿Y eso está cerca de la estación de tren?",
+      "sourceHash": "sha256:v1:50d2f2a1a46657d16dc877d778f8d9b3ac5979e6221704e72be38970e9ff27ad",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b6|museum|dest=museum": {
+      "beatId": "b6",
+      "alternativeId": "b6-s1",
+      "optionKey": "museum",
+      "variantKey": "b6|museum|dest=museum",
+      "l1": "Is it close to the museum?",
+      "l2": "¿Está cerca del museo?",
+      "mt": "¿Está cerca del museo?",
+      "sourceHash": "sha256:v1:7768c37f490c703afd5eb566b439c7956b8168ca704758b486eac5e474e95d5d",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b7|b7-l1|dest=station": {
+      "beatId": "b7",
+      "alternativeId": "b7-l1",
+      "variantKey": "b7|b7-l1|dest=station",
+      "l1": "That's the train station, yes.",
+      "l2": "Eso es la estación de tren, sí.",
+      "mt": "Eso es la estación de tren, sí.",
+      "sourceHash": "sha256:v1:f9a531725b4436dc3267d859c742d1f59eea747a13722bf9657e210926a47ab2",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b7|b7-l1|dest=museum": {
+      "beatId": "b7",
+      "alternativeId": "b7-l1",
+      "variantKey": "b7|b7-l1|dest=museum",
+      "l1": "That's the museum, yes.",
+      "l2": "Eso es el museo, sí.",
+      "mt": "Eso es el museo, sí.",
+      "sourceHash": "sha256:v1:f91e9316f0d636adc8a2ee1ae57a2b64ed2c714ab66d8a3d13d8df79f54d5cc9",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b8|single|ticket=single": {
+      "beatId": "b8",
+      "alternativeId": "b8-s1",
+      "optionKey": "single",
+      "variantKey": "b8|single|ticket=single",
+      "l1": "Should I get a single ticket?",
+      "l2": "¿Saco un billete sencillo?",
+      "mt": "¿Saco un billete sencillo?",
+      "sourceHash": "sha256:v1:ef04e5a499fe89e722632bd8544cbe63a496dd7a24ffeaf4179b7ead34f8e9e0",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b8|daypass|ticket=daypass": {
+      "beatId": "b8",
+      "alternativeId": "b8-s1",
+      "optionKey": "daypass",
+      "variantKey": "b8|daypass|ticket=daypass",
+      "l1": "Or maybe a day pass?",
+      "l2": "¿O mejor un billete de día?",
+      "mt": "¿O mejor un billete de día?",
+      "sourceHash": "sha256:v1:e67dcc48d4ee65843e8230cae01573e5c9359b5f86b8a2983fb257fd340e8bbe",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b9|b9-l1|dest=station|leg=red-line|route=metro": {
+      "beatId": "b9",
+      "alternativeId": "b9-l1",
+      "variantKey": "b9|b9-l1|dest=station|leg=red-line|route=metro",
+      "l1": "No problem! So: by metro, the red line to the third stop, to the train station.",
+      "l2": "¡Sin problema! Entonces: en metro, la línea roja hasta la tercera parada, a la estación de tren.",
+      "mt": "¡Sin problema! Entonces: en metro, la línea roja hasta la tercera parada, a la estación de tren.",
+      "sourceHash": "sha256:v1:b9883f67c1cc150fa39a18b0bbab0d4679322368ba977eb961cdc87e7028ae29",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b9|b9-l1|dest=museum|leg=red-line|route=metro": {
+      "beatId": "b9",
+      "alternativeId": "b9-l1",
+      "variantKey": "b9|b9-l1|dest=museum|leg=red-line|route=metro",
+      "l1": "No problem! So: by metro, the red line to the third stop, to the museum.",
+      "l2": "¡Sin problema! Entonces: en metro, la línea roja hasta la tercera parada, al museo.",
+      "mt": "¡Sin problema! Entonces: en metro, la línea roja hasta la tercera parada, al museo.",
+      "sourceHash": "sha256:v1:6cd99cdb0100147789bf07ebb3bb79723af9e2a66e6201a3145a8def8f2877c0",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b9|b9-l1|dest=station|leg=blue-line|route=metro": {
+      "beatId": "b9",
+      "alternativeId": "b9-l1",
+      "variantKey": "b9|b9-l1|dest=station|leg=blue-line|route=metro",
+      "l1": "No problem! So: by metro, the blue line to the last stop, to the train station.",
+      "l2": "¡Sin problema! Entonces: en metro, la línea azul hasta la última parada, a la estación de tren.",
+      "mt": "¡Sin problema! Entonces: en metro, la línea azul hasta la última parada, a la estación de tren.",
+      "sourceHash": "sha256:v1:29cd6efe2b99a4e02a0889db1f66764f2d8b39b6176d3d111b7fe815318a5486",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b9|b9-l1|dest=museum|leg=blue-line|route=metro": {
+      "beatId": "b9",
+      "alternativeId": "b9-l1",
+      "variantKey": "b9|b9-l1|dest=museum|leg=blue-line|route=metro",
+      "l1": "No problem! So: by metro, the blue line to the last stop, to the museum.",
+      "l2": "¡Sin problema! Entonces: en metro, la línea azul hasta la última parada, al museo.",
+      "mt": "¡Sin problema! Entonces: en metro, la línea azul hasta la última parada, al museo.",
+      "sourceHash": "sha256:v1:dfea8f42439b0d756c17eec59d317d1bf5e4378699f48e95c837e75cc31c755a",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b9|b9-l1|dest=station|leg=straight|route=walk": {
+      "beatId": "b9",
+      "alternativeId": "b9-l1",
+      "variantKey": "b9|b9-l1|dest=station|leg=straight|route=walk",
+      "l1": "No problem! So: on foot, straight on and then right, to the train station.",
+      "l2": "¡Sin problema! Entonces: andando, todo recto y luego a la derecha, a la estación de tren.",
+      "mt": "¡Sin problema! Entonces: andando, todo recto y luego a la derecha, a la estación de tren.",
+      "sourceHash": "sha256:v1:7245ad45be2f8269f5862fa0cc85e02d5cfc2ade9b946a698f0f972fb03bb9bf",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b9|b9-l1|dest=museum|leg=straight|route=walk": {
+      "beatId": "b9",
+      "alternativeId": "b9-l1",
+      "variantKey": "b9|b9-l1|dest=museum|leg=straight|route=walk",
+      "l1": "No problem! So: on foot, straight on and then right, to the museum.",
+      "l2": "¡Sin problema! Entonces: andando, todo recto y luego a la derecha, al museo.",
+      "mt": "¡Sin problema! Entonces: andando, todo recto y luego a la derecha, al museo.",
+      "sourceHash": "sha256:v1:62a01058f5ce745182e075d26acba0b9e88b018d38b70902b1e5e0e2cf66d1c9",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b9|b9-l1|dest=station|leg=park|route=walk": {
+      "beatId": "b9",
+      "alternativeId": "b9-l1",
+      "variantKey": "b9|b9-l1|dest=station|leg=park|route=walk",
+      "l1": "No problem! So: on foot, through the park, to the train station.",
+      "l2": "¡Sin problema! Entonces: andando, por el parque, a la estación de tren.",
+      "mt": "¡Sin problema! Entonces: andando, por el parque, a la estación de tren.",
+      "sourceHash": "sha256:v1:50792968331c2cb5b2a18b20e5c89c2ffa36027a279596d5a358b9a59fb485b5",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b9|b9-l1|dest=museum|leg=park|route=walk": {
+      "beatId": "b9",
+      "alternativeId": "b9-l1",
+      "variantKey": "b9|b9-l1|dest=museum|leg=park|route=walk",
+      "l1": "No problem! So: on foot, through the park, to the museum.",
+      "l2": "¡Sin problema! Entonces: andando, por el parque, al museo.",
+      "mt": "¡Sin problema! Entonces: andando, por el parque, al museo.",
+      "sourceHash": "sha256:v1:f63721176cf9928ee56aeddcca7cb784eb889403305c1954984cf4895d7f5d4c",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b10|b10-l1|ticket=single": {
+      "beatId": "b10",
+      "alternativeId": "b10-l1",
+      "variantKey": "b10|b10-l1|ticket=single",
+      "l1": "I'll get a single ticket, then. Thanks, Marta!",
+      "l2": "Saco un billete sencillo, entonces. ¡Gracias, Marta!",
+      "mt": "Saco un billete sencillo, entonces. ¡Gracias, Marta!",
+      "sourceHash": "sha256:v1:c1b33c1dd02614d135b26af6c36e90b485734144569548a79e19bd644bac464b",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b10|b10-l1|ticket=daypass": {
+      "beatId": "b10",
+      "alternativeId": "b10-l1",
+      "variantKey": "b10|b10-l1|ticket=daypass",
+      "l1": "I'll get a day pass, then. Thanks, Marta!",
+      "l2": "Saco un billete de día, entonces. ¡Gracias, Marta!",
+      "mt": "Saco un billete de día, entonces. ¡Gracias, Marta!",
+      "sourceHash": "sha256:v1:d1c9019b55e566f294718eb632bd4d41314b9fa08710903f69d7722960a07e3e",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    }
+  },
+  "gloss": {
+    "todo bien, tomás? pareces perdido": {
+      "l1": "Everything all right, Tomás? You look lost.",
+      "origin": "mt",
+      "mt": "Everything all right, Tomás? You look lost.",
+      "reviewedBy": "agent"
+    },
+    "todo bien, tomás": {
+      "l1": "Everything all right, Tomás?",
+      "origin": "mt",
+      "mt": "Everything all right, Tomás?",
+      "reviewedBy": "agent"
+    },
+    "todo bien": {
+      "l1": "everything all right",
+      "origin": "mt",
+      "mt": "everything all right",
+      "reviewedBy": "agent"
+    },
+    "tomás": {
+      "l1": "Tomás",
+      "origin": "mt",
+      "mt": "Tomás",
+      "reviewedBy": "agent"
+    },
+    "pareces perdido": {
+      "l1": "You look lost",
+      "origin": "mt",
+      "mt": "You look lost",
+      "reviewedBy": "agent"
+    },
+    "sí, un poco. voy en metro": {
+      "l1": "Yes, a bit. I'll go by metro.",
+      "origin": "mt",
+      "mt": "Yes, a bit. I'll go by metro.",
+      "reviewedBy": "agent"
+    },
+    "sí, un poco": {
+      "l1": "Yes, a bit",
+      "origin": "mt",
+      "mt": "Yes, a bit",
+      "reviewedBy": "agent"
+    },
+    "sí": {
+      "l1": "yes",
+      "origin": "mt",
+      "mt": "yes",
+      "reviewedBy": "agent"
+    },
+    "un poco": {
+      "l1": "a bit",
+      "origin": "mt",
+      "mt": "a bit",
+      "reviewedBy": "agent"
+    },
+    "voy en metro": {
+      "l1": "I'm going by metro",
+      "origin": "mt",
+      "mt": "I'm going by metro",
+      "reviewedBy": "agent"
+    },
+    "voy": {
+      "l1": "I'll go",
+      "origin": "mt",
+      "mt": "I'll go",
+      "reviewedBy": "agent"
+    },
+    "quizá vaya andando": {
+      "l1": "Maybe I'll just go on foot.",
+      "origin": "mt",
+      "mt": "Maybe I'll just go on foot.",
+      "reviewedBy": "agent"
+    },
+    "estoy de acuerdo, en metro va bien": {
+      "l1": "I agree, by metro works well.",
+      "origin": "mt",
+      "mt": "I agree, by metro works well.",
+      "reviewedBy": "agent"
+    },
+    "estoy de acuerdo": {
+      "l1": "I agree,",
+      "origin": "mt",
+      "mt": "I agree,",
+      "reviewedBy": "agent"
+    },
+    "estoy": {
+      "l1": "I am",
+      "origin": "mt",
+      "mt": "I am",
+      "reviewedBy": "agent"
+    },
+    "en metro va bien": {
+      "l1": "the metro is fine",
+      "origin": "mt",
+      "mt": "the metro is fine",
+      "reviewedBy": "agent"
+    },
+    "estoy de acuerdo, andando va bien": {
+      "l1": "I agree, on foot works well.",
+      "origin": "mt",
+      "mt": "I agree, on foot works well.",
+      "reviewedBy": "agent"
+    },
+    "andando va bien": {
+      "l1": "walking is fine",
+      "origin": "mt",
+      "mt": "walking is fine",
+      "reviewedBy": "agent"
+    },
+    "entonces cojo la línea roja hasta la tercera parada": {
+      "l1": "So I take the red line to the third stop?",
+      "origin": "mt",
+      "mt": "So I take the red line to the third stop?",
+      "reviewedBy": "agent"
+    },
+    "cojo la línea azul hasta la última parada": {
+      "l1": "Should I take the blue line to the last stop?",
+      "origin": "mt",
+      "mt": "Should I take the blue line to the last stop?",
+      "reviewedBy": "agent"
+    },
+    "entonces sigo todo recto y luego a la derecha": {
+      "l1": "So I go straight on and then right?",
+      "origin": "mt",
+      "mt": "So I go straight on and then right?",
+      "reviewedBy": "agent"
+    },
+    "entonces sigo todo recto": {
+      "l1": "then I keep going straight",
+      "origin": "mt",
+      "mt": "then I keep going straight",
+      "reviewedBy": "agent"
+    },
+    "y luego a la derecha": {
+      "l1": "and then right",
+      "origin": "mt",
+      "mt": "and then right",
+      "reviewedBy": "agent"
+    },
+    "luego a la derecha": {
+      "l1": "then right",
+      "origin": "mt",
+      "mt": "then right",
+      "reviewedBy": "agent"
+    },
+    "voy por el parque": {
+      "l1": "Should I go through the park?",
+      "origin": "mt",
+      "mt": "Should I go through the park?",
+      "reviewedBy": "agent"
+    },
+    "eso es: la línea roja hasta la tercera parada": {
+      "l1": "That's it — the red line to the third stop.",
+      "origin": "mt",
+      "mt": "That's it — the red line to the third stop.",
+      "reviewedBy": "agent"
+    },
+    "eso es: la línea azul hasta la última parada": {
+      "l1": "That's it — the blue line to the last stop.",
+      "origin": "mt",
+      "mt": "That's it — the blue line to the last stop.",
+      "reviewedBy": "agent"
+    },
+    "eso es: todo recto y luego a la derecha": {
+      "l1": "That's it — straight on and then right.",
+      "origin": "mt",
+      "mt": "That's it — straight on and then right.",
+      "reviewedBy": "agent"
+    },
+    "eso es: todo recto": {
+      "l1": "That's it: straight on",
+      "origin": "mt",
+      "mt": "That's it: straight on",
+      "reviewedBy": "agent"
+    },
+    "eso es: por el parque": {
+      "l1": "That's it — through the park.",
+      "origin": "mt",
+      "mt": "That's it — through the park.",
+      "reviewedBy": "agent"
+    },
+    "eso es": {
+      "l1": "That's it:",
+      "origin": "mt",
+      "mt": "That's it:",
+      "reviewedBy": "agent"
+    },
+    "y eso está cerca de la estación de tren": {
+      "l1": "And that's near the train station?",
+      "origin": "mt",
+      "mt": "And that's near the train station?",
+      "reviewedBy": "agent"
+    },
+    "eso está cerca": {
+      "l1": "that is close",
+      "origin": "mt",
+      "mt": "that is close",
+      "reviewedBy": "agent"
+    },
+    "está cerca del museo": {
+      "l1": "Is it close to the museum?",
+      "origin": "mt",
+      "mt": "Is it close to the museum?",
+      "reviewedBy": "agent"
+    },
+    "eso es la estación de tren, sí": {
+      "l1": "That's the train station, yes.",
+      "origin": "mt",
+      "mt": "That's the train station, yes.",
+      "reviewedBy": "agent"
+    },
+    "eso es la estación de tren": {
+      "l1": "That's the train station,",
+      "origin": "mt",
+      "mt": "That's the train station,",
+      "reviewedBy": "agent"
+    },
+    "eso es la estación": {
+      "l1": "That's the station",
+      "origin": "mt",
+      "mt": "That's the station",
+      "reviewedBy": "agent"
+    },
+    "eso es el museo, sí": {
+      "l1": "That's the museum, yes.",
+      "origin": "mt",
+      "mt": "That's the museum, yes.",
+      "reviewedBy": "agent"
+    },
+    "eso es el museo": {
+      "l1": "That's the museum,",
+      "origin": "mt",
+      "mt": "That's the museum,",
+      "reviewedBy": "agent"
+    },
+    "saco un billete sencillo": {
+      "l1": "Should I get a single ticket?",
+      "origin": "mt",
+      "mt": "Should I get a single ticket?",
+      "reviewedBy": "agent"
+    },
+    "o mejor un billete de día": {
+      "l1": "Or maybe a day pass?",
+      "origin": "mt",
+      "mt": "Or maybe a day pass?",
+      "reviewedBy": "agent"
+    },
+    "mejor un billete": {
+      "l1": "rather a ticket",
+      "origin": "mt",
+      "mt": "rather a ticket",
+      "reviewedBy": "agent"
+    },
+    "sin problema! entonces: en metro, la línea roja hasta la tercera parada, a la estación de tren": {
+      "l1": "No problem! So: by metro, the red line to the third stop, to the train station.",
+      "origin": "mt",
+      "mt": "No problem! So: by metro, the red line to the third stop, to the train station.",
+      "reviewedBy": "agent"
+    },
+    "sin problema": {
+      "l1": "no problem",
+      "origin": "mt",
+      "mt": "no problem",
+      "reviewedBy": "agent"
+    },
+    "entonces: en metro, la línea roja hasta la tercera parada, a la estación de tren": {
+      "l1": "So: by metro, the red line to the third stop, to the train station",
+      "origin": "mt",
+      "mt": "So: by metro, the red line to the third stop, to the train station",
+      "reviewedBy": "agent"
+    },
+    "entonces: en metro": {
+      "l1": "So: by metro,",
+      "origin": "mt",
+      "mt": "So: by metro,",
+      "reviewedBy": "agent"
+    },
+    "entonces": {
+      "l1": "so",
+      "origin": "mt",
+      "mt": "so",
+      "reviewedBy": "agent"
+    },
+    "la línea roja hasta la tercera parada": {
+      "l1": "the red line to the third stop,",
+      "origin": "mt",
+      "mt": "the red line to the third stop,",
+      "reviewedBy": "agent"
+    },
+    "a la estación de tren": {
+      "l1": "to the train station",
+      "origin": "mt",
+      "mt": "to the train station",
+      "reviewedBy": "agent"
+    },
+    "a la estación": {
+      "l1": "to the station",
+      "origin": "mt",
+      "mt": "to the station",
+      "reviewedBy": "agent"
+    },
+    "sin problema! entonces: en metro, la línea roja hasta la tercera parada, al museo": {
+      "l1": "No problem! So: by metro, the red line to the third stop, to the museum.",
+      "origin": "mt",
+      "mt": "No problem! So: by metro, the red line to the third stop, to the museum.",
+      "reviewedBy": "agent"
+    },
+    "entonces: en metro, la línea roja hasta la tercera parada, al museo": {
+      "l1": "So: by metro, the red line to the third stop, to the museum",
+      "origin": "mt",
+      "mt": "So: by metro, the red line to the third stop, to the museum",
+      "reviewedBy": "agent"
+    },
+    "al museo": {
+      "l1": "to the museum",
+      "origin": "mt",
+      "mt": "to the museum",
+      "reviewedBy": "agent"
+    },
+    "sin problema! entonces: en metro, la línea azul hasta la última parada, a la estación de tren": {
+      "l1": "No problem! So: by metro, the blue line to the last stop, to the train station.",
+      "origin": "mt",
+      "mt": "No problem! So: by metro, the blue line to the last stop, to the train station.",
+      "reviewedBy": "agent"
+    },
+    "entonces: en metro, la línea azul hasta la última parada, a la estación de tren": {
+      "l1": "So: by metro, the blue line to the last stop, to the train station",
+      "origin": "mt",
+      "mt": "So: by metro, the blue line to the last stop, to the train station",
+      "reviewedBy": "agent"
+    },
+    "la línea azul hasta la última parada": {
+      "l1": "the blue line to the last stop,",
+      "origin": "mt",
+      "mt": "the blue line to the last stop,",
+      "reviewedBy": "agent"
+    },
+    "sin problema! entonces: en metro, la línea azul hasta la última parada, al museo": {
+      "l1": "No problem! So: by metro, the blue line to the last stop, to the museum.",
+      "origin": "mt",
+      "mt": "No problem! So: by metro, the blue line to the last stop, to the museum.",
+      "reviewedBy": "agent"
+    },
+    "entonces: en metro, la línea azul hasta la última parada, al museo": {
+      "l1": "So: by metro, the blue line to the last stop, to the museum",
+      "origin": "mt",
+      "mt": "So: by metro, the blue line to the last stop, to the museum",
+      "reviewedBy": "agent"
+    },
+    "sin problema! entonces: andando, todo recto y luego a la derecha, a la estación de tren": {
+      "l1": "No problem! So: on foot, straight on and then right, to the train station.",
+      "origin": "mt",
+      "mt": "No problem! So: on foot, straight on and then right, to the train station.",
+      "reviewedBy": "agent"
+    },
+    "entonces: andando, todo recto y luego a la derecha, a la estación de tren": {
+      "l1": "So: on foot, straight on and then right, to the train station",
+      "origin": "mt",
+      "mt": "So: on foot, straight on and then right, to the train station",
+      "reviewedBy": "agent"
+    },
+    "entonces: andando": {
+      "l1": "So: on foot,",
+      "origin": "mt",
+      "mt": "So: on foot,",
+      "reviewedBy": "agent"
+    },
+    "todo recto": {
+      "l1": "straight on",
+      "origin": "mt",
+      "mt": "straight on",
+      "reviewedBy": "agent"
+    },
+    "sin problema! entonces: andando, todo recto y luego a la derecha, al museo": {
+      "l1": "No problem! So: on foot, straight on and then right, to the museum.",
+      "origin": "mt",
+      "mt": "No problem! So: on foot, straight on and then right, to the museum.",
+      "reviewedBy": "agent"
+    },
+    "entonces: andando, todo recto y luego a la derecha, al museo": {
+      "l1": "So: on foot, straight on and then right, to the museum",
+      "origin": "mt",
+      "mt": "So: on foot, straight on and then right, to the museum",
+      "reviewedBy": "agent"
+    },
+    "sin problema! entonces: andando, por el parque, a la estación de tren": {
+      "l1": "No problem! So: on foot, through the park, to the train station.",
+      "origin": "mt",
+      "mt": "No problem! So: on foot, through the park, to the train station.",
+      "reviewedBy": "agent"
+    },
+    "entonces: andando, por el parque, a la estación de tren": {
+      "l1": "So: on foot, through the park, to the train station",
+      "origin": "mt",
+      "mt": "So: on foot, through the park, to the train station",
+      "reviewedBy": "agent"
+    },
+    "por el parque": {
+      "l1": "through the park,",
+      "origin": "mt",
+      "mt": "through the park,",
+      "reviewedBy": "agent"
+    },
+    "sin problema! entonces: andando, por el parque, al museo": {
+      "l1": "No problem! So: on foot, through the park, to the museum.",
+      "origin": "mt",
+      "mt": "No problem! So: on foot, through the park, to the museum.",
+      "reviewedBy": "agent"
+    },
+    "entonces: andando, por el parque, al museo": {
+      "l1": "So: on foot, through the park, to the museum",
+      "origin": "mt",
+      "mt": "So: on foot, through the park, to the museum",
+      "reviewedBy": "agent"
+    },
+    "saco un billete sencillo, entonces. ¡gracias, marta": {
+      "l1": "I'll get a single ticket, then. Thanks, Marta!",
+      "origin": "mt",
+      "mt": "I'll get a single ticket, then. Thanks, Marta!",
+      "reviewedBy": "agent"
+    },
+    "saco un billete sencillo, entonces": {
+      "l1": "I'll get a single ticket, then",
+      "origin": "mt",
+      "mt": "I'll get a single ticket, then",
+      "reviewedBy": "agent"
+    },
+    "gracias, marta": {
+      "l1": "Thanks, Marta!",
+      "origin": "mt",
+      "mt": "Thanks, Marta!",
+      "reviewedBy": "agent"
+    },
+    "gracias": {
+      "l1": "thanks",
+      "origin": "mt",
+      "mt": "thanks",
+      "reviewedBy": "agent"
+    },
+    "marta": {
+      "l1": "Marta",
+      "origin": "mt",
+      "mt": "Marta",
+      "reviewedBy": "agent"
+    },
+    "saco un billete de día, entonces. ¡gracias, marta": {
+      "l1": "I'll get a day pass, then. Thanks, Marta!",
+      "origin": "mt",
+      "mt": "I'll get a day pass, then. Thanks, Marta!",
+      "reviewedBy": "agent"
+    },
+    "saco un billete de día, entonces": {
+      "l1": "I'll get a day pass, then",
+      "origin": "mt",
+      "mt": "I'll get a day pass, then",
+      "reviewedBy": "agent"
+    },
+    "saco un billete de día": {
+      "l1": "I'll get a day pass,",
+      "origin": "mt",
+      "mt": "I'll get a day pass,",
+      "reviewedBy": "agent"
+    },
+    "saco un billete": {
+      "l1": "I'll get a ticket",
+      "origin": "mt",
+      "mt": "I'll get a ticket",
+      "reviewedBy": "agent"
+    }
+  },
+  "meta": {
+    "schemaVersion": 1,
+    "segmentationVersion": 1,
+    "generatedFrom": "getting-there.source.json",
+    "sourceDigest": "sha256:v1:ccb75021c7f82874073cc95669dbfb5b178d86eaad3cc4cf1e4ace91e56720e5",
+    "reviewPolicy": "shipping",
+    "translator": {
+      "en2romance": "authored-1",
+      "romance2en": "authored-1"
+    }
+  }
+}

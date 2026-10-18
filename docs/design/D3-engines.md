@@ -414,7 +414,7 @@ type TranslationRequest = { text: string; from: Lang; to: Lang };
 type Translator = {
   readonly id: TranslatorId;
   readonly repoId: string;
-  readonly revision: string;          // pinned commit; never a branch or a tag
+  readonly revision: string;          // pinned revision id — a model commit, or `authored-<n>`; never a branch or a tag
   translate(req: TranslationRequest): Promise<string>;
 };
 
@@ -437,14 +437,18 @@ Rules:
 1. **The port owns the `>>es<<` convention.** `translate({ text, from: 'en', to: 'es' })` and the adapter prepends the token internally. **No call site constructs a model prompt** (AC-ENG-17). This is the seam that lets the pipeline stay model-agnostic, and it is the reason the token is a *fact* (D3) while its *use* is pipeline (D6).
 2. **Revisions are pinned** (R3) and recorded in `Conversation.meta.translator`. Never a branch: a moving model makes every build look stale.
 
-   **The pinned revisions, as of 2026-10-18** (fetched from the Hugging Face API by the owner; amendment E7):
+   **The pinned model revisions, as of 2026-10-18** (fetched from the Hugging Face API by the owner; amendment E7):
 
    | Model | Pinned revision |
    |---|---|
    | `Xenova/opus-mt-en-ROMANCE` | `9d2ba69ac80c8e8453c3d9a1e2323a0e7b8ca3cd` |
    | `Xenova/opus-mt-ROMANCE-en` | `f60feaabe8bb435a5871e7702b25f53a01e770f8` |
 
-   These are the values `registry.build.ts` must carry, and the values a shipping artifact's `translationRev` must match. **A revision bump is a deliberate act**, per R3's mitigation: it re-drafts every line, which invalidates every `mt`, every gloss key derived from one, and every review stamp. It must therefore be its own commit, never a side effect of a rebuild. AC-CONTENT-23 asserts that a `'shipping'` artifact's revisions are these SHAs and that a `'fixture'` artifact's are consistent without being SHAs (D2 §7.2).
+   These are the values `registry.build.ts` must carry **when a model translator is selected**, and the values a **model-provenance** shipping artifact's `translationRev` must match.
+
+   **A shipping artifact may instead carry an authored-table revision** (amendment Y1; D2 §7.2 owns the rule). `meta.translator.en2romance`/`romance2en` and every record's `translationRev` are then `authored-<n>` — the pinned id of the authored lookup table that produced the text. This is a first-class, honest provenance, not a fallback: the `Translator` is an **injected port** (rule 5), an authored table is a legitimate thing to inject in its place, and the artifact must record which source actually ran. **A model SHA must never be recorded for text a model did not produce** — that is the false provenance `reviewedBy` exists to prevent, and it is worse than the fixture's labelled wart. The `authored-` prefix is mandatory so the two kinds can never be confused; no model entry exists in `registry.build.ts` for an authored run, and `E_TRANSLATOR_REV_STALE` still compares record against `meta` like with like.
+
+   **A revision bump is a deliberate act**, per R3's mitigation: it re-drafts every line, which invalidates every `mt`, every gloss key derived from one, and every review stamp. It must therefore be its own commit, never a side effect of a rebuild. AC-CONTENT-23 asserts that a `'shipping'` artifact's revisions are a pinned revision id of the required kind (model SHA or `authored-<n>`) and that a `'fixture'` artifact's are consistent without being either (D2 §7.2). AC-ENG-19 asserts the record-vs-`meta` consistency, including the mixed-null case.
 
    The **Supertonic** revisions arrive with M3 and are recorded the same way (§11); nothing about them is needed to bake.
 
@@ -461,7 +465,7 @@ Rules:
 
 ⚠ **DIVERGES FROM README** §Decisions ("Translation: client-side MT") and §Footprint ("lazily, first hover"). Under locked decision 3 the browser performs no translation and downloads no translation model, so the 214 MB is a **build-machine** cost, not a learner cost, and the README's footprint table no longer describes the app.
 
-⚠ A second README divergence: §Open questions asks whether MT is the hover layer or the source of the second language. **That question is closed** (PM ruling C7): MT drafts the whole L2 dialogue *and* every gloss span at build time.
+⚠ A second README divergence: §Open questions asks whether MT is the hover layer or the source of the second language. **That question is closed** (PM ruling C7): the translator drafts the whole L2 dialogue *and* every gloss span at build time — a pinned model **or** an authored bilingual table (amendment Y8).
 
 ---
 
@@ -545,7 +549,7 @@ Rules:
 | **AC-ENG-16** | The `Translator` is injected: the whole pipeline runs with a fake translator under a test that fails on any network access. |
 | **AC-ENG-17** | The port owns the `>>es<<` convention; no call site constructs a model prompt. |
 | **AC-ENG-18** | The phase-0 smoke test asserts `to: 'es'` differs from `to: 'pt'` before any full bake. |
-| **AC-ENG-19** | `translationRev` rules hold: both null is clean; exactly one null is `E_TRANSLATOR_REV_STALE` with a distinct message; differ is the same code; and `(mt === '') === (translationRev === null)` everywhere. A `'shipping'` artifact's revisions are the pinned SHAs of §10.2; a `'fixture'` artifact's are its fixture translator identifier (D2 §7.2). |
+| **AC-ENG-19** | `translationRev` rules hold: both null is clean; exactly one null is `E_TRANSLATOR_REV_STALE` with a distinct message; differ is the same code; and `(mt === '') === (translationRev === null)` everywhere. A `'shipping'` artifact's revisions are a pinned revision id of the required kind — a model SHA from §10.2 **or** an `authored-<n>` authored-table revision (amendment Y1) — and record and `meta` must agree; a `'fixture'` artifact's are its fixture translator identifier (D2 §7.2). |
 | **AC-ENG-20** | The production bundle contains none of `transformers`, `onnxruntime`, `opus-mt` or `supertonic` (mechanism: D5). |
 | **AC-ENG-22** | `resolveVoice` takes a character id and consults the override map supplied at construction (§3.1.1); two characters sharing a `VoiceId` receive their own overrides, and no adapter reads `localStorage`, a global, or a module singleton to obtain them. |
 | **AC-ENG-21** | Every registry entry naming weights has a **verified** license (§6.7), and the About/Licenses surface lists all of them and states OpenRAIL-M's use restrictions in plain language. |

@@ -1,0 +1,903 @@
+{
+  "id": "clothes-shopping",
+  "title": "Clothes Shopping",
+  "l1": "en",
+  "l2": "es",
+  "characters": {
+    "sofia": {
+      "name": "Sofía",
+      "voice": "F5"
+    },
+    "javier": {
+      "name": "Javier",
+      "voice": "M5"
+    }
+  },
+  "order": [
+    "b1",
+    "b2",
+    "b3",
+    "b4",
+    "b5",
+    "b6",
+    "b7",
+    "b8",
+    "b9",
+    "b10"
+  ],
+  "beats": {
+    "b1": {
+      "id": "b1",
+      "index": 0,
+      "speaker": "sofia",
+      "kind": "line",
+      "hint": "Sofía greets Javier in the shop.",
+      "alternatives": [
+        {
+          "id": "b1-l1",
+          "slotNames": []
+        }
+      ]
+    },
+    "b2": {
+      "id": "b2",
+      "index": 1,
+      "speaker": "javier",
+      "kind": "choice",
+      "hint": "Javier says what he needs.",
+      "alternatives": [
+        {
+          "id": "b2-s1",
+          "slotNames": [
+            "item"
+          ],
+          "options": [
+            {
+              "key": "shirt",
+              "label": {
+                "l1": "A shirt",
+                "l2": "Una camisa"
+              },
+              "icon": "👕",
+              "sets": {
+                "item": "shirt"
+              },
+              "slotNames": [
+                "item"
+              ]
+            },
+            {
+              "key": "coat",
+              "label": {
+                "l1": "A coat",
+                "l2": "Un abrigo"
+              },
+              "icon": "🧥",
+              "sets": {
+                "item": "coat"
+              },
+              "slotNames": [
+                "item"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "b3": {
+      "id": "b3",
+      "index": 2,
+      "speaker": "sofia",
+      "kind": "line",
+      "hint": "Sofía approves of the choice.",
+      "alternatives": [
+        {
+          "id": "b3-l1",
+          "slotNames": [
+            "item"
+          ]
+        }
+      ]
+    },
+    "b4": {
+      "id": "b4",
+      "index": 3,
+      "speaker": "javier",
+      "kind": "choice",
+      "hint": "Javier chooses a colour.",
+      "alternatives": [
+        {
+          "id": "b4-s1",
+          "slotNames": [
+            "color"
+          ],
+          "options": [
+            {
+              "key": "blue",
+              "label": {
+                "l1": "Blue",
+                "l2": "Azul"
+              },
+              "icon": "🔵",
+              "sets": {
+                "color": "blue"
+              },
+              "slotNames": [
+                "color"
+              ]
+            },
+            {
+              "key": "black",
+              "label": {
+                "l1": "Black",
+                "l2": "Negro"
+              },
+              "icon": "⚫",
+              "sets": {
+                "color": "black"
+              },
+              "slotNames": [
+                "color"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "b5": {
+      "id": "b5",
+      "index": 4,
+      "speaker": "sofia",
+      "kind": "line",
+      "hint": "Sofía likes the colour.",
+      "alternatives": [
+        {
+          "id": "b5-l1",
+          "slotNames": [
+            "color"
+          ]
+        }
+      ]
+    },
+    "b6": {
+      "id": "b6",
+      "index": 5,
+      "speaker": "javier",
+      "kind": "choice",
+      "hint": "Javier asks about the size.",
+      "alternatives": [
+        {
+          "id": "b6-s1",
+          "slotNames": [
+            "size"
+          ],
+          "options": [
+            {
+              "key": "small",
+              "label": {
+                "l1": "Small",
+                "l2": "Pequeña"
+              },
+              "icon": "🔽",
+              "sets": {
+                "size": "small"
+              },
+              "slotNames": [
+                "size"
+              ]
+            },
+            {
+              "key": "medium",
+              "label": {
+                "l1": "Medium",
+                "l2": "Mediana"
+              },
+              "icon": "🔼",
+              "sets": {
+                "size": "medium"
+              },
+              "slotNames": [
+                "size"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "b7": {
+      "id": "b7",
+      "index": 6,
+      "speaker": "sofia",
+      "kind": "line",
+      "hint": "Sofía goes to look for it.",
+      "alternatives": [
+        {
+          "id": "b7-l1",
+          "slotNames": [
+            "size"
+          ]
+        }
+      ]
+    },
+    "b8": {
+      "id": "b8",
+      "index": 7,
+      "speaker": "javier",
+      "kind": "choice",
+      "hint": "Javier decides whether to buy it.",
+      "alternatives": [
+        {
+          "id": "b8-s1",
+          "slotNames": [
+            "decision"
+          ],
+          "options": [
+            {
+              "key": "take",
+              "label": {
+                "l1": "I'll take it",
+                "l2": "Me lo llevo"
+              },
+              "icon": "✅",
+              "sets": {
+                "decision": "take"
+              },
+              "slotNames": [
+                "decision"
+              ]
+            },
+            {
+              "key": "think",
+              "label": {
+                "l1": "I'll think",
+                "l2": "Me lo pienso"
+              },
+              "icon": "🤔",
+              "sets": {
+                "decision": "think"
+              },
+              "slotNames": [
+                "decision"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "b9": {
+      "id": "b9",
+      "index": 8,
+      "speaker": "sofia",
+      "kind": "line",
+      "hint": "Sofía repeats the choice.",
+      "alternatives": [
+        {
+          "id": "b9-l1",
+          "slotNames": [
+            "item",
+            "color",
+            "size"
+          ]
+        }
+      ]
+    },
+    "b10": {
+      "id": "b10",
+      "index": 9,
+      "speaker": "javier",
+      "kind": "line",
+      "hint": "Javier thanks Sofía.",
+      "alternatives": [
+        {
+          "id": "b10-l1",
+          "slotNames": []
+        }
+      ]
+    }
+  },
+  "lines": {
+    "b1|b1-l1": {
+      "beatId": "b1",
+      "alternativeId": "b1-l1",
+      "variantKey": "b1|b1-l1",
+      "l1": "Hi Javier! Are you looking for something?",
+      "l2": "¡Hola, Javier! ¿Buscas algo?",
+      "mt": "¡Hola, Javier! ¿Buscas algo?",
+      "sourceHash": "sha256:v1:5c0574984954d263cc2a1c80a35c55d0fd29d524f3b47af408310000511216cb",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b2|shirt|item=shirt": {
+      "beatId": "b2",
+      "alternativeId": "b2-s1",
+      "optionKey": "shirt",
+      "variantKey": "b2|shirt|item=shirt",
+      "l1": "Yes, I'm looking for a shirt.",
+      "l2": "Sí, busco una camisa.",
+      "mt": "Sí, busco una camisa.",
+      "sourceHash": "sha256:v1:0deef2d5e4d00ffd85005f8eccabe9ecef46ac33ac0f5166bce6d9f889aca132",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b2|coat|item=coat": {
+      "beatId": "b2",
+      "alternativeId": "b2-s1",
+      "optionKey": "coat",
+      "variantKey": "b2|coat|item=coat",
+      "l1": "Actually, I need a coat.",
+      "l2": "En realidad, necesito un abrigo.",
+      "mt": "En realidad, necesito un abrigo.",
+      "sourceHash": "sha256:v1:20c959f9dfe241c4644edf982a7cb3c39a49b65d9f444393f82ddd1dc1c48b07",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b3|b3-l1|item=shirt": {
+      "beatId": "b3",
+      "alternativeId": "b3-l1",
+      "variantKey": "b3|b3-l1|item=shirt",
+      "l1": "A shirt? Good choice.",
+      "l2": "¿Una camisa? Buena elección.",
+      "mt": "¿Una camisa? Buena elección.",
+      "sourceHash": "sha256:v1:fd5580db35e31f4ce7b8b4a9ca6149c5b0e0579c7a10566c424c4ca64bdbfd5f",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b3|b3-l1|item=coat": {
+      "beatId": "b3",
+      "alternativeId": "b3-l1",
+      "variantKey": "b3|b3-l1|item=coat",
+      "l1": "A coat? Good choice.",
+      "l2": "¿Un abrigo? Buena elección.",
+      "mt": "¿Un abrigo? Buena elección.",
+      "sourceHash": "sha256:v1:06dbb5d3d9ab65918a818a48cc17d0d5a2c62a7cea1dd9c7d7d8532089f062df",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b4|blue|color=blue": {
+      "beatId": "b4",
+      "alternativeId": "b4-s1",
+      "optionKey": "blue",
+      "variantKey": "b4|blue|color=blue",
+      "l1": "I like it in blue.",
+      "l2": "Me gusta en azul.",
+      "mt": "Me gusta en azul.",
+      "sourceHash": "sha256:v1:af6c683339cb0633aec71b2a595c48ec71d392c9fda68c6f3a88bafc25640756",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b4|black|color=black": {
+      "beatId": "b4",
+      "alternativeId": "b4-s1",
+      "optionKey": "black",
+      "variantKey": "b4|black|color=black",
+      "l1": "Do you have it in black?",
+      "l2": "¿Lo tienes en negro?",
+      "mt": "¿Lo tienes en negro?",
+      "sourceHash": "sha256:v1:13f7c10bf416d7f4fb0cea9e3d26bcf71a97478c2932a477d0c76a3bff93c5fa",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b5|b5-l1|color=blue": {
+      "beatId": "b5",
+      "alternativeId": "b5-l1",
+      "variantKey": "b5|b5-l1|color=blue",
+      "l1": "The blue one looks great.",
+      "l2": "El azul te queda genial.",
+      "mt": "El azul te queda genial.",
+      "sourceHash": "sha256:v1:ece309a56269d1ec3fd80deb233ab3065ab1d3dc73d49f29b3b080fdc5cc226a",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b5|b5-l1|color=black": {
+      "beatId": "b5",
+      "alternativeId": "b5-l1",
+      "variantKey": "b5|b5-l1|color=black",
+      "l1": "The black one looks great.",
+      "l2": "El negro te queda genial.",
+      "mt": "El negro te queda genial.",
+      "sourceHash": "sha256:v1:db2e64385c4700da0bb2060e3d1de23ce5931a400a43bd9312e13b16e2407b8f",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b6|small|size=small": {
+      "beatId": "b6",
+      "alternativeId": "b6-s1",
+      "optionKey": "small",
+      "variantKey": "b6|small|size=small",
+      "l1": "Do you have it in a small?",
+      "l2": "¿Lo tienes en talla pequeña?",
+      "mt": "¿Lo tienes en talla pequeña?",
+      "sourceHash": "sha256:v1:526056b5cf04abf87abb5f2e00fc532f88fd9e6a43da93f1ca8b5f88d34d58fe",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b6|medium|size=medium": {
+      "beatId": "b6",
+      "alternativeId": "b6-s1",
+      "optionKey": "medium",
+      "variantKey": "b6|medium|size=medium",
+      "l1": "Can I try it in a medium?",
+      "l2": "¿Puedo probarme una mediana?",
+      "mt": "¿Puedo probarme una mediana?",
+      "sourceHash": "sha256:v1:86dc99d7867c25a751f7f0835aafadbe898169b873814c2e4f70029f7e4fd19a",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b7|b7-l1|size=small": {
+      "beatId": "b7",
+      "alternativeId": "b7-l1",
+      "variantKey": "b7|b7-l1|size=small",
+      "l1": "A small? Let's see.",
+      "l2": "¿Una pequeña? Vamos a ver.",
+      "mt": "¿Una pequeña? Vamos a ver.",
+      "sourceHash": "sha256:v1:b39d370e3e7f2dcef65c9f1fb2af7f25a82b9de028ba767b5263df0232f1e2c6",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b7|b7-l1|size=medium": {
+      "beatId": "b7",
+      "alternativeId": "b7-l1",
+      "variantKey": "b7|b7-l1|size=medium",
+      "l1": "A medium? Let's see.",
+      "l2": "¿Una mediana? Vamos a ver.",
+      "mt": "¿Una mediana? Vamos a ver.",
+      "sourceHash": "sha256:v1:51d8920413e0ebe3292f9640a4add44a6e6e114d2779d6ebcd8441be194e0759",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b8|take|decision=take": {
+      "beatId": "b8",
+      "alternativeId": "b8-s1",
+      "optionKey": "take",
+      "variantKey": "b8|take|decision=take",
+      "l1": "Perfect, I'll take it.",
+      "l2": "Perfecto, me lo llevo.",
+      "mt": "Perfecto, me lo llevo.",
+      "sourceHash": "sha256:v1:b63ce86adfc80d8c15e4b1432418c8d729e846b895ff7cfa77cf9d250255bf42",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b8|think|decision=think": {
+      "beatId": "b8",
+      "alternativeId": "b8-s1",
+      "optionKey": "think",
+      "variantKey": "b8|think|decision=think",
+      "l1": "Hmm, I'll think about it.",
+      "l2": "Mmm, me lo pienso.",
+      "mt": "Mmm, me lo pienso.",
+      "sourceHash": "sha256:v1:f7514f89e7e0b809fcf933825bc99f68f3f9441f2dd2d3ab2eea2636e87ce287",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b9|b9-l1|color=blue|item=shirt|size=small": {
+      "beatId": "b9",
+      "alternativeId": "b9-l1",
+      "variantKey": "b9|b9-l1|color=blue|item=shirt|size=small",
+      "l1": "Great: a shirt in blue, size small.",
+      "l2": "Genial: una camisa azul, talla pequeña.",
+      "mt": "Genial: una camisa azul, talla pequeña.",
+      "sourceHash": "sha256:v1:2784985f1eca6942738ddccfba33a1efb177e4f958ae9917d0e4f64307e1152e",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b9|b9-l1|color=blue|item=shirt|size=medium": {
+      "beatId": "b9",
+      "alternativeId": "b9-l1",
+      "variantKey": "b9|b9-l1|color=blue|item=shirt|size=medium",
+      "l1": "Great: a shirt in blue, size medium.",
+      "l2": "Genial: una camisa azul, talla mediana.",
+      "mt": "Genial: una camisa azul, talla mediana.",
+      "sourceHash": "sha256:v1:62ebfb5be71a39365cdc7a14fd62ffb7d1f4327c63342fc6691ee1e8d75640c3",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b9|b9-l1|color=black|item=shirt|size=small": {
+      "beatId": "b9",
+      "alternativeId": "b9-l1",
+      "variantKey": "b9|b9-l1|color=black|item=shirt|size=small",
+      "l1": "Great: a shirt in black, size small.",
+      "l2": "Genial: una camisa negra, talla pequeña.",
+      "mt": "Genial: una camisa negra, talla pequeña.",
+      "sourceHash": "sha256:v1:13a97cf2f21cc2a14103b0ed62c97e236b0e0b6d4d66888a3d673ccf4b0b2858",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b9|b9-l1|color=black|item=shirt|size=medium": {
+      "beatId": "b9",
+      "alternativeId": "b9-l1",
+      "variantKey": "b9|b9-l1|color=black|item=shirt|size=medium",
+      "l1": "Great: a shirt in black, size medium.",
+      "l2": "Genial: una camisa negra, talla mediana.",
+      "mt": "Genial: una camisa negra, talla mediana.",
+      "sourceHash": "sha256:v1:1906d7339712bd9b79cdbabdeb1d2c4462c111aaf479e7334d023d5c3539c54f",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b9|b9-l1|color=blue|item=coat|size=small": {
+      "beatId": "b9",
+      "alternativeId": "b9-l1",
+      "variantKey": "b9|b9-l1|color=blue|item=coat|size=small",
+      "l1": "Great: a coat in blue, size small.",
+      "l2": "Genial: un abrigo azul, talla pequeña.",
+      "mt": "Genial: un abrigo azul, talla pequeña.",
+      "sourceHash": "sha256:v1:7b3edcbc2917fbb4548c7b5d1999eef98b522166f1ce81a8b6179c2e5f2d7c92",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b9|b9-l1|color=blue|item=coat|size=medium": {
+      "beatId": "b9",
+      "alternativeId": "b9-l1",
+      "variantKey": "b9|b9-l1|color=blue|item=coat|size=medium",
+      "l1": "Great: a coat in blue, size medium.",
+      "l2": "Genial: un abrigo azul, talla mediana.",
+      "mt": "Genial: un abrigo azul, talla mediana.",
+      "sourceHash": "sha256:v1:41a3e81c6be65ac636d8607cbc9189cabbd8e0a862f701321766b5a2d66d516c",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b9|b9-l1|color=black|item=coat|size=small": {
+      "beatId": "b9",
+      "alternativeId": "b9-l1",
+      "variantKey": "b9|b9-l1|color=black|item=coat|size=small",
+      "l1": "Great: a coat in black, size small.",
+      "l2": "Genial: un abrigo negro, talla pequeña.",
+      "mt": "Genial: un abrigo negro, talla pequeña.",
+      "sourceHash": "sha256:v1:3f3b2edbf7b0de12d0dab71658ed99e1cd34145ef28d7bcd7e9624b33627415d",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b9|b9-l1|color=black|item=coat|size=medium": {
+      "beatId": "b9",
+      "alternativeId": "b9-l1",
+      "variantKey": "b9|b9-l1|color=black|item=coat|size=medium",
+      "l1": "Great: a coat in black, size medium.",
+      "l2": "Genial: un abrigo negro, talla mediana.",
+      "mt": "Genial: un abrigo negro, talla mediana.",
+      "sourceHash": "sha256:v1:bea16a87abdb53dbcb53f438865af92194aed7a5de5ac25ef43617aaa3a8859c",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b10|b10-l1": {
+      "beatId": "b10",
+      "alternativeId": "b10-l1",
+      "variantKey": "b10|b10-l1",
+      "l1": "Thanks for your help, Sofía!",
+      "l2": "¡Gracias por tu ayuda, Sofía!",
+      "mt": "¡Gracias por tu ayuda, Sofía!",
+      "sourceHash": "sha256:v1:4c5663cc0ce6fac2b9a2994246ffae258589c41eccf989246277d092a83d2a97",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    }
+  },
+  "gloss": {
+    "hola, javier! ¿buscas algo": {
+      "l1": "Hi Javier! Are you looking for something?",
+      "origin": "mt",
+      "mt": "Hi Javier! Are you looking for something?",
+      "reviewedBy": "agent"
+    },
+    "hola, javier": {
+      "l1": "Hi, Javier!",
+      "origin": "mt",
+      "mt": "Hi, Javier!",
+      "reviewedBy": "agent"
+    },
+    "hola": {
+      "l1": "Hi",
+      "origin": "mt",
+      "mt": "Hi",
+      "reviewedBy": "agent"
+    },
+    "javier": {
+      "l1": "Javier",
+      "origin": "mt",
+      "mt": "Javier",
+      "reviewedBy": "agent"
+    },
+    "buscas algo": {
+      "l1": "Are you looking for something?",
+      "origin": "mt",
+      "mt": "Are you looking for something?",
+      "reviewedBy": "agent"
+    },
+    "sí, busco una camisa": {
+      "l1": "Yes, I'm looking for a shirt.",
+      "origin": "mt",
+      "mt": "Yes, I'm looking for a shirt.",
+      "reviewedBy": "agent"
+    },
+    "sí": {
+      "l1": "Yes",
+      "origin": "mt",
+      "mt": "Yes",
+      "reviewedBy": "agent"
+    },
+    "busco una camisa": {
+      "l1": "I'm looking for a shirt",
+      "origin": "mt",
+      "mt": "I'm looking for a shirt",
+      "reviewedBy": "agent"
+    },
+    "en realidad, necesito un abrigo": {
+      "l1": "Actually, I need a coat.",
+      "origin": "mt",
+      "mt": "Actually, I need a coat.",
+      "reviewedBy": "agent"
+    },
+    "en realidad": {
+      "l1": "Actually",
+      "origin": "mt",
+      "mt": "Actually",
+      "reviewedBy": "agent"
+    },
+    "necesito un abrigo": {
+      "l1": "I need a coat",
+      "origin": "mt",
+      "mt": "I need a coat",
+      "reviewedBy": "agent"
+    },
+    "una camisa? buena elección": {
+      "l1": "A shirt? Good choice.",
+      "origin": "mt",
+      "mt": "A shirt? Good choice.",
+      "reviewedBy": "agent"
+    },
+    "una camisa": {
+      "l1": "A shirt?",
+      "origin": "mt",
+      "mt": "A shirt?",
+      "reviewedBy": "agent"
+    },
+    "buena elección": {
+      "l1": "Good choice",
+      "origin": "mt",
+      "mt": "Good choice",
+      "reviewedBy": "agent"
+    },
+    "un abrigo? buena elección": {
+      "l1": "A coat? Good choice.",
+      "origin": "mt",
+      "mt": "A coat? Good choice.",
+      "reviewedBy": "agent"
+    },
+    "un abrigo": {
+      "l1": "A coat?",
+      "origin": "mt",
+      "mt": "A coat?",
+      "reviewedBy": "agent"
+    },
+    "me gusta en azul": {
+      "l1": "I like it in blue.",
+      "origin": "mt",
+      "mt": "I like it in blue.",
+      "reviewedBy": "agent"
+    },
+    "me gusta": {
+      "l1": "I like it",
+      "origin": "mt",
+      "mt": "I like it",
+      "reviewedBy": "agent"
+    },
+    "lo tienes en negro": {
+      "l1": "Do you have it in black?",
+      "origin": "mt",
+      "mt": "Do you have it in black?",
+      "reviewedBy": "agent"
+    },
+    "lo tienes": {
+      "l1": "You have it",
+      "origin": "mt",
+      "mt": "You have it",
+      "reviewedBy": "agent"
+    },
+    "el azul te queda genial": {
+      "l1": "The blue one looks great.",
+      "origin": "mt",
+      "mt": "The blue one looks great.",
+      "reviewedBy": "agent"
+    },
+    "el negro te queda genial": {
+      "l1": "The black one looks great.",
+      "origin": "mt",
+      "mt": "The black one looks great.",
+      "reviewedBy": "agent"
+    },
+    "lo tienes en talla pequeña": {
+      "l1": "Do you have it in a small?",
+      "origin": "mt",
+      "mt": "Do you have it in a small?",
+      "reviewedBy": "agent"
+    },
+    "puedo probarme una mediana": {
+      "l1": "Can I try it in a medium?",
+      "origin": "mt",
+      "mt": "Can I try it in a medium?",
+      "reviewedBy": "agent"
+    },
+    "una pequeña? vamos a ver": {
+      "l1": "A small? Let's see.",
+      "origin": "mt",
+      "mt": "A small? Let's see.",
+      "reviewedBy": "agent"
+    },
+    "una pequeña": {
+      "l1": "A small?",
+      "origin": "mt",
+      "mt": "A small?",
+      "reviewedBy": "agent"
+    },
+    "vamos a ver": {
+      "l1": "Let's see",
+      "origin": "mt",
+      "mt": "Let's see",
+      "reviewedBy": "agent"
+    },
+    "una mediana? vamos a ver": {
+      "l1": "A medium? Let's see.",
+      "origin": "mt",
+      "mt": "A medium? Let's see.",
+      "reviewedBy": "agent"
+    },
+    "una mediana": {
+      "l1": "A medium?",
+      "origin": "mt",
+      "mt": "A medium?",
+      "reviewedBy": "agent"
+    },
+    "perfecto, me lo llevo": {
+      "l1": "Perfect, I'll take it.",
+      "origin": "mt",
+      "mt": "Perfect, I'll take it.",
+      "reviewedBy": "agent"
+    },
+    "perfecto": {
+      "l1": "Perfect",
+      "origin": "mt",
+      "mt": "Perfect",
+      "reviewedBy": "agent"
+    },
+    "me lo llevo": {
+      "l1": "I'll take it",
+      "origin": "mt",
+      "mt": "I'll take it",
+      "reviewedBy": "agent"
+    },
+    "mmm, me lo pienso": {
+      "l1": "Hmm, I'll think about it.",
+      "origin": "mt",
+      "mt": "Hmm, I'll think about it.",
+      "reviewedBy": "agent"
+    },
+    "mmm": {
+      "l1": "Hmm",
+      "origin": "mt",
+      "mt": "Hmm",
+      "reviewedBy": "agent"
+    },
+    "me lo pienso": {
+      "l1": "I'll think about it",
+      "origin": "mt",
+      "mt": "I'll think about it",
+      "reviewedBy": "agent"
+    },
+    "genial: una camisa azul, talla pequeña": {
+      "l1": "Great: a shirt in blue, size small.",
+      "origin": "mt",
+      "mt": "Great: a shirt in blue, size small.",
+      "reviewedBy": "agent"
+    },
+    "genial: una camisa azul": {
+      "l1": "Great: a blue shirt",
+      "origin": "mt",
+      "mt": "Great: a blue shirt",
+      "reviewedBy": "agent"
+    },
+    "talla pequeña": {
+      "l1": "Small size",
+      "origin": "mt",
+      "mt": "Small size",
+      "reviewedBy": "agent"
+    },
+    "genial: una camisa azul, talla mediana": {
+      "l1": "Great: a shirt in blue, size medium.",
+      "origin": "mt",
+      "mt": "Great: a shirt in blue, size medium.",
+      "reviewedBy": "agent"
+    },
+    "talla mediana": {
+      "l1": "Medium size",
+      "origin": "mt",
+      "mt": "Medium size",
+      "reviewedBy": "agent"
+    },
+    "genial: una camisa negra, talla pequeña": {
+      "l1": "Great: a shirt in black, size small.",
+      "origin": "mt",
+      "mt": "Great: a shirt in black, size small.",
+      "reviewedBy": "agent"
+    },
+    "genial: una camisa negra": {
+      "l1": "Great: a black shirt",
+      "origin": "mt",
+      "mt": "Great: a black shirt",
+      "reviewedBy": "agent"
+    },
+    "genial: una camisa negra, talla mediana": {
+      "l1": "Great: a shirt in black, size medium.",
+      "origin": "mt",
+      "mt": "Great: a shirt in black, size medium.",
+      "reviewedBy": "agent"
+    },
+    "genial: un abrigo azul, talla pequeña": {
+      "l1": "Great: a coat in blue, size small.",
+      "origin": "mt",
+      "mt": "Great: a coat in blue, size small.",
+      "reviewedBy": "agent"
+    },
+    "genial: un abrigo azul": {
+      "l1": "Great: a blue coat",
+      "origin": "mt",
+      "mt": "Great: a blue coat",
+      "reviewedBy": "agent"
+    },
+    "genial: un abrigo azul, talla mediana": {
+      "l1": "Great: a coat in blue, size medium.",
+      "origin": "mt",
+      "mt": "Great: a coat in blue, size medium.",
+      "reviewedBy": "agent"
+    },
+    "genial: un abrigo negro, talla pequeña": {
+      "l1": "Great: a coat in black, size small.",
+      "origin": "mt",
+      "mt": "Great: a coat in black, size small.",
+      "reviewedBy": "agent"
+    },
+    "genial: un abrigo negro": {
+      "l1": "Great: a black coat",
+      "origin": "mt",
+      "mt": "Great: a black coat",
+      "reviewedBy": "agent"
+    },
+    "genial: un abrigo negro, talla mediana": {
+      "l1": "Great: a coat in black, size medium.",
+      "origin": "mt",
+      "mt": "Great: a coat in black, size medium.",
+      "reviewedBy": "agent"
+    },
+    "gracias por tu ayuda, sofía": {
+      "l1": "Thanks for your help, Sofía!",
+      "origin": "mt",
+      "mt": "Thanks for your help, Sofía!",
+      "reviewedBy": "agent"
+    },
+    "gracias por tu ayuda": {
+      "l1": "Thanks for your help",
+      "origin": "mt",
+      "mt": "Thanks for your help",
+      "reviewedBy": "agent"
+    },
+    "gracias": {
+      "l1": "Thanks",
+      "origin": "mt",
+      "mt": "Thanks",
+      "reviewedBy": "agent"
+    },
+    "sofía": {
+      "l1": "Sofía",
+      "origin": "mt",
+      "mt": "Sofía",
+      "reviewedBy": "agent"
+    }
+  },
+  "meta": {
+    "schemaVersion": 1,
+    "segmentationVersion": 1,
+    "generatedFrom": "clothes-shopping.source.json",
+    "sourceDigest": "sha256:v1:76af6301395813b6c5423ba35b9b94357c2856609096638b11a710704456337b",
+    "reviewPolicy": "shipping",
+    "translator": {
+      "en2romance": "authored-1",
+      "romance2en": "authored-1"
+    }
+  }
+}

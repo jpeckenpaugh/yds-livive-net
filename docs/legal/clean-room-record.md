@@ -69,7 +69,7 @@ behaviour, and abstract technique**:
 |---|---|
 | Code | Written from scratch for this repo (human owner + AI coding agents), TypeScript / Preact. |
 | Conversation content | Originally authored for this project. The ten-beat English/Spanish conversation in `D6` is our own writing. |
-| Spanish dialogue text | Machine-drafted from our own English by Apache-2.0 MT models, then reviewed under the `D6` triage/adjudication gate. Provenance per line is recorded in the artifact (`mt`, `es`, `reviewedBy`), so which lines a human approved is always auditable. |
+| Spanish dialogue text | **Authored, not machine-translated.** Produced by an AI agent and carried through an authored bilingual phrase table, so the pipeline's provenance stays honest: `l2 === mt` (the table *is* the translation output), `reviewedBy: 'agent'`, revision `authored-1`. **No MT model has been used and none is downloaded.** Provenance is recorded per line and per gloss, so which text a human has adjudicated is always auditable. |
 | Audio | Synthesized at runtime by licensed model weights. No recorded human voice; no audio files committed to the repo. |
 | Model weights | **Not redistributed.** Fetched from pinned upstream revisions at runtime and cached in the browser. Voice styles are ~49 KB each and are likewise fetched, never committed. |
 | Fonts | System fonts only; none embedded. |

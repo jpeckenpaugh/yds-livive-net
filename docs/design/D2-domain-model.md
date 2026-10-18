@@ -113,7 +113,7 @@ type VariableValue = { key: ValueKey; l1?: string };
 
 - `values` are the only legal values for this variable. Any `sets`/`when` referring to an unknown key is `E_UNKNOWN_VALUE`.
 - `l1` is the **surface form substituted into English templates**, e.g. `spot`'s value `movie-plan` → `l1: "a new movie"`. It is **required if and only if** some template reads this variable (§6.1). A pure selector variable such as `activity` has no `l1`.
-- `l1` surface forms are authored English noun phrases or adverbs, not keys. Their whole purpose is that MT sees the complete English sentence (§7.3).
+- `l1` surface forms are authored English noun phrases or adverbs, not keys. Their whole purpose is that the translator sees the complete English sentence (§7.3).
 - **A variable is never written to `null`.** ⚠ **DIVERGES FROM README** beat 2, which has `"cuisine": null`. "Unwritten" is the absence of a key in the assignment, not a null value (`E_NULL_WRITE`).
 
 ### 4.3 `SourceBeat`, `Line`, `ChoiceSet`, `Option`, `When`
@@ -277,10 +277,12 @@ For every beat and every reachable assignment at that beat, **exactly one** alte
 
 - zero matches → `E_NO_MATCH` (build error)
 - two or more matches → `E_AMBIGUOUS_MATCH` (build error; "first wins" is forbidden)
-- more than one `when`-less alternative per beat → `E_MULTIPLE_FALLBACK`
-- a `when`-less alternative not last in its array → `E_FALLBACK_NOT_LAST`
+- more than one `when`-less **`line`** alternative per beat → `E_MULTIPLE_FALLBACK`
+- a `when`-less **`line`** alternative not last in `line[]` → `E_FALLBACK_NOT_LAST`
 - an alternative that matches on no reachable assignment → `E_DEAD_ALTERNATIVE` (build error; nearly always a typo in a `when`, which is otherwise invisible)
 - at most one fallback alternative per beat is permitted
+
+**The two fallback codes are `line`-array rules only, and that is deliberate** (amendment Y5). `validateConversationSource` inspects `beat.line` for fallbacks; it does **not** apply `E_MULTIPLE_FALLBACK`/`E_FALLBACK_NOT_LAST` to `choiceSets`. For a choice beat the same *semantic* rule (exactly one alternative matches) is enforced by the walk instead: two `when`-less sets both match every reachable assignment, so the walk raises `E_AMBIGUOUS_MATCH`. The ordering convention — a `when`-less set placed first — is **not** flagged as `E_FALLBACK_NOT_LAST`, and that is a recorded gap, not a licence: matching does not depend on array order, so a misplaced fallback set is caught by `E_AMBIGUOUS_MATCH` (if the scoped set is reachable) or by `E_DEAD_ALTERNATIVE` (if it is not). The doc is narrowed to what the validator enforces rather than the code widened to the doc.
 
 ### 5.3 Variant keys
 
@@ -451,8 +453,8 @@ type VariantRecord = {
   l2: string;                     // Spanish — complete, slot-free; the only human-editable field
   mt: string;                     // the last machine translation of `l1` (immutable once written)
   sourceHash: string;             // sha256:v1:<hex> of `l1`
-  reviewedBy: Reviewer;           // 'owner' = a human adjudicated THIS entry; 'agent' = triaged, unflagged
-  translationRev: string | null;  // pinned model revision that produced `mt`; null in --author-only mode
+  reviewedBy: Reviewer;           // 'owner' = a human adjudicated THIS entry; 'agent' = triaged, unflagged (D6 §8.1)
+  translationRev: string | null;  // pinned revision that produced `mt`: a model SHA or `authored-<n>`; null in --author-only mode
   triageRef?: string;             // id of the review-agent flag entry that escalated this entry, if any
 };
 ```
@@ -488,27 +490,40 @@ E_UNREVIEWED  <path>  reviewedBy is null
 
 Both are the same *kind* of fault — a provenance claim that is not true — so one code with two messages is the honest grouping rather than a compromise. AC-DOM-10 asserts both.
 
-**The fixture's translator provenance is a fixture identifier, not a commit SHA.** The committed fixture records `meta.translator = { en2romance: 'fixture-1', romance2en: 'fixture-1' }`, and every record's `translationRev = 'fixture-1'`. That keeps the invariant `(mt === '') === (translationRev === null)` true **without amendment** — `mt` is non-empty and `translationRev` is non-null — and `E_TRANSLATOR_REV_STALE` compares like with like and stays clean. So:
+**The fixture's translator provenance is a fixture identifier, not a commit SHA.** The committed fixture records `meta.translator = { en2romance: 'fixture-1', romance2en: 'fixture-1' }`, and every record's `translationRev = 'fixture-1'`. That keeps the invariant `(mt === '') === (translationRev === null)` true **without amendment** — `mt` is non-empty and `translationRev` is non-null — and `E_TRANSLATOR_REV_STALE` compares like with like and stays clean.
+
+**A shipping artifact has two honest provenances, not one** (amendment Y1). These rules originally assumed MT was the only possible source of `l2`. The architecture never did: `Translator` is an **injected port** (D3 §10 rule 5) precisely so the implementation can be swapped, and the M1 fixture translator is already an **authored English→Spanish lookup table**, not a model. An authored table is therefore a legitimate translator that the provenance rules simply did not anticipate.
+
+So a shipping artifact's revision — `meta.translator.en2romance`/`romance2en` **and** every record's `translationRev` — must be a **pinned, recorded, internally consistent** revision id of one of exactly two kinds:
+
+| Kind | Shape | What it identifies |
+|---|---|---|
+| **model** | a pinned commit SHA (D3 §10.2) | the MT weights that drafted the text |
+| **authored** | `authored-<n>`, `n` a monotonically increasing integer | the authored lookup-table revision that produced the text |
+
+**An authored revision must be visibly distinct from a model revision**, so nobody can mistake it for MT provenance. Hence the required `authored-` prefix: a bare hex SHA is a model, `authored-<n>` is not, and the two must never be spelled alike.
+
+**Why record the source rather than assume it.** The port is injected, so *which* translator ran is a property of the pipeline invocation, not of the resulting text; two runs can produce the same `l2` by different routes. The artifact must say which route it was. Recording a model SHA for text a model never produced is exactly the false provenance `reviewedBy` exists to prevent — and it is worse than the fixture's wart, which is at least labelled `'fixture'`.
 
 | `reviewPolicy` | `meta.translator.*` | Rule |
 |---|---|---|
-| `'shipping'` | a **pinned commit SHA** (D3 §10) | required; a non-SHA is an error |
-| `'fixture'` | a fixture translator identifier (`fixture-1`) | must be *consistent*, is never required to be a SHA |
+| `'shipping'` | a **pinned revision id** — a model SHA (D3 §10.2) **or** `authored-<n>` | required; must equal every record's `translationRev`; a model SHA must equal the pinned value in `registry.build.ts` |
+| `'fixture'` | a fixture translator identifier (`fixture-1`) | must be *consistent*, is never required to be a SHA or an `authored-` id |
 
-`reviewPolicy` is what makes that distinction safe — the same mechanism this section already uses for the review gate. AC-CONTENT-23 asserts it.
+`reviewPolicy` is what makes the fixture distinction safe — the same mechanism this section already uses for the review gate. AC-CONTENT-23 asserts the kind and the consistency; AC-ENG-19 asserts the record-vs-`meta` consistency including the mixed-null case.
 
 The policy is recorded in the artifact rather than inferred from a path, so it survives a file move and is visible in a diff. D6 §7.2 owns the bake-side behaviour, and the report prints the policy on every run so an unreviewed fixture can never be mistaken for reviewed shipping content.
 
-### 7.3 Why English is the authored language and MT sees whole sentences
+### 7.3 Why English is the authored language and the translator sees whole sentences
 
-The source is English; `l2` is machine-drafted from the **complete rendered English sentence**. This is the mechanism behind hard requirement 2. Worked:
+The source is English; `l2` is drafted from the **complete rendered English sentence** — by a model, or by an authored table keyed on the rendered line. This is the mechanism behind hard requirement 2. Worked:
 
 - `spot` = `dinner-plan` with surface form `a nice dinner`
 - b9 template: `Perfect. See you Saturday {time} for {spot}.`
 - b9 variant for `(spot=movie-plan, time=early)` renders English `Perfect. See you Saturday early for a new movie.`
-- MT translates **that whole string**. Spanish agreement, article selection and word order are all decided on complete input — never by concatenating a translated noun into a translated frame, which is the failure the requirement names ("una buena *dinner*").
+- The translator handles **that whole string**. Spanish agreement, article selection and word order are all decided on complete input — never by concatenating a translated noun into a translated frame, which is the failure the requirement names ("una buena *dinner*").
 
-An authored noun with the wrong gender can therefore only enter the artifact by an owner edit, and owner edits are exactly the thing that is recorded.
+A gender error in a **model**-drafted line can therefore only enter the artifact by an owner edit, and owner edits are exactly the thing that is recorded. An **authored table** can introduce one directly, which is why the table carries a recorded revision (`authored-<n>`, §7.2) and its output is still stamped `reviewedBy: 'agent'` for triage rather than assumed correct.
 
 ---
 
@@ -606,7 +621,7 @@ Rules:
 
 - `origin === 'mt'` ⇒ `l1 === mt` (`E_GLOSS_EDITED_NOT_OWNER`). Edits are made by adding an override to `glossary.es.json`, never by touching the generated file.
 - `origin === 'authored'` ⇒ `l1` may differ from `mt` (the authored file is human-owned).
-- **Coverage is guaranteed by construction:** every span at every level of every variant's `l2` has an entry, because MT drafts every span (PM rulings Q1/Q6). `E_GLOSS_MISSING` is a build error, and a runtime miss is therefore unreachable (AC-DOM-12).
+- **Coverage is guaranteed by construction:** every span at every level of every variant's `l2` has an entry, because the translator drafts every span — a pinned model **or** an authored table (PM rulings Q1/Q6; amendment Y8). `E_GLOSS_MISSING` is a build error, and a runtime miss is therefore unreachable (AC-DOM-12).
 - Hover is fully offline and instant: it is a dictionary lookup in `Record<string, GlossEntry>`. No model, no network, no worker.
 - Review gate: `reviewedBy` must be non-null in a release build (`E_UNREVIEWED`). D6 owns the triage workflow and the coverage report; this doc owns the record.
 
@@ -826,8 +841,8 @@ One registry, cited by D5 (CI), D6 (bake) and the Engineer's tests. `severity: e
 | `E_CHOICE_OPTIONS_MAX` | error | source | more than `MAX_OPTIONS` options in a choice set |
 | `E_NO_MATCH` | error | walk | a reachable assignment matches no alternative (§5.2) |
 | `E_AMBIGUOUS_MATCH` | error | walk | a reachable assignment matches two or more alternatives (§5.2) |
-| `E_MULTIPLE_FALLBACK` | error | source | more than one `when`-less alternative in a beat |
-| `E_FALLBACK_NOT_LAST` | error | source | a `when`-less alternative is not last |
+| `E_MULTIPLE_FALLBACK` | error | source | more than one `when`-less **`line`** alternative in a beat (§5.2; choice sets are caught by `E_AMBIGUOUS_MATCH`) |
+| `E_FALLBACK_NOT_LAST` | error | source | a `when`-less **`line`** alternative is not last in `line[]` (§5.2) |
 | `E_DEAD_ALTERNATIVE` | error | walk | an alternative matches no reachable assignment |
 | `E_DEAD_VARIABLE` | error | source | never written, or never read (incl. `who`) |
 | `E_READ_UNSET` | error | walk | a read variable can be unset at that point |
@@ -874,7 +889,7 @@ D1 references these ids; they are stable and must not be renumbered.
 | **AC-DOM-01** | `ConversationSource` and `Conversation` are separate types; no module reachable from `index.html` imports a `*.source.json` (lint-asserted). |
 | **AC-DOM-02** | `resolveTimeline` and `reduce` are pure: no DOM, `fetch`, `Date`, `Math.random`, or module-level mutable state. Same inputs → deep-equal outputs. |
 | **AC-DOM-03** | Over the exhaustive walk, exactly one alternative matches at every beat for every reachable assignment; a constructed counterexample raises `E_NO_MATCH` and another raises `E_AMBIGUOUS_MATCH`. |
-| **AC-DOM-04** | Fallback discipline: ≤1 `when`-less alternative per beat, and it is last. |
+| **AC-DOM-04** | Fallback discipline for `line` alternatives: ≤1 `when`-less `line` per beat, and it is last in `line[]`. For `choiceSets` the equivalent semantic rule is enforced by the walk (`E_AMBIGUOUS_MATCH`, §5.2); the ordering convention is not enforced and that gap is recorded, not asserted (amendment Y5). |
 | **AC-DOM-05** | No dead variables: the shipped conversation validates clean, and deleting **every** read of `who` — its self-read in b8's option templates *and* its read in b9 — makes `E_DEAD_VARIABLE` fire. A self-read counts as a read (§5.1), so removing only the downstream read must *not* fire it. |
 | **AC-DOM-06** | No read of an unset variable; an option reading a variable it sets itself is valid and produces a variant. |
 | **AC-DOM-07** | Bound-pair coherence: `activity`/`spot` are one co-write group; a mutated source that writes `activity` alone raises `E_BOUND_PAIR_SLOPPY`, and one that writes the same tuple twice raises `E_BOUND_PAIR_AMBIGUOUS`. |

@@ -1,0 +1,374 @@
+{
+  "buenos días, lucía! ¿pedimos algo": {
+    "l1": "Morning, Lucía! Shall we order something?",
+    "origin": "mt",
+    "mt": "Morning, Lucía! Shall we order something?",
+    "reviewedBy": "agent"
+  },
+  "buenos días, lucía": {
+    "l1": "Good morning, Lucía",
+    "origin": "mt",
+    "mt": "Good morning, Lucía",
+    "reviewedBy": "agent"
+  },
+  "buenos días": {
+    "l1": "Good morning",
+    "origin": "mt",
+    "mt": "Good morning",
+    "reviewedBy": "agent"
+  },
+  "lucía": {
+    "l1": "Lucía",
+    "origin": "mt",
+    "mt": "Lucía",
+    "reviewedBy": "agent"
+  },
+  "pedimos algo": {
+    "l1": "Shall we order something?",
+    "origin": "mt",
+    "mt": "Shall we order something?",
+    "reviewedBy": "agent"
+  },
+  "qué bien! yo quiero un café": {
+    "l1": "Sounds good! I'll have a coffee.",
+    "origin": "mt",
+    "mt": "Sounds good! I'll have a coffee.",
+    "reviewedBy": "agent"
+  },
+  "qué bien": {
+    "l1": "Great",
+    "origin": "mt",
+    "mt": "Great",
+    "reviewedBy": "agent"
+  },
+  "yo quiero un café": {
+    "l1": "I'd like a coffee",
+    "origin": "mt",
+    "mt": "I'd like a coffee",
+    "reviewedBy": "agent"
+  },
+  "vale, yo tomo un té": {
+    "l1": "OK, I'll take a tea.",
+    "origin": "mt",
+    "mt": "OK, I'll take a tea.",
+    "reviewedBy": "agent"
+  },
+  "vale": {
+    "l1": "OK",
+    "origin": "mt",
+    "mt": "OK",
+    "reviewedBy": "agent"
+  },
+  "yo tomo un té": {
+    "l1": "I'll have a tea",
+    "origin": "mt",
+    "mt": "I'll have a tea",
+    "reviewedBy": "agent"
+  },
+  "para mí lo mismo: un café": {
+    "l1": "Same for me: a coffee.",
+    "origin": "mt",
+    "mt": "Same for me: a coffee.",
+    "reviewedBy": "agent"
+  },
+  "para mí lo mismo: un té": {
+    "l1": "Same for me: a tea.",
+    "origin": "mt",
+    "mt": "Same for me: a tea.",
+    "reviewedBy": "agent"
+  },
+  "me lo pones con leche, por favor": {
+    "l1": "Could I have it with milk, please?",
+    "origin": "mt",
+    "mt": "Could I have it with milk, please?",
+    "reviewedBy": "agent"
+  },
+  "me lo pones con leche": {
+    "l1": "Could you make it with milk",
+    "origin": "mt",
+    "mt": "Could you make it with milk",
+    "reviewedBy": "agent"
+  },
+  "me lo pones": {
+    "l1": "Could you make it",
+    "origin": "mt",
+    "mt": "Could you make it",
+    "reviewedBy": "agent"
+  },
+  "por favor": {
+    "l1": "please",
+    "origin": "mt",
+    "mt": "please",
+    "reviewedBy": "agent"
+  },
+  "me lo pones solo, por favor": {
+    "l1": "Could I have it without milk, please?",
+    "origin": "mt",
+    "mt": "Could I have it without milk, please?",
+    "reviewedBy": "agent"
+  },
+  "me lo pones solo": {
+    "l1": "Could you make it black",
+    "origin": "mt",
+    "mt": "Could you make it black",
+    "reviewedBy": "agent"
+  },
+  "prefiero tomarlo con limón, por favor": {
+    "l1": "I'd rather have it with lemon, please.",
+    "origin": "mt",
+    "mt": "I'd rather have it with lemon, please.",
+    "reviewedBy": "agent"
+  },
+  "prefiero tomarlo con limón": {
+    "l1": "I'd rather have it with lemon",
+    "origin": "mt",
+    "mt": "I'd rather have it with lemon",
+    "reviewedBy": "agent"
+  },
+  "prefiero tomarlo": {
+    "l1": "I'd rather have it",
+    "origin": "mt",
+    "mt": "I'd rather have it",
+    "reviewedBy": "agent"
+  },
+  "prefiero tomarlo sin azúcar, por favor": {
+    "l1": "I'd rather have it without sugar, please.",
+    "origin": "mt",
+    "mt": "I'd rather have it without sugar, please.",
+    "reviewedBy": "agent"
+  },
+  "prefiero tomarlo sin azúcar": {
+    "l1": "I'd rather have it without sugar",
+    "origin": "mt",
+    "mt": "I'd rather have it without sugar",
+    "reviewedBy": "agent"
+  },
+  "el mío con leche también": {
+    "l1": "Make mine with milk too.",
+    "origin": "mt",
+    "mt": "Make mine with milk too.",
+    "reviewedBy": "agent"
+  },
+  "el mío": {
+    "l1": "Mine",
+    "origin": "mt",
+    "mt": "Mine",
+    "reviewedBy": "agent"
+  },
+  "el mío solo también": {
+    "l1": "Make mine without milk too.",
+    "origin": "mt",
+    "mt": "Make mine without milk too.",
+    "reviewedBy": "agent"
+  },
+  "el mío con limón también": {
+    "l1": "Make mine with lemon too.",
+    "origin": "mt",
+    "mt": "Make mine with lemon too.",
+    "reviewedBy": "agent"
+  },
+  "el mío sin azúcar también": {
+    "l1": "Make mine without sugar too.",
+    "origin": "mt",
+    "mt": "Make mine without sugar too.",
+    "reviewedBy": "agent"
+  },
+  "y un croissant, por favor": {
+    "l1": "And a croissant, please.",
+    "origin": "mt",
+    "mt": "And a croissant, please.",
+    "reviewedBy": "agent"
+  },
+  "y un croissant": {
+    "l1": "And a croissant",
+    "origin": "mt",
+    "mt": "And a croissant",
+    "reviewedBy": "agent"
+  },
+  "un croissant": {
+    "l1": "a croissant",
+    "origin": "mt",
+    "mt": "a croissant",
+    "reviewedBy": "agent"
+  },
+  "yo también quiero una tostada con tomate": {
+    "l1": "I'd also like a tomato toast.",
+    "origin": "mt",
+    "mt": "I'd also like a tomato toast.",
+    "reviewedBy": "agent"
+  },
+  "yo también quiero una tostada": {
+    "l1": "I'd also like a slice of toast",
+    "origin": "mt",
+    "mt": "I'd also like a slice of toast",
+    "reviewedBy": "agent"
+  },
+  "perfecto, un croissant para mí": {
+    "l1": "Perfect, a croissant for me.",
+    "origin": "mt",
+    "mt": "Perfect, a croissant for me.",
+    "reviewedBy": "agent"
+  },
+  "perfecto": {
+    "l1": "Perfect",
+    "origin": "mt",
+    "mt": "Perfect",
+    "reviewedBy": "agent"
+  },
+  "un croissant para mí": {
+    "l1": "a croissant for me",
+    "origin": "mt",
+    "mt": "a croissant for me",
+    "reviewedBy": "agent"
+  },
+  "perfecto, una tostada con tomate para mí": {
+    "l1": "Perfect, a tomato toast for me.",
+    "origin": "mt",
+    "mt": "Perfect, a tomato toast for me.",
+    "reviewedBy": "agent"
+  },
+  "una tostada con tomate para mí": {
+    "l1": "a tomato toast for me",
+    "origin": "mt",
+    "mt": "a tomato toast for me",
+    "reviewedBy": "agent"
+  },
+  "una tostada": {
+    "l1": "a slice of toast",
+    "origin": "mt",
+    "mt": "a slice of toast",
+    "reviewedBy": "agent"
+  },
+  "nos lo tomamos aquí": {
+    "l1": "Can we have it here?",
+    "origin": "mt",
+    "mt": "Can we have it here?",
+    "reviewedBy": "agent"
+  },
+  "nos lo pones para llevar": {
+    "l1": "Can we have it to take away?",
+    "origin": "mt",
+    "mt": "Can we have it to take away?",
+    "reviewedBy": "agent"
+  },
+  "nos lo pones": {
+    "l1": "Could you make it for us",
+    "origin": "mt",
+    "mt": "Could you make it for us",
+    "reviewedBy": "agent"
+  },
+  "perfecto: un café con leche, aquí": {
+    "l1": "Perfect: a coffee with milk, here.",
+    "origin": "mt",
+    "mt": "Perfect: a coffee with milk, here.",
+    "reviewedBy": "agent"
+  },
+  "perfecto: un café con leche": {
+    "l1": "Perfect: a coffee with milk",
+    "origin": "mt",
+    "mt": "Perfect: a coffee with milk",
+    "reviewedBy": "agent"
+  },
+  "perfecto: un café": {
+    "l1": "Perfect: a coffee",
+    "origin": "mt",
+    "mt": "Perfect: a coffee",
+    "reviewedBy": "agent"
+  },
+  "aquí": {
+    "l1": "here",
+    "origin": "mt",
+    "mt": "here",
+    "reviewedBy": "agent"
+  },
+  "perfecto: un café con leche, para llevar": {
+    "l1": "Perfect: a coffee with milk, to take away.",
+    "origin": "mt",
+    "mt": "Perfect: a coffee with milk, to take away.",
+    "reviewedBy": "agent"
+  },
+  "para llevar": {
+    "l1": "to take away",
+    "origin": "mt",
+    "mt": "to take away",
+    "reviewedBy": "agent"
+  },
+  "perfecto: un café solo, aquí": {
+    "l1": "Perfect: a coffee without milk, here.",
+    "origin": "mt",
+    "mt": "Perfect: a coffee without milk, here.",
+    "reviewedBy": "agent"
+  },
+  "perfecto: un café solo": {
+    "l1": "Perfect: a black coffee",
+    "origin": "mt",
+    "mt": "Perfect: a black coffee",
+    "reviewedBy": "agent"
+  },
+  "perfecto: un café solo, para llevar": {
+    "l1": "Perfect: a coffee without milk, to take away.",
+    "origin": "mt",
+    "mt": "Perfect: a coffee without milk, to take away.",
+    "reviewedBy": "agent"
+  },
+  "perfecto: un té con limón, aquí": {
+    "l1": "Perfect: a tea with lemon, here.",
+    "origin": "mt",
+    "mt": "Perfect: a tea with lemon, here.",
+    "reviewedBy": "agent"
+  },
+  "perfecto: un té con limón": {
+    "l1": "Perfect: a tea with lemon",
+    "origin": "mt",
+    "mt": "Perfect: a tea with lemon",
+    "reviewedBy": "agent"
+  },
+  "perfecto: un té": {
+    "l1": "Perfect: a tea",
+    "origin": "mt",
+    "mt": "Perfect: a tea",
+    "reviewedBy": "agent"
+  },
+  "perfecto: un té con limón, para llevar": {
+    "l1": "Perfect: a tea with lemon, to take away.",
+    "origin": "mt",
+    "mt": "Perfect: a tea with lemon, to take away.",
+    "reviewedBy": "agent"
+  },
+  "perfecto: un té sin azúcar, aquí": {
+    "l1": "Perfect: a tea without sugar, here.",
+    "origin": "mt",
+    "mt": "Perfect: a tea without sugar, here.",
+    "reviewedBy": "agent"
+  },
+  "perfecto: un té sin azúcar": {
+    "l1": "Perfect: a tea without sugar",
+    "origin": "mt",
+    "mt": "Perfect: a tea without sugar",
+    "reviewedBy": "agent"
+  },
+  "perfecto: un té sin azúcar, para llevar": {
+    "l1": "Perfect: a tea without sugar, to take away.",
+    "origin": "mt",
+    "mt": "Perfect: a tea without sugar, to take away.",
+    "reviewedBy": "agent"
+  },
+  "gracias, ana": {
+    "l1": "Thanks, Ana!",
+    "origin": "mt",
+    "mt": "Thanks, Ana!",
+    "reviewedBy": "agent"
+  },
+  "gracias": {
+    "l1": "Thanks",
+    "origin": "mt",
+    "mt": "Thanks",
+    "reviewedBy": "agent"
+  },
+  "ana": {
+    "l1": "Ana",
+    "origin": "mt",
+    "mt": "Ana",
+    "reviewedBy": "agent"
+  }
+}

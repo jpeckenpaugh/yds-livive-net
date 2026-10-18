@@ -1,0 +1,320 @@
+{
+  "hola, javier! ¿buscas algo": {
+    "l1": "Hi Javier! Are you looking for something?",
+    "origin": "mt",
+    "mt": "Hi Javier! Are you looking for something?",
+    "reviewedBy": "agent"
+  },
+  "hola, javier": {
+    "l1": "Hi, Javier!",
+    "origin": "mt",
+    "mt": "Hi, Javier!",
+    "reviewedBy": "agent"
+  },
+  "hola": {
+    "l1": "Hi",
+    "origin": "mt",
+    "mt": "Hi",
+    "reviewedBy": "agent"
+  },
+  "javier": {
+    "l1": "Javier",
+    "origin": "mt",
+    "mt": "Javier",
+    "reviewedBy": "agent"
+  },
+  "buscas algo": {
+    "l1": "Are you looking for something?",
+    "origin": "mt",
+    "mt": "Are you looking for something?",
+    "reviewedBy": "agent"
+  },
+  "sí, busco una camisa": {
+    "l1": "Yes, I'm looking for a shirt.",
+    "origin": "mt",
+    "mt": "Yes, I'm looking for a shirt.",
+    "reviewedBy": "agent"
+  },
+  "sí": {
+    "l1": "Yes",
+    "origin": "mt",
+    "mt": "Yes",
+    "reviewedBy": "agent"
+  },
+  "busco una camisa": {
+    "l1": "I'm looking for a shirt",
+    "origin": "mt",
+    "mt": "I'm looking for a shirt",
+    "reviewedBy": "agent"
+  },
+  "en realidad, necesito un abrigo": {
+    "l1": "Actually, I need a coat.",
+    "origin": "mt",
+    "mt": "Actually, I need a coat.",
+    "reviewedBy": "agent"
+  },
+  "en realidad": {
+    "l1": "Actually",
+    "origin": "mt",
+    "mt": "Actually",
+    "reviewedBy": "agent"
+  },
+  "necesito un abrigo": {
+    "l1": "I need a coat",
+    "origin": "mt",
+    "mt": "I need a coat",
+    "reviewedBy": "agent"
+  },
+  "una camisa? buena elección": {
+    "l1": "A shirt? Good choice.",
+    "origin": "mt",
+    "mt": "A shirt? Good choice.",
+    "reviewedBy": "agent"
+  },
+  "una camisa": {
+    "l1": "A shirt?",
+    "origin": "mt",
+    "mt": "A shirt?",
+    "reviewedBy": "agent"
+  },
+  "buena elección": {
+    "l1": "Good choice",
+    "origin": "mt",
+    "mt": "Good choice",
+    "reviewedBy": "agent"
+  },
+  "un abrigo? buena elección": {
+    "l1": "A coat? Good choice.",
+    "origin": "mt",
+    "mt": "A coat? Good choice.",
+    "reviewedBy": "agent"
+  },
+  "un abrigo": {
+    "l1": "A coat?",
+    "origin": "mt",
+    "mt": "A coat?",
+    "reviewedBy": "agent"
+  },
+  "me gusta en azul": {
+    "l1": "I like it in blue.",
+    "origin": "mt",
+    "mt": "I like it in blue.",
+    "reviewedBy": "agent"
+  },
+  "me gusta": {
+    "l1": "I like it",
+    "origin": "mt",
+    "mt": "I like it",
+    "reviewedBy": "agent"
+  },
+  "lo tienes en negro": {
+    "l1": "Do you have it in black?",
+    "origin": "mt",
+    "mt": "Do you have it in black?",
+    "reviewedBy": "agent"
+  },
+  "lo tienes": {
+    "l1": "You have it",
+    "origin": "mt",
+    "mt": "You have it",
+    "reviewedBy": "agent"
+  },
+  "el azul te queda genial": {
+    "l1": "The blue one looks great.",
+    "origin": "mt",
+    "mt": "The blue one looks great.",
+    "reviewedBy": "agent"
+  },
+  "el negro te queda genial": {
+    "l1": "The black one looks great.",
+    "origin": "mt",
+    "mt": "The black one looks great.",
+    "reviewedBy": "agent"
+  },
+  "lo tienes en talla pequeña": {
+    "l1": "Do you have it in a small?",
+    "origin": "mt",
+    "mt": "Do you have it in a small?",
+    "reviewedBy": "agent"
+  },
+  "puedo probarme una mediana": {
+    "l1": "Can I try it in a medium?",
+    "origin": "mt",
+    "mt": "Can I try it in a medium?",
+    "reviewedBy": "agent"
+  },
+  "una pequeña? vamos a ver": {
+    "l1": "A small? Let's see.",
+    "origin": "mt",
+    "mt": "A small? Let's see.",
+    "reviewedBy": "agent"
+  },
+  "una pequeña": {
+    "l1": "A small?",
+    "origin": "mt",
+    "mt": "A small?",
+    "reviewedBy": "agent"
+  },
+  "vamos a ver": {
+    "l1": "Let's see",
+    "origin": "mt",
+    "mt": "Let's see",
+    "reviewedBy": "agent"
+  },
+  "una mediana? vamos a ver": {
+    "l1": "A medium? Let's see.",
+    "origin": "mt",
+    "mt": "A medium? Let's see.",
+    "reviewedBy": "agent"
+  },
+  "una mediana": {
+    "l1": "A medium?",
+    "origin": "mt",
+    "mt": "A medium?",
+    "reviewedBy": "agent"
+  },
+  "perfecto, me lo llevo": {
+    "l1": "Perfect, I'll take it.",
+    "origin": "mt",
+    "mt": "Perfect, I'll take it.",
+    "reviewedBy": "agent"
+  },
+  "perfecto": {
+    "l1": "Perfect",
+    "origin": "mt",
+    "mt": "Perfect",
+    "reviewedBy": "agent"
+  },
+  "me lo llevo": {
+    "l1": "I'll take it",
+    "origin": "mt",
+    "mt": "I'll take it",
+    "reviewedBy": "agent"
+  },
+  "mmm, me lo pienso": {
+    "l1": "Hmm, I'll think about it.",
+    "origin": "mt",
+    "mt": "Hmm, I'll think about it.",
+    "reviewedBy": "agent"
+  },
+  "mmm": {
+    "l1": "Hmm",
+    "origin": "mt",
+    "mt": "Hmm",
+    "reviewedBy": "agent"
+  },
+  "me lo pienso": {
+    "l1": "I'll think about it",
+    "origin": "mt",
+    "mt": "I'll think about it",
+    "reviewedBy": "agent"
+  },
+  "genial: una camisa azul, talla pequeña": {
+    "l1": "Great: a shirt in blue, size small.",
+    "origin": "mt",
+    "mt": "Great: a shirt in blue, size small.",
+    "reviewedBy": "agent"
+  },
+  "genial: una camisa azul": {
+    "l1": "Great: a blue shirt",
+    "origin": "mt",
+    "mt": "Great: a blue shirt",
+    "reviewedBy": "agent"
+  },
+  "talla pequeña": {
+    "l1": "Small size",
+    "origin": "mt",
+    "mt": "Small size",
+    "reviewedBy": "agent"
+  },
+  "genial: una camisa azul, talla mediana": {
+    "l1": "Great: a shirt in blue, size medium.",
+    "origin": "mt",
+    "mt": "Great: a shirt in blue, size medium.",
+    "reviewedBy": "agent"
+  },
+  "talla mediana": {
+    "l1": "Medium size",
+    "origin": "mt",
+    "mt": "Medium size",
+    "reviewedBy": "agent"
+  },
+  "genial: una camisa negra, talla pequeña": {
+    "l1": "Great: a shirt in black, size small.",
+    "origin": "mt",
+    "mt": "Great: a shirt in black, size small.",
+    "reviewedBy": "agent"
+  },
+  "genial: una camisa negra": {
+    "l1": "Great: a black shirt",
+    "origin": "mt",
+    "mt": "Great: a black shirt",
+    "reviewedBy": "agent"
+  },
+  "genial: una camisa negra, talla mediana": {
+    "l1": "Great: a shirt in black, size medium.",
+    "origin": "mt",
+    "mt": "Great: a shirt in black, size medium.",
+    "reviewedBy": "agent"
+  },
+  "genial: un abrigo azul, talla pequeña": {
+    "l1": "Great: a coat in blue, size small.",
+    "origin": "mt",
+    "mt": "Great: a coat in blue, size small.",
+    "reviewedBy": "agent"
+  },
+  "genial: un abrigo azul": {
+    "l1": "Great: a blue coat",
+    "origin": "mt",
+    "mt": "Great: a blue coat",
+    "reviewedBy": "agent"
+  },
+  "genial: un abrigo azul, talla mediana": {
+    "l1": "Great: a coat in blue, size medium.",
+    "origin": "mt",
+    "mt": "Great: a coat in blue, size medium.",
+    "reviewedBy": "agent"
+  },
+  "genial: un abrigo negro, talla pequeña": {
+    "l1": "Great: a coat in black, size small.",
+    "origin": "mt",
+    "mt": "Great: a coat in black, size small.",
+    "reviewedBy": "agent"
+  },
+  "genial: un abrigo negro": {
+    "l1": "Great: a black coat",
+    "origin": "mt",
+    "mt": "Great: a black coat",
+    "reviewedBy": "agent"
+  },
+  "genial: un abrigo negro, talla mediana": {
+    "l1": "Great: a coat in black, size medium.",
+    "origin": "mt",
+    "mt": "Great: a coat in black, size medium.",
+    "reviewedBy": "agent"
+  },
+  "gracias por tu ayuda, sofía": {
+    "l1": "Thanks for your help, Sofía!",
+    "origin": "mt",
+    "mt": "Thanks for your help, Sofía!",
+    "reviewedBy": "agent"
+  },
+  "gracias por tu ayuda": {
+    "l1": "Thanks for your help",
+    "origin": "mt",
+    "mt": "Thanks for your help",
+    "reviewedBy": "agent"
+  },
+  "gracias": {
+    "l1": "Thanks",
+    "origin": "mt",
+    "mt": "Thanks",
+    "reviewedBy": "agent"
+  },
+  "sofía": {
+    "l1": "Sofía",
+    "origin": "mt",
+    "mt": "Sofía",
+    "reviewedBy": "agent"
+  }
+}

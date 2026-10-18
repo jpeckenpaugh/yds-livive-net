@@ -1,0 +1,211 @@
+{
+  "id": "not-feeling-well",
+  "title": "Not Feeling Well",
+  "l1": "en",
+  "l2": "es",
+  "characters": {
+    "elena": { "name": "Elena", "voice": "F4" },
+    "diego": { "name": "Diego", "voice": "M3" }
+  },
+  "variables": [
+    {
+      "name": "ache",
+      "values": [{ "key": "head" }, { "key": "stomach" }]
+    },
+    {
+      "name": "symptom",
+      "values": [
+        { "key": "headache", "l1": "a headache" },
+        { "key": "stomachache", "l1": "a stomachache" }
+      ]
+    },
+    {
+      "name": "remedy",
+      "values": [
+        { "key": "aspirin", "l1": "an aspirin" },
+        { "key": "lie-down", "l1": "a lie-down" },
+        { "key": "herbal-tea", "l1": "some herbal tea" },
+        { "key": "hot-water", "l1": "a hot water bottle" }
+      ]
+    },
+    {
+      "name": "plan",
+      "values": [
+        { "key": "lie-down", "l1": "lie down" },
+        { "key": "go-home", "l1": "go home" }
+      ]
+    },
+    {
+      "name": "where",
+      "values": [
+        { "key": "pharmacy", "l1": "go to the pharmacy" },
+        { "key": "doctor", "l1": "see the doctor" }
+      ]
+    }
+  ],
+  "beats": [
+    {
+      "id": "b1",
+      "speaker": "elena",
+      "hint": "Elena notices Diego is unwell.",
+      "line": [{ "id": "b1-l1", "template": "Are you all right, Diego? You look pale." }]
+    },
+    {
+      "id": "b2",
+      "speaker": "diego",
+      "hint": "Diego says what is wrong.",
+      "choiceSets": [
+        {
+          "id": "b2-s1",
+          "options": [
+            {
+              "key": "head",
+              "label": { "l1": "Head", "l2": "La cabeza" },
+              "icon": "🤕",
+              "template": "I've had {symptom} all morning.",
+              "sets": { "ache": "head", "symptom": "headache" }
+            },
+            {
+              "key": "stomach",
+              "label": { "l1": "Stomach", "l2": "El estómago" },
+              "icon": "🤢",
+              "template": "I think I've got {symptom}.",
+              "sets": { "ache": "stomach", "symptom": "stomachache" }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b3",
+      "speaker": "elena",
+      "hint": "Elena is worried.",
+      "line": [{ "id": "b3-l1", "template": "Oh no, {symptom}?" }]
+    },
+    {
+      "id": "b4",
+      "speaker": "diego",
+      "hint": "Diego asks for something.",
+      "choiceSets": [
+        {
+          "id": "b4-head",
+          "when": { "ache": "head" },
+          "options": [
+            {
+              "key": "aspirin",
+              "label": { "l1": "An aspirin", "l2": "Una aspirina" },
+              "icon": "💊",
+              "template": "Maybe {remedy}?",
+              "sets": { "remedy": "aspirin" }
+            },
+            {
+              "key": "lie-down",
+              "label": { "l1": "A lie-down", "l2": "Echarte un rato" },
+              "icon": "🛏️",
+              "template": "Maybe {remedy}?",
+              "sets": { "remedy": "lie-down" }
+            }
+          ]
+        },
+        {
+          "id": "b4-stomach",
+          "when": { "ache": "stomach" },
+          "options": [
+            {
+              "key": "herbal-tea",
+              "label": { "l1": "Herbal tea", "l2": "Una infusión" },
+              "icon": "🍵",
+              "template": "Maybe {remedy}?",
+              "sets": { "remedy": "herbal-tea" }
+            },
+            {
+              "key": "hot-water",
+              "label": { "l1": "Hot water bottle", "l2": "Bolsa de agua caliente" },
+              "icon": "♨️",
+              "template": "Maybe {remedy}?",
+              "sets": { "remedy": "hot-water" }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "speaker": "elena",
+      "hint": "Elena offers to help.",
+      "line": [{ "id": "b5-l1", "template": "Do you want {remedy}?" }]
+    },
+    {
+      "id": "b6",
+      "speaker": "diego",
+      "hint": "Diego decides what to do.",
+      "choiceSets": [
+        {
+          "id": "b6-s1",
+          "options": [
+            {
+              "key": "lie-down",
+              "label": { "l1": "Lie down", "l2": "Tumbarme" },
+              "icon": "😴",
+              "template": "I think I'll {plan}.",
+              "sets": { "plan": "lie-down" }
+            },
+            {
+              "key": "go-home",
+              "label": { "l1": "Go home", "l2": "Irme a casa" },
+              "icon": "🏠",
+              "template": "I think I'll {plan}.",
+              "sets": { "plan": "go-home" }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b7",
+      "speaker": "elena",
+      "hint": "Elena gives him advice.",
+      "line": [{ "id": "b7-l1", "template": "You should {plan}, then." }]
+    },
+    {
+      "id": "b8",
+      "speaker": "diego",
+      "hint": "Diego says where he'll go.",
+      "choiceSets": [
+        {
+          "id": "b8-s1",
+          "options": [
+            {
+              "key": "pharmacy",
+              "label": { "l1": "The pharmacy", "l2": "La farmacia" },
+              "icon": "💊",
+              "template": "I'll {where}.",
+              "sets": { "where": "pharmacy" }
+            },
+            {
+              "key": "doctor",
+              "label": { "l1": "The doctor", "l2": "El médico" },
+              "icon": "🩺",
+              "template": "I'll {where}.",
+              "sets": { "where": "doctor" }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b9",
+      "speaker": "elena",
+      "hint": "Elena repeats the advice.",
+      "line": [
+        { "id": "b9-l1", "template": "Right. With {symptom}, you should {plan}, and then {where}." }
+      ]
+    },
+    {
+      "id": "b10",
+      "speaker": "diego",
+      "hint": "Diego thanks her.",
+      "line": [{ "id": "b10-l1", "template": "Thanks, Elena." }]
+    }
+  ]
+}

@@ -12,7 +12,7 @@
  */
 
 import type { Conversation } from '../domain/types.ts';
-import { conversation as m1 } from './conversation.ts';
+import { CONVERSATIONS } from './conversation.ts';
 
 export type CatalogEntry = {
   id: string;
@@ -22,9 +22,13 @@ export type CatalogEntry = {
   conversation: Conversation;
 };
 
-export const CATALOG: CatalogEntry[] = [
-  { id: m1.id, title: m1.title, l1: m1.l1, l2: m1.l2, conversation: m1 },
-];
+export const CATALOG: CatalogEntry[] = CONVERSATIONS.map((conversation) => ({
+  id: conversation.id,
+  title: conversation.title,
+  l1: conversation.l1,
+  l2: conversation.l2,
+  conversation,
+}));
 
 export function entryById(id: string): CatalogEntry | undefined {
   return CATALOG.find((entry) => entry.id === id);

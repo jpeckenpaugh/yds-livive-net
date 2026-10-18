@@ -1,0 +1,1047 @@
+{
+  "id": "cafe-order",
+  "title": "At the Café",
+  "l1": "en",
+  "l2": "es",
+  "characters": {
+    "ana": {
+      "name": "Ana",
+      "voice": "F1"
+    },
+    "lucia": {
+      "name": "Lucía",
+      "voice": "F3"
+    }
+  },
+  "order": [
+    "b1",
+    "b2",
+    "b3",
+    "b4",
+    "b5",
+    "b6",
+    "b7",
+    "b8",
+    "b9",
+    "b10"
+  ],
+  "beats": {
+    "b1": {
+      "id": "b1",
+      "index": 0,
+      "speaker": "ana",
+      "kind": "line",
+      "hint": "Ana and Lucía meet at the café.",
+      "alternatives": [
+        {
+          "id": "b1-l1",
+          "slotNames": []
+        }
+      ]
+    },
+    "b2": {
+      "id": "b2",
+      "index": 1,
+      "speaker": "lucia",
+      "kind": "choice",
+      "hint": "Lucía orders a drink first.",
+      "alternatives": [
+        {
+          "id": "b2-s1",
+          "slotNames": [
+            "drinkPhrase"
+          ],
+          "options": [
+            {
+              "key": "coffee",
+              "label": {
+                "l1": "Coffee",
+                "l2": "Café"
+              },
+              "icon": "☕",
+              "sets": {
+                "drink": "coffee",
+                "drinkPhrase": "coffee"
+              },
+              "slotNames": [
+                "drinkPhrase"
+              ]
+            },
+            {
+              "key": "tea",
+              "label": {
+                "l1": "Tea",
+                "l2": "Té"
+              },
+              "icon": "🍵",
+              "sets": {
+                "drink": "tea",
+                "drinkPhrase": "tea"
+              },
+              "slotNames": [
+                "drinkPhrase"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "b3": {
+      "id": "b3",
+      "index": 2,
+      "speaker": "ana",
+      "kind": "line",
+      "hint": "Ana asks for the same.",
+      "alternatives": [
+        {
+          "id": "b3-l1",
+          "slotNames": [
+            "drinkPhrase"
+          ]
+        }
+      ]
+    },
+    "b4": {
+      "id": "b4",
+      "index": 3,
+      "speaker": "lucia",
+      "kind": "choice",
+      "hint": "Lucía says how she takes it.",
+      "alternatives": [
+        {
+          "id": "b4-coffee",
+          "when": {
+            "drink": "coffee"
+          },
+          "slotNames": [
+            "extra"
+          ],
+          "options": [
+            {
+              "key": "with-milk",
+              "label": {
+                "l1": "With milk",
+                "l2": "Con leche"
+              },
+              "icon": "🥛",
+              "sets": {
+                "extra": "with-milk"
+              },
+              "slotNames": [
+                "extra"
+              ]
+            },
+            {
+              "key": "no-milk",
+              "label": {
+                "l1": "Without milk",
+                "l2": "Solo"
+              },
+              "icon": "⬛",
+              "sets": {
+                "extra": "no-milk"
+              },
+              "slotNames": [
+                "extra"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "b4-tea",
+          "when": {
+            "drink": "tea"
+          },
+          "slotNames": [
+            "extra"
+          ],
+          "options": [
+            {
+              "key": "with-lemon",
+              "label": {
+                "l1": "With lemon",
+                "l2": "Con limón"
+              },
+              "icon": "🍋",
+              "sets": {
+                "extra": "with-lemon"
+              },
+              "slotNames": [
+                "extra"
+              ]
+            },
+            {
+              "key": "no-sugar",
+              "label": {
+                "l1": "Without sugar",
+                "l2": "Sin azúcar"
+              },
+              "icon": "🚫",
+              "sets": {
+                "extra": "no-sugar"
+              },
+              "slotNames": [
+                "extra"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "b5": {
+      "id": "b5",
+      "index": 4,
+      "speaker": "ana",
+      "kind": "line",
+      "hint": "Ana copies her friend.",
+      "alternatives": [
+        {
+          "id": "b5-l1",
+          "slotNames": [
+            "extra"
+          ]
+        }
+      ]
+    },
+    "b6": {
+      "id": "b6",
+      "index": 5,
+      "speaker": "lucia",
+      "kind": "choice",
+      "hint": "Lucía orders something to eat.",
+      "alternatives": [
+        {
+          "id": "b6-s1",
+          "slotNames": [
+            "food"
+          ],
+          "options": [
+            {
+              "key": "croissant",
+              "label": {
+                "l1": "A croissant",
+                "l2": "Un croissant"
+              },
+              "icon": "🥐",
+              "sets": {
+                "food": "croissant"
+              },
+              "slotNames": [
+                "food"
+              ]
+            },
+            {
+              "key": "tomato-toast",
+              "label": {
+                "l1": "Tomato toast",
+                "l2": "Tostada con tomate"
+              },
+              "icon": "🍞",
+              "sets": {
+                "food": "tomato-toast"
+              },
+              "slotNames": [
+                "food"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "b7": {
+      "id": "b7",
+      "index": 6,
+      "speaker": "ana",
+      "kind": "line",
+      "hint": "Ana wants the same food.",
+      "alternatives": [
+        {
+          "id": "b7-l1",
+          "slotNames": [
+            "food"
+          ]
+        }
+      ]
+    },
+    "b8": {
+      "id": "b8",
+      "index": 7,
+      "speaker": "lucia",
+      "kind": "choice",
+      "hint": "Lucía decides where to have it.",
+      "alternatives": [
+        {
+          "id": "b8-s1",
+          "slotNames": [
+            "place"
+          ],
+          "options": [
+            {
+              "key": "here",
+              "label": {
+                "l1": "Here",
+                "l2": "Aquí"
+              },
+              "icon": "🪑",
+              "sets": {
+                "place": "here"
+              },
+              "slotNames": [
+                "place"
+              ]
+            },
+            {
+              "key": "takeaway",
+              "label": {
+                "l1": "To take away",
+                "l2": "Para llevar"
+              },
+              "icon": "🥡",
+              "sets": {
+                "place": "takeaway"
+              },
+              "slotNames": [
+                "place"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "b9": {
+      "id": "b9",
+      "index": 8,
+      "speaker": "ana",
+      "kind": "line",
+      "hint": "Ana repeats the whole order.",
+      "alternatives": [
+        {
+          "id": "b9-l1",
+          "slotNames": [
+            "drinkPhrase",
+            "extra",
+            "place"
+          ]
+        }
+      ]
+    },
+    "b10": {
+      "id": "b10",
+      "index": 9,
+      "speaker": "lucia",
+      "kind": "line",
+      "hint": "Lucía says goodbye.",
+      "alternatives": [
+        {
+          "id": "b10-l1",
+          "slotNames": []
+        }
+      ]
+    }
+  },
+  "lines": {
+    "b1|b1-l1": {
+      "beatId": "b1",
+      "alternativeId": "b1-l1",
+      "variantKey": "b1|b1-l1",
+      "l1": "Morning, Lucía! Shall we order something?",
+      "l2": "¡Buenos días, Lucía! ¿Pedimos algo?",
+      "mt": "¡Buenos días, Lucía! ¿Pedimos algo?",
+      "sourceHash": "sha256:v1:fc691a62391b5eb2674e91fa1c6bd8f3fed294fd77ad33686ed68470ae71b663",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b2|coffee|drinkPhrase=coffee": {
+      "beatId": "b2",
+      "alternativeId": "b2-s1",
+      "optionKey": "coffee",
+      "variantKey": "b2|coffee|drinkPhrase=coffee",
+      "l1": "Sounds good! I'll have a coffee.",
+      "l2": "¡Qué bien! Yo quiero un café.",
+      "mt": "¡Qué bien! Yo quiero un café.",
+      "sourceHash": "sha256:v1:65874e5917946a09b192ea7b75962029bc333b2fdaf0da6989831fa9cf4ae3cd",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b2|tea|drinkPhrase=tea": {
+      "beatId": "b2",
+      "alternativeId": "b2-s1",
+      "optionKey": "tea",
+      "variantKey": "b2|tea|drinkPhrase=tea",
+      "l1": "OK, I'll take a tea.",
+      "l2": "Vale, yo tomo un té.",
+      "mt": "Vale, yo tomo un té.",
+      "sourceHash": "sha256:v1:69f0dd01a2293e68822d852b06b17324d52fa0783103cf3fca93e232820cb94d",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b3|b3-l1|drinkPhrase=coffee": {
+      "beatId": "b3",
+      "alternativeId": "b3-l1",
+      "variantKey": "b3|b3-l1|drinkPhrase=coffee",
+      "l1": "Same for me: a coffee.",
+      "l2": "Para mí lo mismo: un café.",
+      "mt": "Para mí lo mismo: un café.",
+      "sourceHash": "sha256:v1:8f81b2ec19b68bdc7724f86c689ef7fb07e3cfc0a7d25077fa6419edd73f20cd",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b3|b3-l1|drinkPhrase=tea": {
+      "beatId": "b3",
+      "alternativeId": "b3-l1",
+      "variantKey": "b3|b3-l1|drinkPhrase=tea",
+      "l1": "Same for me: a tea.",
+      "l2": "Para mí lo mismo: un té.",
+      "mt": "Para mí lo mismo: un té.",
+      "sourceHash": "sha256:v1:d5ced0bf2158289c858c9627615c71bd7cff0ce606f2427f010f7976d57ad86c",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b4|with-milk|extra=with-milk": {
+      "beatId": "b4",
+      "alternativeId": "b4-coffee",
+      "optionKey": "with-milk",
+      "variantKey": "b4|with-milk|extra=with-milk",
+      "l1": "Could I have it with milk, please?",
+      "l2": "¿Me lo pones con leche, por favor?",
+      "mt": "¿Me lo pones con leche, por favor?",
+      "sourceHash": "sha256:v1:e0bd7377042c3610a3a42712bb7034c24a023e8ffcd39a8ef63f3e8bc571429a",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b4|no-milk|extra=no-milk": {
+      "beatId": "b4",
+      "alternativeId": "b4-coffee",
+      "optionKey": "no-milk",
+      "variantKey": "b4|no-milk|extra=no-milk",
+      "l1": "Could I have it without milk, please?",
+      "l2": "¿Me lo pones solo, por favor?",
+      "mt": "¿Me lo pones solo, por favor?",
+      "sourceHash": "sha256:v1:8bd4e5d1a9e8e304c08d5147673e04248eb8439602b28c0ee73e190ed5f39339",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b4|with-lemon|extra=with-lemon": {
+      "beatId": "b4",
+      "alternativeId": "b4-tea",
+      "optionKey": "with-lemon",
+      "variantKey": "b4|with-lemon|extra=with-lemon",
+      "l1": "I'd rather have it with lemon, please.",
+      "l2": "Prefiero tomarlo con limón, por favor.",
+      "mt": "Prefiero tomarlo con limón, por favor.",
+      "sourceHash": "sha256:v1:e2ab255b8d89b8cc4cccb426a45bd848ead5778a03ac8eea4e0f241edb550cff",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b4|no-sugar|extra=no-sugar": {
+      "beatId": "b4",
+      "alternativeId": "b4-tea",
+      "optionKey": "no-sugar",
+      "variantKey": "b4|no-sugar|extra=no-sugar",
+      "l1": "I'd rather have it without sugar, please.",
+      "l2": "Prefiero tomarlo sin azúcar, por favor.",
+      "mt": "Prefiero tomarlo sin azúcar, por favor.",
+      "sourceHash": "sha256:v1:36f68ba76c2079aee013ae16bdd8955753e22241241a340b2e3c377903cb2e02",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b5|b5-l1|extra=with-milk": {
+      "beatId": "b5",
+      "alternativeId": "b5-l1",
+      "variantKey": "b5|b5-l1|extra=with-milk",
+      "l1": "Make mine with milk too.",
+      "l2": "El mío con leche también.",
+      "mt": "El mío con leche también.",
+      "sourceHash": "sha256:v1:ad3577c4c0b8f384d96d45b69b839af9c451c87959c594c1f08d8ea209f09adb",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b5|b5-l1|extra=no-milk": {
+      "beatId": "b5",
+      "alternativeId": "b5-l1",
+      "variantKey": "b5|b5-l1|extra=no-milk",
+      "l1": "Make mine without milk too.",
+      "l2": "El mío solo también.",
+      "mt": "El mío solo también.",
+      "sourceHash": "sha256:v1:2d1c2d232dd22862d134d0234c48f952e44430c0fba1c2b891fd1c36e963edf0",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b5|b5-l1|extra=with-lemon": {
+      "beatId": "b5",
+      "alternativeId": "b5-l1",
+      "variantKey": "b5|b5-l1|extra=with-lemon",
+      "l1": "Make mine with lemon too.",
+      "l2": "El mío con limón también.",
+      "mt": "El mío con limón también.",
+      "sourceHash": "sha256:v1:cf2c771d3a24280cfe2163c666834cb12cb9513793c71e637370985e8b7e5ed6",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b5|b5-l1|extra=no-sugar": {
+      "beatId": "b5",
+      "alternativeId": "b5-l1",
+      "variantKey": "b5|b5-l1|extra=no-sugar",
+      "l1": "Make mine without sugar too.",
+      "l2": "El mío sin azúcar también.",
+      "mt": "El mío sin azúcar también.",
+      "sourceHash": "sha256:v1:aa70c1539d44e2e621acb115043595db48a4fec680f17984fc6958871a362e79",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b6|croissant|food=croissant": {
+      "beatId": "b6",
+      "alternativeId": "b6-s1",
+      "optionKey": "croissant",
+      "variantKey": "b6|croissant|food=croissant",
+      "l1": "And a croissant, please.",
+      "l2": "Y un croissant, por favor.",
+      "mt": "Y un croissant, por favor.",
+      "sourceHash": "sha256:v1:5db910edb9cb7bdcfe2188901835575489675bf6a1f0376569c0e38bbab8d647",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b6|tomato-toast|food=tomato-toast": {
+      "beatId": "b6",
+      "alternativeId": "b6-s1",
+      "optionKey": "tomato-toast",
+      "variantKey": "b6|tomato-toast|food=tomato-toast",
+      "l1": "I'd also like a tomato toast.",
+      "l2": "Yo también quiero una tostada con tomate.",
+      "mt": "Yo también quiero una tostada con tomate.",
+      "sourceHash": "sha256:v1:a9006c5aabb9ae844af9486805c822e9b6bf3d2a8d1c87c03ebd98261cdb379a",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b7|b7-l1|food=croissant": {
+      "beatId": "b7",
+      "alternativeId": "b7-l1",
+      "variantKey": "b7|b7-l1|food=croissant",
+      "l1": "Perfect, a croissant for me.",
+      "l2": "Perfecto, un croissant para mí.",
+      "mt": "Perfecto, un croissant para mí.",
+      "sourceHash": "sha256:v1:59c18e54b5c0b6394f114fb748fc5420666d2b0e292be99efa2f16d577be411f",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b7|b7-l1|food=tomato-toast": {
+      "beatId": "b7",
+      "alternativeId": "b7-l1",
+      "variantKey": "b7|b7-l1|food=tomato-toast",
+      "l1": "Perfect, a tomato toast for me.",
+      "l2": "Perfecto, una tostada con tomate para mí.",
+      "mt": "Perfecto, una tostada con tomate para mí.",
+      "sourceHash": "sha256:v1:d7f9e80dcaa1ffc31e8b7124a1396109a04af048af5b1f2ae745cc1471ec9408",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b8|here|place=here": {
+      "beatId": "b8",
+      "alternativeId": "b8-s1",
+      "optionKey": "here",
+      "variantKey": "b8|here|place=here",
+      "l1": "Can we have it here?",
+      "l2": "¿Nos lo tomamos aquí?",
+      "mt": "¿Nos lo tomamos aquí?",
+      "sourceHash": "sha256:v1:701324ff652f7a5f4f516f97605a4921d9f9d69c7c8e7ca31fd97c2f40569930",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b8|takeaway|place=takeaway": {
+      "beatId": "b8",
+      "alternativeId": "b8-s1",
+      "optionKey": "takeaway",
+      "variantKey": "b8|takeaway|place=takeaway",
+      "l1": "Can we have it to take away?",
+      "l2": "¿Nos lo pones para llevar?",
+      "mt": "¿Nos lo pones para llevar?",
+      "sourceHash": "sha256:v1:fcb4ed6d4c011a0ddb77dd305d37cea147495f54d5ab54c8998efb81a4a84539",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b9|b9-l1|drinkPhrase=coffee|extra=with-milk|place=here": {
+      "beatId": "b9",
+      "alternativeId": "b9-l1",
+      "variantKey": "b9|b9-l1|drinkPhrase=coffee|extra=with-milk|place=here",
+      "l1": "Perfect: a coffee with milk, here.",
+      "l2": "Perfecto: un café con leche, aquí.",
+      "mt": "Perfecto: un café con leche, aquí.",
+      "sourceHash": "sha256:v1:c541f38c5ced373a0ba4ff9a71f34e8d918da37ada6ad75e9f396d8151ff1f70",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b9|b9-l1|drinkPhrase=coffee|extra=with-milk|place=takeaway": {
+      "beatId": "b9",
+      "alternativeId": "b9-l1",
+      "variantKey": "b9|b9-l1|drinkPhrase=coffee|extra=with-milk|place=takeaway",
+      "l1": "Perfect: a coffee with milk, to take away.",
+      "l2": "Perfecto: un café con leche, para llevar.",
+      "mt": "Perfecto: un café con leche, para llevar.",
+      "sourceHash": "sha256:v1:00828823c3383bfdd1b66c8b7bccabd0f0280f8fd68319ad07cd927d4f587ad3",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b9|b9-l1|drinkPhrase=coffee|extra=no-milk|place=here": {
+      "beatId": "b9",
+      "alternativeId": "b9-l1",
+      "variantKey": "b9|b9-l1|drinkPhrase=coffee|extra=no-milk|place=here",
+      "l1": "Perfect: a coffee without milk, here.",
+      "l2": "Perfecto: un café solo, aquí.",
+      "mt": "Perfecto: un café solo, aquí.",
+      "sourceHash": "sha256:v1:af94bfe889648a7d8700dd08b2e401452647897028e15e63a043265a696b7d0e",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b9|b9-l1|drinkPhrase=coffee|extra=no-milk|place=takeaway": {
+      "beatId": "b9",
+      "alternativeId": "b9-l1",
+      "variantKey": "b9|b9-l1|drinkPhrase=coffee|extra=no-milk|place=takeaway",
+      "l1": "Perfect: a coffee without milk, to take away.",
+      "l2": "Perfecto: un café solo, para llevar.",
+      "mt": "Perfecto: un café solo, para llevar.",
+      "sourceHash": "sha256:v1:de4be69fcd7a5e64531228b1d650555e0d739ab34cad5243a789db3f7d247136",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b9|b9-l1|drinkPhrase=tea|extra=with-lemon|place=here": {
+      "beatId": "b9",
+      "alternativeId": "b9-l1",
+      "variantKey": "b9|b9-l1|drinkPhrase=tea|extra=with-lemon|place=here",
+      "l1": "Perfect: a tea with lemon, here.",
+      "l2": "Perfecto: un té con limón, aquí.",
+      "mt": "Perfecto: un té con limón, aquí.",
+      "sourceHash": "sha256:v1:4a56bc5f0acfd4fddc1f27fa10032fa3f8dd5992ebf54d000cac7c57619d77f0",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b9|b9-l1|drinkPhrase=tea|extra=with-lemon|place=takeaway": {
+      "beatId": "b9",
+      "alternativeId": "b9-l1",
+      "variantKey": "b9|b9-l1|drinkPhrase=tea|extra=with-lemon|place=takeaway",
+      "l1": "Perfect: a tea with lemon, to take away.",
+      "l2": "Perfecto: un té con limón, para llevar.",
+      "mt": "Perfecto: un té con limón, para llevar.",
+      "sourceHash": "sha256:v1:ae4c5ede1b9e5fb96ff021d4a4ac05b51d263045118bf8c6e29a06192f9bbf4a",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b9|b9-l1|drinkPhrase=tea|extra=no-sugar|place=here": {
+      "beatId": "b9",
+      "alternativeId": "b9-l1",
+      "variantKey": "b9|b9-l1|drinkPhrase=tea|extra=no-sugar|place=here",
+      "l1": "Perfect: a tea without sugar, here.",
+      "l2": "Perfecto: un té sin azúcar, aquí.",
+      "mt": "Perfecto: un té sin azúcar, aquí.",
+      "sourceHash": "sha256:v1:49ca54a285eb67b88fc9fbfa4a29996599ec305a308237a13c818daf3f10605e",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b9|b9-l1|drinkPhrase=tea|extra=no-sugar|place=takeaway": {
+      "beatId": "b9",
+      "alternativeId": "b9-l1",
+      "variantKey": "b9|b9-l1|drinkPhrase=tea|extra=no-sugar|place=takeaway",
+      "l1": "Perfect: a tea without sugar, to take away.",
+      "l2": "Perfecto: un té sin azúcar, para llevar.",
+      "mt": "Perfecto: un té sin azúcar, para llevar.",
+      "sourceHash": "sha256:v1:9464ea07f0f7259df5ead71b2b8b34123e459da72449b4deb4c45e2518088bfe",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    },
+    "b10|b10-l1": {
+      "beatId": "b10",
+      "alternativeId": "b10-l1",
+      "variantKey": "b10|b10-l1",
+      "l1": "Thanks, Ana!",
+      "l2": "¡Gracias, Ana!",
+      "mt": "¡Gracias, Ana!",
+      "sourceHash": "sha256:v1:ce4855f3b8633c658c82dc8e3ae280f4cd3241401cd9bf90334ea2483f582107",
+      "reviewedBy": "agent",
+      "translationRev": "authored-1"
+    }
+  },
+  "gloss": {
+    "buenos días, lucía! ¿pedimos algo": {
+      "l1": "Morning, Lucía! Shall we order something?",
+      "origin": "mt",
+      "mt": "Morning, Lucía! Shall we order something?",
+      "reviewedBy": "agent"
+    },
+    "buenos días, lucía": {
+      "l1": "Good morning, Lucía",
+      "origin": "mt",
+      "mt": "Good morning, Lucía",
+      "reviewedBy": "agent"
+    },
+    "buenos días": {
+      "l1": "Good morning",
+      "origin": "mt",
+      "mt": "Good morning",
+      "reviewedBy": "agent"
+    },
+    "lucía": {
+      "l1": "Lucía",
+      "origin": "mt",
+      "mt": "Lucía",
+      "reviewedBy": "agent"
+    },
+    "pedimos algo": {
+      "l1": "Shall we order something?",
+      "origin": "mt",
+      "mt": "Shall we order something?",
+      "reviewedBy": "agent"
+    },
+    "qué bien! yo quiero un café": {
+      "l1": "Sounds good! I'll have a coffee.",
+      "origin": "mt",
+      "mt": "Sounds good! I'll have a coffee.",
+      "reviewedBy": "agent"
+    },
+    "qué bien": {
+      "l1": "Great",
+      "origin": "mt",
+      "mt": "Great",
+      "reviewedBy": "agent"
+    },
+    "yo quiero un café": {
+      "l1": "I'd like a coffee",
+      "origin": "mt",
+      "mt": "I'd like a coffee",
+      "reviewedBy": "agent"
+    },
+    "vale, yo tomo un té": {
+      "l1": "OK, I'll take a tea.",
+      "origin": "mt",
+      "mt": "OK, I'll take a tea.",
+      "reviewedBy": "agent"
+    },
+    "vale": {
+      "l1": "OK",
+      "origin": "mt",
+      "mt": "OK",
+      "reviewedBy": "agent"
+    },
+    "yo tomo un té": {
+      "l1": "I'll have a tea",
+      "origin": "mt",
+      "mt": "I'll have a tea",
+      "reviewedBy": "agent"
+    },
+    "para mí lo mismo: un café": {
+      "l1": "Same for me: a coffee.",
+      "origin": "mt",
+      "mt": "Same for me: a coffee.",
+      "reviewedBy": "agent"
+    },
+    "para mí lo mismo: un té": {
+      "l1": "Same for me: a tea.",
+      "origin": "mt",
+      "mt": "Same for me: a tea.",
+      "reviewedBy": "agent"
+    },
+    "me lo pones con leche, por favor": {
+      "l1": "Could I have it with milk, please?",
+      "origin": "mt",
+      "mt": "Could I have it with milk, please?",
+      "reviewedBy": "agent"
+    },
+    "me lo pones con leche": {
+      "l1": "Could you make it with milk",
+      "origin": "mt",
+      "mt": "Could you make it with milk",
+      "reviewedBy": "agent"
+    },
+    "me lo pones": {
+      "l1": "Could you make it",
+      "origin": "mt",
+      "mt": "Could you make it",
+      "reviewedBy": "agent"
+    },
+    "por favor": {
+      "l1": "please",
+      "origin": "mt",
+      "mt": "please",
+      "reviewedBy": "agent"
+    },
+    "me lo pones solo, por favor": {
+      "l1": "Could I have it without milk, please?",
+      "origin": "mt",
+      "mt": "Could I have it without milk, please?",
+      "reviewedBy": "agent"
+    },
+    "me lo pones solo": {
+      "l1": "Could you make it black",
+      "origin": "mt",
+      "mt": "Could you make it black",
+      "reviewedBy": "agent"
+    },
+    "prefiero tomarlo con limón, por favor": {
+      "l1": "I'd rather have it with lemon, please.",
+      "origin": "mt",
+      "mt": "I'd rather have it with lemon, please.",
+      "reviewedBy": "agent"
+    },
+    "prefiero tomarlo con limón": {
+      "l1": "I'd rather have it with lemon",
+      "origin": "mt",
+      "mt": "I'd rather have it with lemon",
+      "reviewedBy": "agent"
+    },
+    "prefiero tomarlo": {
+      "l1": "I'd rather have it",
+      "origin": "mt",
+      "mt": "I'd rather have it",
+      "reviewedBy": "agent"
+    },
+    "prefiero tomarlo sin azúcar, por favor": {
+      "l1": "I'd rather have it without sugar, please.",
+      "origin": "mt",
+      "mt": "I'd rather have it without sugar, please.",
+      "reviewedBy": "agent"
+    },
+    "prefiero tomarlo sin azúcar": {
+      "l1": "I'd rather have it without sugar",
+      "origin": "mt",
+      "mt": "I'd rather have it without sugar",
+      "reviewedBy": "agent"
+    },
+    "el mío con leche también": {
+      "l1": "Make mine with milk too.",
+      "origin": "mt",
+      "mt": "Make mine with milk too.",
+      "reviewedBy": "agent"
+    },
+    "el mío": {
+      "l1": "Mine",
+      "origin": "mt",
+      "mt": "Mine",
+      "reviewedBy": "agent"
+    },
+    "el mío solo también": {
+      "l1": "Make mine without milk too.",
+      "origin": "mt",
+      "mt": "Make mine without milk too.",
+      "reviewedBy": "agent"
+    },
+    "el mío con limón también": {
+      "l1": "Make mine with lemon too.",
+      "origin": "mt",
+      "mt": "Make mine with lemon too.",
+      "reviewedBy": "agent"
+    },
+    "el mío sin azúcar también": {
+      "l1": "Make mine without sugar too.",
+      "origin": "mt",
+      "mt": "Make mine without sugar too.",
+      "reviewedBy": "agent"
+    },
+    "y un croissant, por favor": {
+      "l1": "And a croissant, please.",
+      "origin": "mt",
+      "mt": "And a croissant, please.",
+      "reviewedBy": "agent"
+    },
+    "y un croissant": {
+      "l1": "And a croissant",
+      "origin": "mt",
+      "mt": "And a croissant",
+      "reviewedBy": "agent"
+    },
+    "un croissant": {
+      "l1": "a croissant",
+      "origin": "mt",
+      "mt": "a croissant",
+      "reviewedBy": "agent"
+    },
+    "yo también quiero una tostada con tomate": {
+      "l1": "I'd also like a tomato toast.",
+      "origin": "mt",
+      "mt": "I'd also like a tomato toast.",
+      "reviewedBy": "agent"
+    },
+    "yo también quiero una tostada": {
+      "l1": "I'd also like a slice of toast",
+      "origin": "mt",
+      "mt": "I'd also like a slice of toast",
+      "reviewedBy": "agent"
+    },
+    "perfecto, un croissant para mí": {
+      "l1": "Perfect, a croissant for me.",
+      "origin": "mt",
+      "mt": "Perfect, a croissant for me.",
+      "reviewedBy": "agent"
+    },
+    "perfecto": {
+      "l1": "Perfect",
+      "origin": "mt",
+      "mt": "Perfect",
+      "reviewedBy": "agent"
+    },
+    "un croissant para mí": {
+      "l1": "a croissant for me",
+      "origin": "mt",
+      "mt": "a croissant for me",
+      "reviewedBy": "agent"
+    },
+    "perfecto, una tostada con tomate para mí": {
+      "l1": "Perfect, a tomato toast for me.",
+      "origin": "mt",
+      "mt": "Perfect, a tomato toast for me.",
+      "reviewedBy": "agent"
+    },
+    "una tostada con tomate para mí": {
+      "l1": "a tomato toast for me",
+      "origin": "mt",
+      "mt": "a tomato toast for me",
+      "reviewedBy": "agent"
+    },
+    "una tostada": {
+      "l1": "a slice of toast",
+      "origin": "mt",
+      "mt": "a slice of toast",
+      "reviewedBy": "agent"
+    },
+    "nos lo tomamos aquí": {
+      "l1": "Can we have it here?",
+      "origin": "mt",
+      "mt": "Can we have it here?",
+      "reviewedBy": "agent"
+    },
+    "nos lo pones para llevar": {
+      "l1": "Can we have it to take away?",
+      "origin": "mt",
+      "mt": "Can we have it to take away?",
+      "reviewedBy": "agent"
+    },
+    "nos lo pones": {
+      "l1": "Could you make it for us",
+      "origin": "mt",
+      "mt": "Could you make it for us",
+      "reviewedBy": "agent"
+    },
+    "perfecto: un café con leche, aquí": {
+      "l1": "Perfect: a coffee with milk, here.",
+      "origin": "mt",
+      "mt": "Perfect: a coffee with milk, here.",
+      "reviewedBy": "agent"
+    },
+    "perfecto: un café con leche": {
+      "l1": "Perfect: a coffee with milk",
+      "origin": "mt",
+      "mt": "Perfect: a coffee with milk",
+      "reviewedBy": "agent"
+    },
+    "perfecto: un café": {
+      "l1": "Perfect: a coffee",
+      "origin": "mt",
+      "mt": "Perfect: a coffee",
+      "reviewedBy": "agent"
+    },
+    "aquí": {
+      "l1": "here",
+      "origin": "mt",
+      "mt": "here",
+      "reviewedBy": "agent"
+    },
+    "perfecto: un café con leche, para llevar": {
+      "l1": "Perfect: a coffee with milk, to take away.",
+      "origin": "mt",
+      "mt": "Perfect: a coffee with milk, to take away.",
+      "reviewedBy": "agent"
+    },
+    "para llevar": {
+      "l1": "to take away",
+      "origin": "mt",
+      "mt": "to take away",
+      "reviewedBy": "agent"
+    },
+    "perfecto: un café solo, aquí": {
+      "l1": "Perfect: a coffee without milk, here.",
+      "origin": "mt",
+      "mt": "Perfect: a coffee without milk, here.",
+      "reviewedBy": "agent"
+    },
+    "perfecto: un café solo": {
+      "l1": "Perfect: a black coffee",
+      "origin": "mt",
+      "mt": "Perfect: a black coffee",
+      "reviewedBy": "agent"
+    },
+    "perfecto: un café solo, para llevar": {
+      "l1": "Perfect: a coffee without milk, to take away.",
+      "origin": "mt",
+      "mt": "Perfect: a coffee without milk, to take away.",
+      "reviewedBy": "agent"
+    },
+    "perfecto: un té con limón, aquí": {
+      "l1": "Perfect: a tea with lemon, here.",
+      "origin": "mt",
+      "mt": "Perfect: a tea with lemon, here.",
+      "reviewedBy": "agent"
+    },
+    "perfecto: un té con limón": {
+      "l1": "Perfect: a tea with lemon",
+      "origin": "mt",
+      "mt": "Perfect: a tea with lemon",
+      "reviewedBy": "agent"
+    },
+    "perfecto: un té": {
+      "l1": "Perfect: a tea",
+      "origin": "mt",
+      "mt": "Perfect: a tea",
+      "reviewedBy": "agent"
+    },
+    "perfecto: un té con limón, para llevar": {
+      "l1": "Perfect: a tea with lemon, to take away.",
+      "origin": "mt",
+      "mt": "Perfect: a tea with lemon, to take away.",
+      "reviewedBy": "agent"
+    },
+    "perfecto: un té sin azúcar, aquí": {
+      "l1": "Perfect: a tea without sugar, here.",
+      "origin": "mt",
+      "mt": "Perfect: a tea without sugar, here.",
+      "reviewedBy": "agent"
+    },
+    "perfecto: un té sin azúcar": {
+      "l1": "Perfect: a tea without sugar",
+      "origin": "mt",
+      "mt": "Perfect: a tea without sugar",
+      "reviewedBy": "agent"
+    },
+    "perfecto: un té sin azúcar, para llevar": {
+      "l1": "Perfect: a tea without sugar, to take away.",
+      "origin": "mt",
+      "mt": "Perfect: a tea without sugar, to take away.",
+      "reviewedBy": "agent"
+    },
+    "gracias, ana": {
+      "l1": "Thanks, Ana!",
+      "origin": "mt",
+      "mt": "Thanks, Ana!",
+      "reviewedBy": "agent"
+    },
+    "gracias": {
+      "l1": "Thanks",
+      "origin": "mt",
+      "mt": "Thanks",
+      "reviewedBy": "agent"
+    },
+    "ana": {
+      "l1": "Ana",
+      "origin": "mt",
+      "mt": "Ana",
+      "reviewedBy": "agent"
+    }
+  },
+  "meta": {
+    "schemaVersion": 1,
+    "segmentationVersion": 1,
+    "generatedFrom": "cafe-order.source.json",
+    "sourceDigest": "sha256:v1:0e82ad91494d0b1aeeef7f1321008736d1883e27631bd2b6583356ee1c8f5448",
+    "reviewPolicy": "shipping",
+    "translator": {
+      "en2romance": "authored-1",
+      "romance2en": "authored-1"
+    }
+  }
+}

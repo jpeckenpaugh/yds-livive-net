@@ -196,7 +196,7 @@ export type VariantRecord = {
   sourceHash: string;
   /** 'owner' is required whenever `l2 !== mt` (E_EDITED_NOT_OWNER). */
   reviewedBy: Reviewer;
-  /** Pinned model revision that produced `mt`; null in `--author-only` mode. */
+  /** Pinned revision id that produced `mt`: a model revision, or an authored-table revision named `authored-<n>` (D2 §7.2). Null in `--author-only` mode. */
   translationRev: string | null;
   /** Id of the review-agent flag that escalated this entry, if any. */
   triageRef?: string;

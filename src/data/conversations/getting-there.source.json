@@ -1,0 +1,213 @@
+{
+  "id": "getting-there",
+  "title": "Getting There",
+  "l1": "en",
+  "l2": "es",
+  "characters": {
+    "marta": { "name": "Marta", "voice": "F2" },
+    "tomas": { "name": "Tomás", "voice": "M1" }
+  },
+  "variables": [
+    {
+      "name": "mode",
+      "values": [{ "key": "metro" }, { "key": "walk" }]
+    },
+    {
+      "name": "route",
+      "values": [
+        { "key": "metro", "l1": "by metro" },
+        { "key": "walk", "l1": "on foot" }
+      ]
+    },
+    {
+      "name": "leg",
+      "values": [
+        { "key": "red-line", "l1": "the red line to the third stop" },
+        { "key": "blue-line", "l1": "the blue line to the last stop" },
+        { "key": "straight", "l1": "straight on and then right" },
+        { "key": "park", "l1": "through the park" }
+      ]
+    },
+    {
+      "name": "dest",
+      "values": [
+        { "key": "station", "l1": "the train station" },
+        { "key": "museum", "l1": "the museum" }
+      ]
+    },
+    {
+      "name": "ticket",
+      "values": [
+        { "key": "single", "l1": "a single ticket" },
+        { "key": "daypass", "l1": "a day pass" }
+      ]
+    }
+  ],
+  "beats": [
+    {
+      "id": "b1",
+      "speaker": "marta",
+      "hint": "Marta notices Tomás is lost.",
+      "line": [{ "id": "b1-l1", "template": "Everything all right, Tomás? You look lost." }]
+    },
+    {
+      "id": "b2",
+      "speaker": "tomas",
+      "hint": "Tomás decides how to travel.",
+      "choiceSets": [
+        {
+          "id": "b2-s1",
+          "options": [
+            {
+              "key": "metro",
+              "label": { "l1": "By metro", "l2": "En metro" },
+              "icon": "🚇",
+              "template": "Yes, a bit. I'll go {route}.",
+              "sets": { "mode": "metro", "route": "metro" }
+            },
+            {
+              "key": "walk",
+              "label": { "l1": "On foot", "l2": "Andando" },
+              "icon": "🚶",
+              "template": "Maybe I'll just go {route}.",
+              "sets": { "mode": "walk", "route": "walk" }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b3",
+      "speaker": "marta",
+      "hint": "Marta agrees with the choice.",
+      "line": [{ "id": "b3-l1", "template": "I agree, {route} works well." }]
+    },
+    {
+      "id": "b4",
+      "speaker": "tomas",
+      "hint": "Tomás checks the route.",
+      "choiceSets": [
+        {
+          "id": "b4-metro",
+          "when": { "mode": "metro" },
+          "options": [
+            {
+              "key": "red-line",
+              "label": { "l1": "Red line", "l2": "Línea roja" },
+              "icon": "🔴",
+              "template": "So I take {leg}?",
+              "sets": { "leg": "red-line" }
+            },
+            {
+              "key": "blue-line",
+              "label": { "l1": "Blue line", "l2": "Línea azul" },
+              "icon": "🔵",
+              "template": "Should I take {leg}?",
+              "sets": { "leg": "blue-line" }
+            }
+          ]
+        },
+        {
+          "id": "b4-walk",
+          "when": { "mode": "walk" },
+          "options": [
+            {
+              "key": "straight",
+              "label": { "l1": "Straight on", "l2": "Todo recto" },
+              "icon": "⬆️",
+              "template": "So I go {leg}?",
+              "sets": { "leg": "straight" }
+            },
+            {
+              "key": "park",
+              "label": { "l1": "Through the park", "l2": "Por el parque" },
+              "icon": "🌳",
+              "template": "Should I go {leg}?",
+              "sets": { "leg": "park" }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "speaker": "marta",
+      "hint": "Marta confirms the route.",
+      "line": [{ "id": "b5-l1", "template": "That's it — {leg}." }]
+    },
+    {
+      "id": "b6",
+      "speaker": "tomas",
+      "hint": "Tomás mentions where he is going.",
+      "choiceSets": [
+        {
+          "id": "b6-s1",
+          "options": [
+            {
+              "key": "station",
+              "label": { "l1": "The station", "l2": "La estación" },
+              "icon": "🚉",
+              "template": "And that's near {dest}?",
+              "sets": { "dest": "station" }
+            },
+            {
+              "key": "museum",
+              "label": { "l1": "The museum", "l2": "El museo" },
+              "icon": "🏛️",
+              "template": "Is it close to {dest}?",
+              "sets": { "dest": "museum" }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b7",
+      "speaker": "marta",
+      "hint": "Marta points to the place.",
+      "line": [{ "id": "b7-l1", "template": "That's {dest}, yes." }]
+    },
+    {
+      "id": "b8",
+      "speaker": "tomas",
+      "hint": "Tomás asks about the ticket.",
+      "choiceSets": [
+        {
+          "id": "b8-s1",
+          "options": [
+            {
+              "key": "single",
+              "label": { "l1": "A single ticket", "l2": "Un billete sencillo" },
+              "icon": "🎫",
+              "template": "Should I get {ticket}?",
+              "sets": { "ticket": "single" }
+            },
+            {
+              "key": "daypass",
+              "label": { "l1": "A day pass", "l2": "Un billete de día" },
+              "icon": "📅",
+              "template": "Or maybe {ticket}?",
+              "sets": { "ticket": "daypass" }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b9",
+      "speaker": "marta",
+      "hint": "Marta repeats the directions.",
+      "line": [
+        { "id": "b9-l1", "template": "No problem! So: {route}, {leg}, to {dest}." }
+      ]
+    },
+    {
+      "id": "b10",
+      "speaker": "tomas",
+      "hint": "Tomás thanks Marta.",
+      "line": [
+        { "id": "b10-l1", "template": "I'll get {ticket}, then. Thanks, Marta!" }
+      ]
+    }
+  ]
+}
