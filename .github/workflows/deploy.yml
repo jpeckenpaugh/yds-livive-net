@@ -1,0 +1,103 @@
+name: CI and Publish
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+# Least privilege by default; the deploy job opts into what it needs.
+permissions:
+  contents: read
+
+# One publish at a time; a newer commit supersedes an in-flight run.
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # D5 §9.1 — CI never generates and never downloads a model. If anything
+  # reaches for the network it fails loudly instead of pulling 214 MB.
+  HF_HUB_OFFLINE: '1'
+  TRANSFORMERS_OFFLINE: '1'
+  HF_HOME: ${{ runner.temp }}/hf-home    # ephemeral on purpose, never cached
+
+jobs:
+  verify:
+    name: Gate (npm run check)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc       # 22, per D5 §2
+          cache: npm                      # caches ~/.npm keyed on the lockfile hash (D5 §9.3)
+
+      - run: npm ci
+
+      # The local equivalent of CI, same order, fail-fast (D5 §3, §9).
+      # check:contracts runs first on purpose: if the frozen contracts moved,
+      # every later result describes the wrong codebase.
+      - run: npm run check
+
+      # Publish the artifact the gate actually verified, so the browser job and
+      # the deploy both exercise exactly what passed.
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          retention-days: 7
+
+  browser:
+    name: Browser job (Playwright)
+    needs: verify
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+      # AC-UI-22's contrast / 200%-zoom / target-size half lives here and nowhere
+      # else — jsdom computes no layout and no colours. Headless Chromium also has
+      # no `es` voice, so this job exercises the G1 no-l2-voice path every run (D5 §9.4).
+      - run: npx playwright install --with-deps chromium
+      - run: npm run e2e
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-artifacts
+          path: test-artifacts/
+          retention-days: 7
+
+  deploy:
+    name: Publish to GitHub Pages
+    needs: [verify, browser]
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    permissions:
+      pages: write
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+      - id: deployment
+        uses: actions/deploy-pages@v4
