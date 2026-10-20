@@ -1,0 +1,42 @@
+{
+  "key": "yds-livive-net",
+  "source": "http://127.0.0.1:58827/",
+  "captured_at": "2026-10-20T21:02:14.699Z",
+  "git": {
+    "sha": null,
+    "ref": null
+  },
+  "viewport": {
+    "width": 1280,
+    "height": 800
+  },
+  "duration_ms": 30096,
+  "video": "demo.webm",
+  "thumb": "thumb.webp",
+  "poster": "poster.webp",
+  "video_bytes": 584977,
+  "encoded_with_ffmpeg": true,
+  "gallery": [
+    {
+      "label": "Listen and follow the dialogue in both languages",
+      "src": "gallery/01-reader.png"
+    },
+    {
+      "label": "Choose the next line and bend the story",
+      "src": "gallery/02-branch-choice.png"
+    },
+    {
+      "label": "Hear the chosen branch resolve",
+      "src": "gallery/03-branch-resolved.png"
+    },
+    {
+      "label": "Replay with one decision changed",
+      "src": "gallery/04-replay.png"
+    },
+    {
+      "label": "Back to the conversation catalogue",
+      "src": "gallery/05-catalogue.png"
+    }
+  ],
+  "console_errors": []
+}

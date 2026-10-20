@@ -29,6 +29,7 @@
     "check:ac-map": "node tools/check-ac-map.mjs",
     "check": "npm run check:contracts && npm run format:check && npm run lint && npm run typecheck && npm run check:vocabulary && npm run bake:check && npm run test && npm run build && npm run check:bundle && npm run check:assets && npm run check:ac-map",
     "e2e": "playwright test",
+    "showcase": "node scripts/record-showcase.mjs",
     "evidence": "node tools/test-runner/run.mjs"
   },
   "dependencies": {
